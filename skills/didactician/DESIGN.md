@@ -100,9 +100,9 @@ The multi-agent design has to beat this baseline on accuracy findings and reader
                 ▼   research/{facts,misconceptions,examples,assets,parking-lot}.md
           gate: check_research.py
           [2 PLAN · instructional-designer]
-                │  converge: segments within time budget, cut-list, acceptance criteria
+                │  converge: scope sized in ideas, cut-list + cut order, acceptance criteria
                 ▼   plan/{learning-plan.md, cut-list.md, mockup.html}
-          gate: check_plan.py  (budget fails; traceability warns)
+          gate: check_plan.py  (structure fails; scope and traceability warn)
                 ▼
           ◆ HUMAN CHECKPOINT: approve │ revise(notes) │ rescope; asset decisions  (≤3 rounds)
                 ▼
@@ -192,7 +192,7 @@ Blockers use the §11 schema. **Fake compliance is the worst outcome.** Each pro
 
 ### Instructional designer
 
-- **Purpose:** converge brief and research into a learning plan that fits the budget, plus a reviewable mockup. It specifies _what_ each segment must achieve, its cognitive layout constraints, and its UX intent, not _how_ it is rendered.
+- **Purpose:** converge brief and research into a learning plan scoped to the reader's time, plus a reviewable mockup. It specifies _what_ each segment must achieve, its cognitive layout constraints, and its UX intent, not _how_ it is rendered.
 - **In:** `brief.md`, all research files except `parking-lot.md` (it gets that file's headings only), `references/learning-science-patterns.md` (+ `cognitive-design-patterns.md`), and `references/ux-ui.md`.
 - **Out:**
   - `learning-plan.md`. Per segment:
@@ -202,11 +202,10 @@ Blockers use the §11 schema. **Fake compliance is the worst outcome.** Each pro
     - **cognitive layout constraints** (contiguity, pacing, redundancy, scaffold; vocabulary from `references/cognitive-design-patterns.md` §4 and `ux-ui.md`);
     - **UX intent**: what the reader does, and how the segment behaves on mobile;
     - widget `complexity`;
-    - word/time estimate;
     - comprehension items, where the designer judges they earn their place. A piece whose goal is light exposure or a reference overview, such as a quick tour of chess openings, may have none, and the plan states why in one line.
 
     The overall shape (article, scrollytelling, full-page widget, or a mix) is chosen and justified here, as are the ToC decision and the token approach.
-  - `cut-list.md`: what was left out and why.
+  - `cut-list.md`: what was left out and why, plus `## If it runs long`, the parts in the plan ranked by what to cut first.
   - `mockup.html`: a low-fidelity local wireframe the user opens in a browser. It shows:
     - real headings and segment intents;
     - placeholder figures with written descriptions;
@@ -330,8 +329,8 @@ Convergence is enforced at five points:
 
 1. **Research is question-driven.** Researchers get questions derived from the objectives, not "the topic". Each claim must name the objective it serves. Each claim is a single assertion, which blocks mega-claims that dodge the count. Anything off-objective goes to `parking-lot.md`, and the designer sees only its headings.
 2. **Objectives are few and visible.** The brief targets about one objective per 3–5 minutes (`check_plan` warns beyond that). The user sees the objectives at the checkpoint, so broad objectives that would let anything count as on-objective are caught there.
-3. **The plan's time budget is an invariant.** The plan's per-segment estimates (words at about 230 wpm plus declared interaction time) must sum to ≤ 1.15× the brief's budget (`check_plan.py`). The built page's measured reading time is *reported* to the reviewer and in the final report, not gated, because a hard gate would push builders into gaming estimates or cutting prose.
-4. **There is a cut list.** The designer must say what it left out. The human sees the cut list next to the mockup and can pull items back in, which then requires cutting something else or raising the budget.
+3. **Scope is sized in ideas, not words.** The designer judges how many ideas fit the reader's time and cuts whole ideas when there are too many. There are no word estimates anywhere in the pipeline. An earlier version gated the plan's word estimate (invariant I5, ≤ 1.15× the budget). The designer passed it by planning compressed prose, the builder copied that prose, and the page became hard to follow. Every check counted content items and none counted the connectives, so the length pressure was paid in clarity. The built page's measured reading time is *reported* to the reviewer and in the final report, never gated. If it runs long, the user (or a top-level agent) picks cuts from the plan's ranked cut order.
+4. **There is a cut list.** The designer must say what it left out. The human sees the cut list next to the mockup and can pull items back in, which then means cutting something else or accepting a longer piece. Its `## If it runs long` section ranks the parts still in the plan, so cuts after the build are the user's choice, not the builder's.
 5. **Drift is surfaced.** `check_plan.py` warns about any segment that maps to no objective, and about any objective that has no comprehension item and no stated reason. Build-time creep counts as fake compliance: content not in the plan is a review finding, and the accuracy reviewer flags claims missing from `facts.md` as `unsupported`.
 
 ## Termination and budgets
@@ -425,7 +424,7 @@ Convergence is enforced at five points:
 | I2 | Static only: no runtime data calls to undeclared origins; no backend | invariant | user | verify.mjs |
 | I3 | Third-party media is shown with attribution and is cleared by licence for the intended use, or approved by the user case by case | invariant | user | verify.mjs + assets.md + decisions.md |
 | I4 | Finite animations have a replay control | invariant | user | verify.mjs |
-| I5 | Plan time within budget (≤1.15×) | invariant | user (scope) | check_plan.py |
+| I5 | *Retired.* Was: the plan's word/time estimate within 1.15× of the budget. Removed because it pushed agents to compress prose (see Convergence, point 3) | — | — | — |
 | I6 | Carousels don't reflow the page between pages | invariant | user | verify.mjs |
 | I7 | SVG markers resolve and aren't clipped | invariant | user | verify.mjs |
 | I8 | Agents write only in their namespace | invariant (soft; see below) | designer | round_gate.py receive (manifest diff), gated on the next dispatch |
@@ -466,7 +465,7 @@ A drop-in skill has no hooks and no per-agent tool allowlists. General-purpose s
 |---|---|---|
 | `premise_false` in the brief (topic premise wrong) | researcher | **user**, with evidence and a reframed topic |
 | sources conflict on a core claim | researcher | designer decides whether it's core; if it is, the user decides how to present the controversy |
-| scope infeasible at budget | designer | **user**: rescope, raise budget, or narrow objectives |
+| scope infeasible in the reader's time | designer | **user**: rescope, allow more time, or narrow objectives |
 | asset with `clearance: needs-user` | researcher | **user**, at the checkpoint (per asset: approve with attribution, or substitute) |
 | layout infeasible on mobile | page/widget builder (pre-flight) | designer (alternative layout; a delta goes to the user if the change alters the plan) → user only if a waiver is the only option |
 | missing or unavailable asset | builder | designer (substitute a drawn figure); a delta goes to the user |
@@ -510,7 +509,7 @@ The options are approve, revise with notes, or rescope. Media clearance is decid
 | Accuracy reviewer web-verifying at `none` | catch its own model's errors without external evidence | same-model correlated errors | compare findings with and without web verification | keep |
 | Builder pre-flight | notice infeasibility before spending budget | ImpossibleBench-style fake compliance | count pre-flight blockers vs. mid-build blockers | test |
 | `kit/arrow.js` | place SVG arrowheads correctly unaided | prior iteration failed consistently (user) | builds without the kit; count marker/visual findings | keep until tested |
-| `check_plan` time estimate | converge without a numeric budget | divergence concern (user) | — | keep (user requirement) |
+| ~~`check_plan` time estimate~~ | converge without a numeric budget | divergence concern (user) | — | removed: word estimates pushed agents to compress prose; scope is sized in ideas, and a slightly long page goes to the user to cut |
 | Pivot-instruction on no-progress | escape repeated gate failures alone | general | count pivot successes | keep |
 
 **Structural (keep regardless of model):**
@@ -535,7 +534,7 @@ The options are approve, revise with notes, or rescope. Media clearance is decid
 - **Metrics:**
   - blocking accuracy findings, from an external reviewer on a different model or a human spot check;
   - instructional-design checklist pass rate;
-  - built time vs budget;
+  - built reading time vs the brief's time;
   - gate failures per round;
   - tokens, cost and wall-clock;
   - human checkpoint revision rounds.

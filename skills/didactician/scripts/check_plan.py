@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Check run/plan/* : time budget (invariant I5), references, required parts; warn on drift.
+"""Check run/plan/* : references, required parts; warn on scope and drift.
 
     check_plan.py <out|run>
 
 Errors (exit 1) go back to the designer. Warnings never block; the orchestrator carries them into
 the checkpoint summary so the human can judge them.
+
+There is deliberately no word or time estimate: scope is sized in ideas (objectives, segments), and
+the built page's reading time is measured by verify.mjs and reported, never gated.
 """
 
 from __future__ import annotations
@@ -15,20 +18,9 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _common import READING_WPM, blocks, ids_in, read_brief, resolve_run, section, write_atomic  # noqa: E402
+from _common import blocks, ids_in, read_brief, resolve_run, section, write_atomic  # noqa: E402
 
-BUDGET_TOLERANCE = 1.15
-MOCKUP_PLACEHOLDERS = ["OBJECTIVE TEXT", "SEGMENT HEADING", "WHY THIS FORM", "THE ACTUAL PROMPT", "TOTAL_EST"]
-
-
-def parse_estimate(s: str):
-    words = re.search(r"(\d[\d,]*)\s*words?", s or "")
-    mins = re.search(r"([\d.]+)\s*min", s or "")
-    if not words and not mins:
-        return None
-    w = int(words.group(1).replace(",", "")) if words else 0
-    m = float(mins.group(1)) if mins else 0.0
-    return w, m
+MOCKUP_PLACEHOLDERS = ["OBJECTIVE TEXT", "SEGMENT HEADING", "WHY THIS FORM", "THE ACTUAL PROMPT", "CUT FIRST"]
 
 
 def main():
@@ -66,18 +58,8 @@ def main():
     if not acs:
         errors.append("## Acceptance criteria has no `- ac-NN (…)` items; builders and reviewers need them")
 
-    total_words, total_min, rows = 0, 0.0, []
     covered = set()
     for sid, title, f in segs:
-        est = parse_estimate(f.get("estimate", ""))
-        if est is None:
-            errors.append(f"{sid}: missing or unparseable `estimate:` (e.g. `estimate: 320 words + 1.5 min interaction`)")
-            est = (0, 0.0)
-        w, m = est
-        seg_min = w / READING_WPM + m
-        total_words += w
-        total_min += seg_min
-        rows.append((sid, title, seg_min))
         objs = ids_in(f.get("objectives", ""), "o")
         covered.update(objs)
         if not objs:
@@ -119,13 +101,13 @@ def main():
         n_obj = len(objectives)
         suggested = max(1, math.ceil(budget / 3))
         if n_obj > suggested:
-            warnings.append(f"{n_obj} objectives for a {budget:g}-min budget (guide: ≤ {suggested}); broad scope invites bloat")
-        if total_min > budget * BUDGET_TOLERANCE:
-            errors.append(f"I5: plan estimate {total_min:.1f} min exceeds {BUDGET_TOLERANCE:g}× the {budget:g}-min "
-                          f"budget ({budget * BUDGET_TOLERANCE:.1f}). Cut segments (record them in cut-list.md) or "
-                          f"block with rescoping options")
+            warnings.append(f"{n_obj} objectives for a {budget:g}-min piece (guide: ≤ {suggested}); broad scope invites bloat")
     else:
         errors.append("brief has no numeric `time_budget_minutes:`")
+
+    cuts_p = pdir / "cut-list.md"
+    if cuts_p.exists() and not section(cuts_p.read_text(), "If it runs long").strip():
+        warnings.append("cut-list.md has no `## If it runs long` section; the user has no ranked cuts if the page runs long")
 
     mock = (pdir / "mockup.html").read_text() if (pdir / "mockup.html").exists() else ""
     left = [p for p in MOCKUP_PLACEHOLDERS if p in mock]
@@ -138,9 +120,9 @@ def main():
     unused = sorted(claim_ids - used)
 
     lines = ["segments:"]
-    lines += [f"  {sid:<6} {m:5.1f} min  {t}" for sid, t, m in rows]
-    lines.append(f"total: {total_min:.1f} min ({total_words} words @ {READING_WPM} wpm + interaction) "
-                 f"vs budget {budget:g} min (limit {budget * BUDGET_TOLERANCE:.1f})" if budget else f"total: {total_min:.1f} min")
+    lines += [f"  {sid:<6} {t}" for sid, t, _ in segs]
+    lines.append(f"objectives: {len(objectives)} · segments: {len(segs)} · reader's time: {budget:g} min" if budget
+                 else f"objectives: {len(objectives)} · segments: {len(segs)}")
     wlist = ", ".join(f"{w} ({f.get('complexity')})" for w, f in widgets.items()) or "none"
     lines.append(f"widgets: {wlist}")
     lines.append(f"checks: {len(items)} · acceptance criteria: {len(acs)}")

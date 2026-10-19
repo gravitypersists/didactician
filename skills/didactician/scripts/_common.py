@@ -27,8 +27,6 @@ ORCHESTRATOR_NS = [
     "run/review/round-*/findings.md",
 ]
 
-READING_WPM = 230
-
 
 def now() -> str:
     return _dt.datetime.now().astimezone().isoformat(timespec="seconds")

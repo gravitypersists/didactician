@@ -45,10 +45,6 @@
        margin: var(--s6) 0 var(--s2); }
   .meta { color: var(--ink-2); font-size: 14px; }
   .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: var(--s2); }
-  .budget { display: flex; height: 16px; border-radius: 4px; overflow: hidden; background: var(--fill);
-            margin: var(--s1) 0; outline: 1px solid var(--line); }
-  .budget span { background: var(--accent); opacity: .8; border-right: 2px solid var(--panel); }
-  .budget span:nth-child(even) { opacity: .55; }
   .seg { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--s2);
          margin-bottom: var(--s3); }
   .seg header { grid-column: 1 / -1; display: flex; gap: var(--s1); align-items: baseline; flex-wrap: wrap; }
@@ -75,25 +71,19 @@
 <body>
 <div class="bar">
   <b>MOCKUP</b><span>TITLE</span><span class="sp"></span>
-  <span>budget TOTAL_EST / BUDGET min</span>
   <button type="button" id="vw-desk" aria-pressed="true">desktop</button>
   <button type="button" id="vw-mob" aria-pressed="false">mobile 360</button>
 </div>
 <main>
   <section id="overview">
     <h1>TITLE</h1>
-    <p class="meta">For AUDIENCE (READINESS) · BUDGET-minute budget · SHAPE</p>
+    <p class="meta">For AUDIENCE (READINESS) · about MINUTES minutes of the reader's time · SHAPE</p>
     <div class="panel">
       <p><b>Shape:</b> WHY THIS FORM (2–3 lines).</p>
       <p><b>Objectives:</b></p>
       <ul>
         <li><b>o-1</b> OBJECTIVE TEXT. <span class="meta">checks: k-01</span></li>
       </ul>
-      <!-- One <span> per segment; style="flex: <minutes>". The bar shows time allocation at a glance. -->
-      <div class="budget" title="time per segment">
-        <span style="flex: 2" title="s-01 · 2 min"></span>
-        <span style="flex: 3" title="s-02 · 3 min"></span>
-      </div>
       <p class="meta">check_plan warnings: NONE / LIST</p>
     </div>
   </section>
@@ -106,7 +96,7 @@
     <article class="seg" id="s-01">
       <header>
         <span class="id">s-01</span><h3>SEGMENT HEADING</h3>
-        <span class="tag">MODE</span><span class="tag">~N min</span><span class="tag">o-1</span>
+        <span class="tag">MODE</span><span class="tag">o-1</span>
       </header>
       <div>
         <p class="intent">INTENT: what this segment must achieve for the reader.</p>
@@ -130,7 +120,14 @@
     <h2>Cut list (researched, deliberately left out)</h2>
     <table>
       <thead><tr><th>What</th><th>Why it's out</th><th>Cost to add back</th></tr></thead>
-      <tbody><tr><td>ITEM</td><td>REASON</td><td>~N min, or replaces s-NN</td></tr></tbody>
+      <tbody><tr><td>ITEM</td><td>REASON</td><td>e.g. a paragraph and a figure, or replaces s-NN</td></tr></tbody>
+    </table>
+
+    <h2>If it runs long (in the plan now; cut in this order)</h2>
+    <p class="meta">The prose is written at whatever length clarity needs. If the built page runs long, you pick cuts from here.</p>
+    <table>
+      <thead><tr><th>#</th><th>Cut</th><th>What the reader loses</th></tr></thead>
+      <tbody><tr><td>1</td><td>CUT FIRST: a segment, check or part of one</td><td>WHAT GOES: objective or misconception no longer covered</td></tr></tbody>
     </table>
   </section>
 

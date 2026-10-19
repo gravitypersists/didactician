@@ -38,7 +38,7 @@ If your handoff says `also_accuracy: true`, you are also the accuracy reviewer f
    - Dark mode intact?
    - Animation purposeful and replayable?
    - Carousels only for parallel items?
-   - Is the reading time reasonable against the budget? The gate's JSON reports it.
+   - Note the gate's measured reading time against the brief's time, as information. Length alone isn't a finding; the user decides cuts. Wordiness is a finding only when it hurts clarity (see Redundancy).
 6. **Fake compliance:**
    - widgets that are static images;
    - checks without feedback;

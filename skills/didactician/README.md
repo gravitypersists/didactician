@@ -18,7 +18,7 @@ flowchart TD
     I --> B[/"brief.md<br/>objectives + research questions"/]
     B --> R["<b>1 · Research</b><br/>researcher ×1–3, question-driven, capped<br/><i>skipped at depth none</i>"]
     R --> CR{{"check_research.py"}}
-    CR --> P["<b>2 · Plan</b><br/>instructional designer<br/>converges to the time budget"]
+    CR --> P["<b>2 · Plan</b><br/>instructional designer<br/>scopes ideas to your time"]
     P --> CP{{"check_plan.py"}}
     CP --> H(["<b>Checkpoint: YOU</b><br/>mockup · objectives · cut list · asset decisions"])
     H -- approve --> PB["<b>3 · Build</b><br/>page builder: shell · prose · figures · checks"]
@@ -52,7 +52,7 @@ If your viewer doesn't render Mermaid, the same diagrams are in [`docs/flow.png`
 
 ```
 you ─► INTAKE ─► RESEARCH ─► PLAN + MOCKUP ─► ◆ YOU APPROVE ◆ ─► BUILD ─► GATE ─► REVIEW ─► site/
-            (bounded)    (fits time budget)                       (page,    (Playwright) (accuracy ∥
+            (bounded)    (scoped in ideas)                        (page,    (Playwright) (accuracy ∥
                                                                   widgets)               pedagogy/UX)
 ```
 
@@ -101,7 +101,7 @@ sequenceDiagram
 | `standard` | Default for longer; niche, recent, or codebase topics | 1 researcher, ≤ 25 claims, ≤ 15 sources |
 | `deep` | Contested, technical, high-stakes | 2–3 researchers, ≤ 40 claims, ≤ 25 sources |
 
-**Research can't bloat the piece.** Researchers answer questions derived from the objectives, not "the topic". Each claim is a single assertion tied to an objective, and anything off-topic goes to a parking lot the designer only skims. The plan must fit within 1.15× your time budget (script-checked). Everything researched but left out appears in the **cut list** at the checkpoint, so you can pull items back in.
+**Research can't bloat the piece.** Researchers answer questions derived from the objectives, not "the topic". Each claim is a single assertion tied to an objective, and anything off-topic goes to a parking lot the designer only skims. The designer scopes the plan by how many ideas fit your time, not by word counts, so the prose is written at whatever length clarity needs. Everything researched but left out appears in the **cut list** at the checkpoint, so you can pull items back in. The cut list also ranks what to cut first if the built page runs long, and you choose.
 
 ---
 
@@ -115,7 +115,6 @@ sequenceDiagram
 | I2 | Static only: no runtime calls to undeclared origins (CDNs are fine) |
 | I3 | Third-party media is cleared and visibly attributed |
 | I4 | One-shot animations have a replay control |
-| I5 | The plan fits the time budget (≤ 1.15×) |
 | I6 | Carousels don't reflow the page |
 | I7 | SVG arrowheads resolve and aren't clipped |
 | I8 | Each agent writes only in its own folder (detected after the fact) |

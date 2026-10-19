@@ -483,7 +483,7 @@ if (fs.existsSync(statePath)) {
 }
 
 const rel = (p) => path.relative(run, p);
-const budgetNote = budget ? ` vs ${budget} min budget` : '';
+const budgetNote = budget ? ` (brief: ~${budget} min; reported, not gated)` : '';
 logAppend(run, 'verify', 'gate',
   `Gate (${scopeKey}) round ${round}: **${result.pass ? 'PASS' : 'FAIL'}**` +
   (failing.length ? ` (${failing.map((c) => `${c.id}${c.invariant !== '—' ? '/' + c.invariant : ''}`).join(', ')})` : '') +

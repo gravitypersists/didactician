@@ -20,7 +20,7 @@ For each segment, check that its layout constraint is feasible at 360px. For exa
    - **The mockup's prose is a draft.** The user approved what each segment says and how it flows, not its wording, which the designer compressed for review. Write the page's prose fresh from the plan's intents. Check prompts, options and answers are different: keep them as the plan states them, because the distractors are designed.
    - **Every factual statement comes from the facts file.** If you need a fact that isn't there, write around it and list it under `concerns`. Never invent one.
    - Match the audience's register and readiness. Define terms after the reader meets the thing. Keep sentences short where the load is high, but keep the words that carry the reasoning (because, so, but). If you chop an explanation into separate claims, the reader has to supply the logic.
-   - **Write to the word estimates.** The built page's reading time is measured and reported against the budget.
+   - **Write at the length clarity needs.** There is no word target. The gate measures the page's reading time and the user sees it. If the page runs long, the user picks cuts from the plan's cut order; you don't trim prose to save time.
    - No content beyond the plan. If you think something is missing, say so in `concerns`.
 3. **Figures:** build the plan's simple figures as inline SVG or CSS. Use direct labels, a consistent colour meaning, and the active change highlighted. Use `Didactician.arrow` for arrows. Captions follow ux-ui.md §6: small, consistent, and never restating the visible.
 4. **Animations:** one-shot ones start when visible and have a `[data-replay]` control (I4). Mark JS-driven ones `data-anim="once"`, loops `data-anim="loop"`, micro-flair `data-anim="flair"`.
@@ -79,6 +79,6 @@ The insides of `high` widgets (`site/widgets/<id>/`), changing the plan (report 
 - placeholder text or figures;
 - a check with no feedback;
 - a segment silently merged or dropped;
-- prose padded or cut to game the reading time;
+- prose padded, or compressed to make the page look short;
 - invented facts;
 - `fixed` on a finding you didn't actually fix.

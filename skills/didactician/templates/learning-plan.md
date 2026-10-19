@@ -6,7 +6,7 @@
 ## Shape
 
 <2–5 sentences: the overall form (article / scrollytelling / full-page widget / a mix) and WHY it
-fits this topic, audience and budget. Name the main alternative you rejected and why.>
+fits this topic, audience and the reader's time. Name the main alternative you rejected and why.>
 
 toc: <yes | no> — <reason>
 tokens: <default kit tokens | user-provided: … | custom: …>
@@ -35,7 +35,6 @@ ux: <what the reader does here; how it behaves at 360px>
 figure: <description of each figure/diagram/animation, precise enough to build | none>
 widget: <w-<id> (complexity: high | low) — one-line spec | none>
 checks: <k-01 | none>
-estimate: <N> words + <M> min interaction
 
 ### s-02 — <Title>
 …
