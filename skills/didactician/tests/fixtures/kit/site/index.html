@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kit demo</title>
+<link rel="stylesheet" href="assets/tokens.css"><link rel="stylesheet" href="assets/components.css">
+<style>
+  @keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .meter { height: 12px; background: var(--c1); transform-origin: left; transform: scaleX(0); border-radius: 6px; }
+  .meter.is-playing { animation: fill 2.4s var(--ease-out) forwards; }
+</style>
+</head>
+<body class="d-body">
+<header class="d-hero">
+  <div class="d-kicker">Kit demo</div>
+  <h1>How the parts fit together</h1>
+  <p class="d-standfirst">A test page exercising every kit component.</p>
+  <div class="d-meta"><div><b>Reading time</b>4 min</div><div><b>For</b>Builders</div></div>
+</header>
+<div class="d-page">
+  <aside class="d-rail" data-toc data-minutes="4"></aside>
+  <main class="d-main" id="main">
+    <details class="d-toc-mobile" data-toc-mobile></details>
+    <section><h2 id="arrows">Arrows that land on the boundary</h2>
+      <p>Arrows end at shape boundaries with a small gap, and curves keep their heads aligned with the curve's direction.</p>
+      <figure class="d-figure d-wide">
+        <div class="d-canvas"><svg class="d-svg" id="arrows-svg" viewBox="0 0 640 260" role="img" aria-label="Three nodes connected by arrows">
+          <circle id="n1" cx="80" cy="130" r="36" fill="var(--c1-soft)" stroke="var(--c1)" stroke-width="2"/>
+          <rect id="n2" x="260" y="30" width="120" height="56" rx="8" fill="var(--c2-soft)" stroke="var(--c2)" stroke-width="2"/>
+          <ellipse id="n3" cx="540" cy="170" rx="70" ry="40" fill="var(--c3-soft)" stroke="var(--c3)" stroke-width="2"/>
+        </svg></div>
+        <figcaption><b>Figure 1.</b> Direct labels sit on the arrows; no legend.</figcaption>
+      </figure>
+      <h3 id="sub-a">A subsection</h3><p>Subsections appear in the rail only under the active section.</p>
+    </section>
+    <section><h2 id="replay">One-shot animation with replay</h2>
+      <figure class="d-figure" data-anim-scope>
+        <div class="d-figure-head"><span class="d-caption">Progress over 2.4 s</span><button class="d-replay" data-replay type="button">Replay</button></div>
+        <div class="d-canvas"><div class="meter" data-anim-autoplay="visible"></div></div>
+      </figure>
+    </section>
+    <section><h2 id="cases">Three cases (carousel)</h2>
+      <div class="d-carousel" data-carousel aria-label="Three cases">
+        <div class="d-carousel-pages">
+          <div data-carousel-page><p><b>Case 1.</b> Short.</p></div>
+          <div data-carousel-page><p><b>Case 2.</b> Much longer case text that wraps onto several lines on a phone, so the tallest page decides the height and nothing below jumps when you switch pages.</p></div>
+          <div data-carousel-page><p><b>Case 3.</b> Medium length text here.</p></div>
+        </div>
+      </div>
+    </section>
+    <section><h2 id="check">Check yourself</h2>
+      <div class="d-check" data-check>
+        <div class="d-check-kind">Predict</div>
+        <p class="d-check-prompt">Which arrow end gets the head when <code>both</code> is false?</p>
+        <div class="d-options">
+          <button class="d-option" type="button" data-correct>The target end</button>
+          <button class="d-option" type="button">The source end</button>
+        </div>
+        <p class="d-feedback" hidden>The head goes on the target: <code>marker-end</code>. <code>both: true</code> adds <code>marker-start</code>.</p>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="assets/arrow.js"></script><script src="assets/replay.js"></script><script src="assets/carousel.js"></script><script src="assets/toc.js"></script>
+<script>
+  const s = document.getElementById('arrows-svg'), D = Didactician;
+  const n1 = document.getElementById('n1'), n2 = document.getElementById('n2'), n3 = document.getElementById('n3');
+  D.arrow(s, n1, n2, { color: 'var(--c1)' });
+  const p = D.arrow(s, n2, n3, { color: 'var(--c2)', curve: 0.25 });
+  D.arrow(s, n3, n1, { color: 'var(--ink-3)', curve: -0.2, both: true, dashed: true });
+  D.arrow(s, {x: 600, y: 250}, {x: 636, y: 250}, { color: 'var(--ink-2)', gap: 0 });
+  D.labelAlong(p, 0.5, 'curved', { offset: 14 });
+  D.label(s, 170, 70, 'straight');
+  document.querySelectorAll('[data-check]').forEach(c => c.querySelectorAll('.d-option').forEach(o => o.onclick = () => {
+    c.querySelectorAll('.d-option').forEach(x => { x.setAttribute('aria-pressed', x === o); x.classList.toggle('is-right', x.hasAttribute('data-correct')); x.classList.toggle('is-wrong', x === o && !x.hasAttribute('data-correct')); });
+    c.querySelector('.d-feedback').hidden = false;
+  }));
+</script>
+</body>
+</html>

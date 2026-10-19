@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+ body{margin:0;font:16px system-ui;padding:16px} img,svg{max-width:100%;height:auto}
+ @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+ .bar{height:10px;background:#36c;animation:grow 3s ease-out 1 forwards}
+ .bar.re{animation:none}
+ @keyframes fade{from{opacity:0}to{opacity:1}} h1{animation:fade .4s}
+ .pages{display:grid}.page{grid-area:1/1;visibility:hidden}.page.on{visibility:visible}
+</style></head><body><main>
+<h1>Clean fixture</h1>
+<figure id="anim"><div class="bar"></div><button data-replay type="button">Replay</button></figure>
+<svg width="200" height="100" viewBox="0 0 200 100">
+  <defs><marker id="ok" viewBox="0 0 10 10" markerWidth="6" markerHeight="6" refX="10" refY="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <line x1="10" y1="20" x2="150" y2="20" stroke="#000" stroke-width="2" marker-end="url(#ok)"/>
+  <path d="M20 80 C 60 40, 120 40, 160 80" fill="none" stroke="#000" stroke-width="2" marker-start="url(#ok)" marker-end="url(#ok)"/>
+</svg>
+<div data-carousel id="car">
+  <div class="pages">
+  <div data-carousel-page class="page on"><p>short</p></div>
+  <div data-carousel-page class="page"><p>tall</p><p>tall</p><p>tall</p></div>
+  </div>
+  <button data-carousel-goto="0">1</button><button data-carousel-goto="1">2</button>
+</div>
+<figure data-asset="a-02"><img src="assets/local-photo.svg" alt="grey square"><figcaption>Photo courtesy of Example Org</figcaption></figure>
+<div data-widget="w-demo"><p>widget content</p></div>
+</main>
+<script>
+document.querySelectorAll('[data-carousel-goto]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.page').forEach((p,i)=>p.classList.toggle('on',i==b.dataset.carouselGoto))});
+document.querySelector('[data-replay]').onclick=()=>{const b=document.querySelector('.bar');b.classList.add('re');void b.offsetWidth;b.classList.remove('re')};
+</script></body></html>

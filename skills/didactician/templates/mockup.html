@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup: TITLE</title>
+<!--
+  Checkpoint wireframe skeleton. The instructional designer copies this to run/plan/mockup.html
+  and fills it in. It is deliberately low-fidelity: grey boxes, real words. The human must be able
+  to judge WHAT the piece will contain and HOW it will flow, not how it will look.
+
+  Keep these section ids: #overview #segments #cuts #assets. Replace every ALL-CAPS placeholder.
+  Use real headings, real prompts, real intents. Placeholder FIGURES are fine, but each must carry
+  a written description precise enough that the human can picture it.
+-->
+<style>
+  :root {
+    --bg: #fafaf9; --panel: #fff; --ink: #1c1917; --ink-2: #57534e; --ink-3: #a8a29e;
+    --line: #e7e5e4; --fill: #f5f5f4; --accent: #2563eb; --warn: #b45309; --ok: #15803d;
+    --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px; --s6: 48px;
+    --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0c0a09; --panel:#1c1917; --ink:#fafaf9; --ink-2:#d6d3d1; --ink-3:#78716c;
+            --line:#292524; --fill:#292524; --accent:#60a5fa; --warn:#f59e0b; --ok:#4ade80; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 var(--sans); }
+  .bar { position: sticky; top: 0; z-index: 2; display: flex; gap: var(--s2); align-items: center;
+         flex-wrap: wrap; padding: var(--s1) var(--s2); background: var(--panel); border-bottom: 1px solid var(--line);
+         font: 13px/1.4 var(--mono); }
+  .bar b { font-weight: 600; }
+  .bar .sp { flex: 1; }
+  .bar button { font: inherit; padding: 4px 8px; border: 1px solid var(--line); background: var(--fill);
+                color: var(--ink); border-radius: 4px; cursor: pointer; }
+  .bar button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+  main { max-width: 1040px; margin: 0 auto; padding: var(--s4) var(--s2) var(--s6); }
+  body.mobile main { max-width: 360px; padding-left: 0; padding-right: 0; }
+  body.mobile .seg { grid-template-columns: 1fr; }
+  h1 { font-size: 28px; line-height: 1.2; margin: 0 0 var(--s1); }
+  h2 { font: 600 13px/1.4 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2);
+       margin: var(--s6) 0 var(--s2); }
+  .meta { color: var(--ink-2); font-size: 14px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: var(--s2); }
+  .budget { display: flex; height: 16px; border-radius: 4px; overflow: hidden; background: var(--fill);
+            margin: var(--s1) 0; outline: 1px solid var(--line); }
+  .budget span { background: var(--accent); opacity: .8; border-right: 2px solid var(--panel); }
+  .budget span:nth-child(even) { opacity: .55; }
+  .seg { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--s2);
+         margin-bottom: var(--s3); }
+  .seg header { grid-column: 1 / -1; display: flex; gap: var(--s1); align-items: baseline; flex-wrap: wrap; }
+  .seg header .id { font: 12px var(--mono); color: var(--ink-3); }
+  .seg header h3 { margin: 0; font-size: 18px; }
+  .tag { font: 11px/1 var(--mono); padding: 3px 6px; border-radius: 3px; background: var(--fill); color: var(--ink-2); }
+  .intent { font-style: italic; color: var(--ink-2); margin: 0 0 var(--s1); }
+  .prose { color: var(--ink-2); font-size: 14px; }
+  .prose p { margin: 0 0 var(--s1); }
+  .fig { min-height: 160px; border: 2px dashed var(--ink-3); border-radius: 8px; background: var(--fill);
+         padding: var(--s2); font-size: 14px; color: var(--ink-2); display: flex; flex-direction: column; gap: var(--s1); }
+  .fig .kind { font: 600 11px var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
+  .check { border-left: 3px solid var(--accent); padding: var(--s1) var(--s2); background: var(--panel); margin-top: var(--s1); font-size: 14px; }
+  .check .kind { font: 600 11px var(--mono); text-transform: uppercase; color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: var(--s1); border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font: 600 12px var(--mono); color: var(--ink-2); }
+  .needs-user { color: var(--warn); font-weight: 600; }
+  .license { color: var(--ok); }
+  .warn { color: var(--warn); }
+  @media (max-width: 720px) { .seg { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="bar">
+  <b>MOCKUP</b><span>TITLE</span><span class="sp"></span>
+  <span>budget TOTAL_EST / BUDGET min</span>
+  <button type="button" id="vw-desk" aria-pressed="true">desktop</button>
+  <button type="button" id="vw-mob" aria-pressed="false">mobile 360</button>
+</div>
+<main>
+  <section id="overview">
+    <h1>TITLE</h1>
+    <p class="meta">For AUDIENCE (READINESS) · BUDGET-minute budget · SHAPE</p>
+    <div class="panel">
+      <p><b>Shape:</b> WHY THIS FORM (2–3 lines).</p>
+      <p><b>Objectives:</b></p>
+      <ul>
+        <li><b>o-1</b> OBJECTIVE TEXT. <span class="meta">checks: k-01</span></li>
+      </ul>
+      <!-- One <span> per segment; style="flex: <minutes>". The bar shows time allocation at a glance. -->
+      <div class="budget" title="time per segment">
+        <span style="flex: 2" title="s-01 · 2 min"></span>
+        <span style="flex: 3" title="s-02 · 3 min"></span>
+      </div>
+      <p class="meta">check_plan warnings: NONE / LIST</p>
+    </div>
+  </section>
+
+  <section id="segments">
+    <h2>Segments</h2>
+
+    <!-- Repeat per segment. -->
+    <article class="seg" id="s-01">
+      <header>
+        <span class="id">s-01</span><h3>SEGMENT HEADING</h3>
+        <span class="tag">MODE</span><span class="tag">~N min</span><span class="tag">o-1</span>
+      </header>
+      <div>
+        <p class="intent">INTENT: what this segment must achieve for the reader.</p>
+        <div class="prose">
+          <p>OPENING LINE OR KEY SENTENCE, written as it will roughly read.</p>
+          <p>BULLETED GIST of the rest, in real words.</p>
+        </div>
+        <div class="check">
+          <div class="kind">PREDICT · k-01</div>
+          THE ACTUAL PROMPT. Options: A / B / C (the tempting answer is B).
+        </div>
+      </div>
+      <div class="fig">
+        <span class="kind">WIDGET · w-id · complexity high</span>
+        WHAT THE READER SEES AND DOES: controls, direct labels, what changes. On mobile: HOW IT ADAPTS.
+      </div>
+    </article>
+  </section>
+
+  <section id="cuts">
+    <h2>Cut list (researched, deliberately left out)</h2>
+    <table>
+      <thead><tr><th>What</th><th>Why it's out</th><th>Cost to add back</th></tr></thead>
+      <tbody><tr><td>ITEM</td><td>REASON</td><td>~N min, or replaces s-NN</td></tr></tbody>
+    </table>
+  </section>
+
+  <section id="assets">
+    <h2>Third-party assets</h2>
+    <!-- Number rows so the user can answer "approve 1, 3; substitute 2" in one reply. -->
+    <table>
+      <thead><tr><th>#</th><th>Asset</th><th>Used in</th><th>Licence</th><th>Clearance</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>a-01: DESCRIPTION (source link)</td><td>s-02</td><td>LICENSE</td>
+            <td class="needs-user">needs your decision: QUESTION</td></tr>
+      </tbody>
+    </table>
+    <p class="meta">No third-party assets? Say so here.</p>
+  </section>
+</main>
+<script>
+  const d = document.getElementById('vw-desk'), m = document.getElementById('vw-mob');
+  function set(mobile) {
+    document.body.classList.toggle('mobile', mobile);
+    d.setAttribute('aria-pressed', String(!mobile)); m.setAttribute('aria-pressed', String(mobile));
+  }
+  d.onclick = () => set(false); m.onclick = () => set(true);
+</script>
+</body>
+</html>

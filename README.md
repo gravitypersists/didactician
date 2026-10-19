@@ -1,0 +1,36 @@
+# Didactician
+
+Development repo for **Didactician**, a Claude Code skill that turns "explain X to Y" into a deployable static explainer: a long-form article, a scrollytelling piece, a full-page explorable widget, or a mix. It runs a governed multi-agent pipeline: bounded research, a plan you approve, a Playwright gate, and independent accuracy and pedagogy/UX review.
+
+The skill itself, with its full documentation, lives in [`skills/didactician/`](skills/didactician/README.md). This page only covers how the repo is laid out and how to work on it.
+
+## Layout
+
+| Path | What |
+|---|---|
+| `skills/didactician/` | The skill package. Self-contained, so it's what you copy into other projects |
+| `.claude/skills/didactician` | Symlink to `skills/didactician/`, so Claude Code loads the skill while you work in this repo |
+| `.claude/skills/multi-agent-designer/` | Helper skill used to design and review Didactician's agent pipeline |
+| `docs/research/` | Background research on multi-agent failure modes that informed the design |
+
+## Working on it
+
+Open the repo in Claude Code. Thanks to the symlink, `/didactician` is already available and edits to `skills/didactician/` take effect without any install step.
+
+```
+/didactician explain how CRDTs converge, for Hacker News readers, ~10 minutes
+```
+
+Requirements: Node ≥ 20 and Python ≥ 3.8. On first use the skill runs `scripts/preflight.sh`, which installs a pinned Playwright and Chromium into `~/.cache/didactician/`, outside the repo.
+
+Run the self-test after changing scripts, templates or the kit:
+
+```bash
+bash skills/didactician/tests/run.sh    # expect "failed 0"
+```
+
+## Using it in another project
+
+Copy or symlink `skills/didactician/` to `<project>/.claude/skills/didactician/`. See the [skill README](skills/didactician/README.md#setup) for setup, what you'll be asked during a run, and the audit trail each run leaves behind.
+
+The [design notes](skills/didactician/DESIGN.md) explain why the pipeline is built the way it is, and which pieces of scaffolding are candidates for removal as models improve.

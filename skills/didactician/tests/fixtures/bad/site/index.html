@@ -1,0 +1,34 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="/style.css">
+<style>
+ body{margin:0;font:16px system-ui} .wide{width:600px;height:20px;background:#ccc}
+ @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+ .bar{height:10px;background:#36c;animation:grow 3s ease-out 1 forwards}
+ .page{display:none}.page.on{display:block}
+</style></head><body><main>
+<p>TODO: write intro</p>
+<div class="wide"></div>
+<section id="anim"><div class="bar"></div></section>
+<svg width="200" height="100" viewBox="0 0 200 100">
+  <defs>
+    <marker id="tiny" markerWidth="4" markerHeight="4" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z"/></marker>
+    <marker id="ok" viewBox="0 0 10 10" markerWidth="6" markerHeight="6" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z"/></marker>
+  </defs>
+  <line x1="10" y1="20" x2="100" y2="20" stroke="#000" stroke-width="2" marker-end="url(#tiny)"/>
+  <line x1="10" y1="50" x2="100" y2="50" stroke="#000" marker-end="url(#nope)"/>
+  <line x1="100" y1="80" x2="10" y2="80" stroke="#000" stroke-width="2" marker-start="url(#ok)" />
+  <line x1="150" y1="98" x2="150" y2="5" stroke="#000" stroke-width="3" marker-start="url(#ok)"/>
+</svg>
+<div data-carousel id="car">
+  <div data-carousel-page class="page on"><p>short</p></div>
+  <div data-carousel-page class="page"><p>tall</p><p>tall</p><p>tall</p><p>tall</p></div>
+  <button data-carousel-goto="0">1</button><button data-carousel-goto="1">2</button>
+</div>
+<img src="https://example.invalid/pic.png" alt="">
+<div data-widget="w-x"></div>
+</main>
+<script>
+document.querySelectorAll('[data-carousel-goto]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.page').forEach((p,i)=>p.classList.toggle('on',i==b.dataset.carouselGoto))});
+fetch('https://api.example.invalid/data').catch(()=>{});
+throw new Error('boom');
+</script></body></html>

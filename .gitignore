@@ -1,0 +1,24 @@
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Node (Playwright itself installs to ~/.cache/didactician, but just in case)
+node_modules/
+
+# Claude Code: per-user local settings (shared skills in .claude/skills stay tracked)
+.claude/settings.local.json
+
+# Verify/probe output if run directly against the test fixtures
+skills/didactician/tests/fixtures/*/run/gate/
+skills/didactician/tests/fixtures/*/run/screenshots/
+
+# Secrets
+.env
+.env.*
