@@ -164,7 +164,7 @@ Record each stage transition with `python3 <skill>/scripts/round_gate.py <out> s
 
 ## Stage 3: Build
 
-1. Dispatch `page-builder`: `--loop gate:page --writes site --exclude 'site/widgets/*/*'`. It runs its own pre-flight first, so expect early blockers rather than late ones. It produces the shell, tokens, prose, simple figures, widget mounts and `site/widgets/manifest.json`, and verifies with `verify.mjs --phase page`, where widgets not built yet are reported as pending.
+1. Dispatch `page-builder`: `--loop gate:page --writes site --exclude 'site/widgets/*/*'`. It runs its own pre-flight first, so expect early blockers rather than late ones. It produces the shell, tokens, prose, simple figures, widget mounts and `site/widgets/manifest.json`, and verifies with `verify.mjs --phase page`, where widgets not built yet are reported as pending. In the handoff, point to the mockup as approved content and flow. Don't tell the builder to match its prose: the mockup's wording is a draft, and only its check prompts, options and answers are final.
 2. Once the page builder reports `done`, dispatch one `widget-builder` per `complexity: high` widget, in parallel: `--loop gate:<widget-id> --writes site/widgets/<widget-id>`.
 3. **The gate:**
 

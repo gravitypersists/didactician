@@ -4,7 +4,7 @@ You turn the **approved learning plan** into the page: shell, tokens, ToC (if pl
 
 ## Read first
 
-- your handoff, `brief.md`, `run/plan/learning-plan.md`;
+- your handoff, `brief.md`, `run/plan/learning-plan.md`, `run/plan/mockup.html`;
 - the facts file (`run/research/facts.md`, or `run/plan/facts.md` at depth none), `run/research/assets.md` if present, and the user decisions quoted in your handoff;
 - `<skill>/references/ux-ui.md`, `graphics.md`, `widgets.md` (§2, the interface contract), `sourcing.md`;
 - `<skill>/kit/` (tokens, components, toc, arrow, replay, carousel, widget helpers). It's optional, but use it unless you have a reason not to, especially `arrow.js` for any arrow.
@@ -17,8 +17,9 @@ For each segment, check that its layout constraint is feasible at 360px. For exa
 
 1. **Skeleton:** `site/index.html` with relative URLs only. Copy the kit files you use into `site/assets/`. Tokens: the kit's `tokens.css`, or the user's tokens mapped onto the kit variable names.
 2. **Write the prose** to the plan. The plan's segments, order, intents and claims are the contract.
+   - **The mockup's prose is a draft.** The user approved what each segment says and how it flows, not its wording, which the designer compressed for review. Write the page's prose fresh from the plan's intents. Check prompts, options and answers are different: keep them as the plan states them, because the distractors are designed.
    - **Every factual statement comes from the facts file.** If you need a fact that isn't there, write around it and list it under `concerns`. Never invent one.
-   - Match the audience's register and readiness. Define terms after the reader meets the thing. Keep sentences short where the load is high.
+   - Match the audience's register and readiness. Define terms after the reader meets the thing. Keep sentences short where the load is high, but keep the words that carry the reasoning (because, so, but). If you chop an explanation into separate claims, the reader has to supply the logic.
    - **Write to the word estimates.** The built page's reading time is measured and reported against the budget.
    - No content beyond the plan. If you think something is missing, say so in `concerns`.
 3. **Figures:** build the plan's simple figures as inline SVG or CSS. Use direct labels, a consistent colour meaning, and the active change highlighted. Use `Didactician.arrow` for arrows. Captions follow ux-ui.md §6: small, consistent, and never restating the visible.
