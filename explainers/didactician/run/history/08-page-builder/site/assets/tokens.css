@@ -1,0 +1,98 @@
+/* Design tokens for "How Didactician Teaches".
+   Visual direction (plan § Visual direction, user decision d-01): a page from a 19th-century
+   natural-philosophy treatise. Light theme = laid paper and printer's ink; dark theme = chalkboard.
+   Values are mapped onto the kit's variable names so components.css and widgets keep working.
+
+   Role colours, constant across every figure on the page:
+     agent  = ink        (--role-agent,  plain ink)
+     script = Prussian blue (--c1 / --role-script)
+     human  = rubric vermilion (--c2 / --role-human; also --accent: the active element)
+   Colour is never the only channel: shape carries role too (rectangle / hexagon / rounded pill).
+
+   Contrast (checked): body ink ≥ 13:1, --ink-3 captions ≥ 5.5:1, --accent ≥ 5:1, --c1 ≥ 7:1 on
+   --bg, --surface and --surface-2 in both themes. --ink-4 and --line are for rules only. */
+:root {
+  --sp-0: 0; --sp-half: 4px; --sp-1: 8px; --sp-2: 16px; --sp-3: 24px; --sp-4: 32px;
+  --sp-5: 40px; --sp-6: 48px; --sp-8: 64px; --sp-10: 80px; --sp-12: 96px;
+
+  /* No sans on this page: the kit's "sans" slots take the book serif. The display face
+     (small caps) is used only at ≥ 24px: title, section heads. Fallbacks keep the layout. */
+  --font-display: "Cormorant SC", "Cormorant Garamond", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --font-serif: "Source Serif 4", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-sans: var(--font-serif);
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-body: var(--font-serif);
+  --fs-caption: 0.875rem;   /* 14px: captions, labels */
+  --lh-caption: 1.25rem;
+  --fs-small: 1rem;         /* 16px */
+  --lh-small: 1.5rem;
+  --fs-body: 1.125rem;      /* 18px */
+  --lh-body: 1.75rem;
+  --fs-h3: 1.25rem;  --lh-h3: 1.75rem;
+  --fs-h2: 2.125rem; --lh-h2: 2.5rem;
+  --fs-h1: 4rem;     --lh-h1: 4.25rem;
+  --measure: 66ch;
+
+  /* light: laid paper + printer's ink */
+  --bg: #f4ecd8;
+  --surface: #faf5e8;
+  --surface-2: #ece2c8;
+  --ink: #231a12;
+  --ink-2: #4a3b2c;
+  --ink-3: #66553f;
+  --ink-4: #a8977a;
+  --line: #cbbd9f;
+  --accent: #a8361b;        /* rubric vermilion */
+  --accent-ink: #faf5e8;
+  --focus: #1f3a5f;
+  --good: #2f5d2a; --bad: #a8361b; --warn: #7a4a00;
+  --c1: #1f3a5f;            /* Prussian blue: scripts, gates */
+  --c2: #a8361b;            /* vermilion: the human, the active element */
+  --c3: #2f5d2a; --c4: #7a4a00; --c5: #5a3d6b; --c6: #5b5246;
+  --c1-soft: #1f3a5f1f; --c2-soft: #a8361b1f; --c3-soft: #2f5d2a1f; --c4-soft: #7a4a001f;
+  --role-agent: var(--ink); --role-script: var(--c1); --role-human: var(--c2);
+  --grid-line: #d9cdb2;     /* graph-paper ruling on specimen cards (decorative) */
+  --hatch: color-mix(in srgb, var(--ink) 22%, transparent);
+
+  --radius-1: 2px; --radius-2: 2px; --radius-3: 2px;
+  --shadow-1: none;
+  --stroke: 1.25px;         /* engraving hairline; chalk is thicker (dark theme) */
+  --tap: 44px;
+
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --dur-1: 150ms; --dur-2: 220ms; --dur-3: 600ms;
+}
+
+@media (max-width: 599px) {
+  :root { --fs-body: 1.0625rem; --lh-body: 1.625rem; --fs-h1: 2.5rem; --lh-h1: 2.875rem; --fs-h2: 1.75rem; --lh-h2: 2.125rem; }
+}
+
+/* dark: chalkboard */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1d2620; --surface: #232e27; --surface-2: #2a362e;
+    --ink: #ece6d6; --ink-2: #cfc8b6; --ink-3: #a9b0a2; --ink-4: #66756b; --line: #45524a;
+    --accent: #f2937a; --accent-ink: #1d2620; --focus: #a3c4ea;
+    --good: #9ad18f; --bad: #f2937a; --warn: #f0b35a;
+    --c1: #a3c4ea; --c2: #f2937a; --c3: #9ad18f; --c4: #f0b35a; --c5: #c9a8e0; --c6: #b8b2a2;
+    --c1-soft: #a3c4ea26; --c2-soft: #f2937a26; --c3-soft: #9ad18f26; --c4-soft: #f0b35a26;
+    --grid-line: #34413a;
+    --hatch: color-mix(in srgb, var(--ink) 20%, transparent);
+    --stroke: 1.75px;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1d2620; --surface: #232e27; --surface-2: #2a362e;
+  --ink: #ece6d6; --ink-2: #cfc8b6; --ink-3: #a9b0a2; --ink-4: #66756b; --line: #45524a;
+  --accent: #f2937a; --accent-ink: #1d2620; --focus: #a3c4ea;
+  --good: #9ad18f; --bad: #f2937a; --warn: #f0b35a;
+  --c1: #a3c4ea; --c2: #f2937a; --c3: #9ad18f; --c4: #f0b35a; --c5: #c9a8e0; --c6: #b8b2a2;
+  --c1-soft: #a3c4ea26; --c2-soft: #f2937a26; --c3-soft: #9ad18f26; --c4-soft: #f0b35a26;
+  --grid-line: #34413a;
+  --hatch: color-mix(in srgb, var(--ink) 20%, transparent);
+  --stroke: 1.75px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-1: 0ms; --dur-2: 0ms; --dur-3: 0ms; }
+}

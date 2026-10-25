@@ -22,3 +22,4 @@ skills/didactician/tests/fixtures/*/run/screenshots/
 # Secrets
 .env
 .env.*
+explainers/*/run/screenshots/

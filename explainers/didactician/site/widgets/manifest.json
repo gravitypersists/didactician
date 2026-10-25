@@ -1,0 +1,68 @@
+{
+  "data_origins": [],
+  "cdn": [
+    "https://fonts.googleapis.com",
+    "https://fonts.gstatic.com"
+  ],
+  "widgets": {
+    "w-pipeline": {
+      "segment": "s-02, s-03",
+      "mount": "[data-widget=\"w-pipeline\"]",
+      "mounts": {
+        "what": {
+          "segment": "s-02",
+          "selector": "[data-widget=\"w-pipeline\"][data-mode=\"what\"]",
+          "states": "data-step 0 (overview) … 8 (one stage each)",
+          "initial": "0"
+        },
+        "why": {
+          "segment": "s-03",
+          "selector": "[data-widget=\"w-pipeline\"][data-mode=\"why\"]",
+          "states": "data-step 1…3 = rules W1…W3 (data-rule on the step): W1 the orchestrator coordinates and never authors; W2 agents communicate only through files, in a fixed structure; W3 you approve before anything expensive",
+          "initial": "\"\" (no step reached yet: plain pipeline, no overlay)"
+        }
+      },
+      "size": {
+        "desktop": "≥ 900px: left 3/5 of the .d-wide scrolly (≈ 540–570px wide); mount min-height 480px (what) / 420px (why); sticky canvas max-height 84vh",
+        "mobile": "< 900px: full column width (≥ 300px at 360); mount min-height min(330px, 55vh − 56px) (what) / min(300px, 55vh − 56px) (why); the sticky canvas (diagram head + mount) is capped at 55vh; check landscape 740×360"
+      },
+      "files": [
+        "index.js",
+        "index.css"
+      ],
+      "cdn": [],
+      "data_origins": [],
+      "contract": [
+        "Two mounts share the id w-pipeline (one widget folder, two modes), distinguished by data-mode=\"what\" | \"why\". kit/widget.js's Didactician.widget() only initialises the FIRST matching mount, so index.js must init each mount itself (e.g. document.querySelectorAll('[data-widget=\"w-pipeline\"]')).",
+        "The page owns the scroll steps (prose in .d-step[data-step] beside/below each mount) and a driver in assets/page.js. On change it sets data-active-step on the mount and dispatches CustomEvent 'didactician:step' on the mount with detail { step, mode, rule, el }. Read data-active-step at init (the widget may load after the first event).",
+        "The diagram frame and its title (Diagram I / Diagram II) are outside the mount; draw only the strip, card and overlays inside it.",
+        "Tokens: role colours are --role-agent (ink), --role-script (= --c1, Prussian blue), --role-human (= --c2 = --accent, vermilion). Engraving stroke width is var(--stroke) (thicker in the dark chalkboard theme). --hatch is a ready-made hatching colour; --grid-line is the graph-paper ruling for specimen cards. Fonts: --font-serif, --font-mono; --font-display only at ≥ 24px.",
+        "Stage kinds as in the skill README: Intake, Research, Plan, Build, Review = agent (rectangle); Gate = script (hexagon); You approve, Deliver = human (rounded pill). Step 0 prose says: 'rectangles are agents, the hexagon is a script, and the rounded stages are where you come in.'",
+        "Diagram III in s-04 draws the same 8 stages with these artifact names: brief.md, facts.md, learning-plan.md, decisions.md, site/, page-round-N.json, findings.md, log.md. Keep the card headers consistent with them."
+      ]
+    },
+    "w-blocks": {
+      "segment": "s-05",
+      "mount": "[data-widget=\"w-blocks\"]",
+      "size": {
+        "desktop": "≥ 900px: the mount is .d-wide (max 960px); a 2-column grid of 7 cards; measured 1908px tall at 1280, so the page reserves min-height 1900px",
+        "mobile": "< 900px: one column, full width (≥ 300px at 360); each card ≤ 360px tall, 44px touch targets, slider thumb ≥ 44px; measured 2982px at 768 and 3565px at 360, so the page reserves min-height clamp(2900px, 3550px − (100vw − 360px) × 1.43, 3550px)"
+      },
+      "files": [
+        "index.js",
+        "index.css"
+      ],
+      "cdn": [],
+      "data_origins": [],
+      "contract": [
+        "One mount, one widget, no scroll steps: the page does not drive it (no data-active-step, no didactician:step events). Each specimen is independent and works in any order. kit/widget.js's Didactician.widget('w-blocks', init) is enough.",
+        "The page owns the section's prose before the widget (s-05 opening), Problem 3 (k-05) and the 'beyond these blocks' paragraphs after it. The mount is empty: draw 7 specimen cards inside it and nothing else (no section heading, no k-05).",
+        "Each card: a small-caps head 'Specimen N · Name', the working example, and its one-line load reason directly under it. All examples use the § 4 line `total = sum(x for x in values if x > 0)` with values = [3, -1, 4, 0], or the pipeline (its eight stages, brief.md, handoff prompts, reviewers). No new subject matter. See the plan's w-blocks entry for the exact seven specimens, their prompts, options and reasons.",
+        "Every disclosure shows an arrow and an action label (e.g. '▸ Show what's in a handoff prompt'); nothing is hover-only; every control is keyboard-operable with 44px targets; reveals and feedback appear in place without moving the page; aria-live on each reveal. Reduced motion respected.",
+        "Wording of the load-reason lines: they restate directives from the skill's references (learning-science-patterns, cognitive-design-patterns, widgets), which are not evidence. State them as what the design does, not as proven effects: avoid 'is what sticks' or 'beats' as certainties, and if ICAP is named, say its authors frame it as a hypothesis (c-12; review finding A-02).",
+        "Say 'diagram', never the older word for a framed figure (H-17); call larger figures 'Diagram I / II / III'. Diagram III is the full-size version of specimen 6 and Diagrams I and II of specimen 5. Live-LLM (Socratic, Feynman-style) elements are not built or mocked (I2); the page describes them in prose.",
+        "Tokens: --role-agent, --role-script, --role-human, --accent, --stroke, --hatch, --grid-line (graph-paper ruling for specimen cards, never behind text), --font-serif, --font-mono; --font-display only at ≥ 24px. Cards are flat, 2px corners at most, hairline border, no soft shadows. Scope all CSS under [data-widget=\"w-blocks\"]."
+      ]
+    }
+  }
+}

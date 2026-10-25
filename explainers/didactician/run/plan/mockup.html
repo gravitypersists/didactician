@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup: How Didactician teaches</title>
+<!--
+  Checkpoint wireframe. Low-fidelity in layout, but dressed in the visual direction from user
+  decision d-01 (classical treatise; chalkboard dark theme) so the look can be judged too.
+  Prose is draft wording; check prompts, options and answers are final.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4ecd8; --panel: #faf5e8; --ink: #231a12; --ink-2: #4a3b2c; --ink-3: #8a7862;
+    --line: #cbbd9f; --fill: #ece2c8; --accent: #b03a1e; --blue: #1f3a5f; --warn: #8a4b00; --ok: #2f5d2a;
+    --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px; --s6: 48px;
+    --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --display: "Cormorant SC", "Cormorant Garamond", Georgia, serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1d2620; --panel:#232e27; --ink:#ece6d6; --ink-2:#cfc8b6; --ink-3:#8f988c;
+            --line:#45524a; --fill:#2a362e; --accent:#f08a6c; --blue:#9cc0ea; --warn:#f0b35a; --ok:#9ad18f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.55 var(--serif); }
+  .bar { position: sticky; top: 0; z-index: 2; display: flex; gap: var(--s2); align-items: center; flex-wrap: wrap;
+         padding: var(--s1) var(--s2); background: var(--panel); border-bottom: 3px double var(--ink); font: 13px/1.4 var(--mono); }
+  .bar .sp { flex: 1; }
+  .bar button { font: inherit; padding: 4px 8px; border: 1px solid var(--ink-2); background: transparent; color: var(--ink); border-radius: 2px; cursor: pointer; min-height: 32px; }
+  .bar button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+  main { max-width: 1040px; margin: 0 auto; padding: var(--s4) var(--s2) var(--s6); }
+  body.mobile main { max-width: 360px; padding-left: 0; padding-right: 0; }
+  body.mobile .seg { grid-template-columns: 1fr; }
+  body.mobile .strip { grid-template-columns: repeat(4, 1fr); }
+  h1 { font: 700 44px/1.05 var(--display); letter-spacing: .02em; margin: 0; text-align: center; }
+  .rules { border-top: 3px solid var(--ink); border-bottom: 1px solid var(--ink); height: 6px; margin: var(--s2) 0; }
+  .sub { text-align: center; font-style: italic; color: var(--ink-2); margin: 0; }
+  .fleuron { text-align: center; color: var(--accent); font-size: 22px; margin: var(--s1) 0 0; }
+  h2 { font: 700 24px/1.2 var(--display); letter-spacing: .03em; margin: var(--s6) 0 var(--s1);
+       padding-bottom: 6px; border-bottom: 3px double var(--ink); }
+  .meta { color: var(--ink-2); font: 13px/1.5 var(--mono); }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 2px; padding: var(--s2); }
+  .seg { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--s2); margin-bottom: var(--s4);
+         padding-top: var(--s2); border-top: 1px solid var(--line); }
+  .seg header { grid-column: 1 / -1; display: flex; gap: var(--s1); align-items: baseline; flex-wrap: wrap; }
+  .seg header .id { font: 12px var(--mono); color: var(--ink-3); }
+  .seg header h3 { margin: 0; font: 700 22px/1.2 var(--display); letter-spacing: .02em; }
+  .seg header .sec { font: 700 22px var(--display); color: var(--accent); }
+  .tag { font: 11px/1 var(--mono); padding: 3px 6px; border: 1px solid var(--line); color: var(--ink-2); }
+  .intent { font-style: italic; color: var(--ink-2); margin: 0 0 var(--s1); }
+  .prose { font-size: 15px; }
+  .prose p { margin: 0 0 var(--s1); }
+  .prose ul { margin: 0 0 var(--s1); padding-left: 20px; }
+  .fig { border: 1px solid var(--ink-2); outline: 1px solid var(--ink-2); outline-offset: 3px; background:
+         repeating-linear-gradient(135deg, transparent 0 7px, color-mix(in srgb, var(--ink-3) 18%, transparent) 7px 8px), var(--panel);
+         padding: var(--s2); font-size: 14px; color: var(--ink); display: flex; flex-direction: column; gap: var(--s1); margin: 4px; }
+  .fig > * { background: var(--panel); }
+  .fig .kind { font: 700 15px var(--display); letter-spacing: .05em; color: var(--ink); display: flex; justify-content: space-between; gap: 8px; }
+  .fig .kind i { font: 12px var(--mono); color: var(--ink-3); font-style: normal; }
+  .check { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); padding: var(--s1) 0; margin-top: var(--s2); font-size: 15px; }
+  .check .kind { font: 700 15px var(--display); letter-spacing: .05em; color: var(--accent); }
+  .check ol { margin: 6px 0; padding-left: 0; list-style: none; }
+  .check li { border: 1px solid var(--line); padding: 6px 8px; margin: 4px 0; }
+  .check li.ok { border-color: var(--ok); }
+  .check .sol { font-size: 14px; color: var(--ink-2); }
+  .check .sol b { font-variant: small-caps; color: var(--ink); }
+  details.more { border: 1px dashed var(--ink-3); padding: 6px 8px; font-size: 14px; margin-top: 8px; }
+  .strip { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin: 6px 0; }
+  .node { border: 1.5px solid var(--ink); padding: 6px 2px; text-align: center; font: 12px/1.2 var(--mono); min-width: 0; overflow-wrap: anywhere; }
+  .node.script { border-color: var(--blue); color: var(--blue); clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%); background: color-mix(in srgb, var(--blue) 10%, var(--panel)); }
+  .node.human { border-color: var(--accent); color: var(--accent); border-radius: 999px; }
+  .node.dim { opacity: .4; }
+  .node.on { background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--accent) 22%, var(--panel)) 0 3px, var(--panel) 3px 6px); font-weight: 700; opacity: 1; }
+  .card { border: 1px solid var(--ink-2); font: 12px/1.45 var(--mono); padding: 6px 8px;
+          background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+          background-size: 16px 16px; background-color: var(--panel); }
+  .card b { display: block; border-bottom: 1px solid var(--ink-2); margin-bottom: 4px; }
+  .card span { background: var(--panel); }
+  pre { font: 12px/1.45 var(--mono); white-space: pre-wrap; margin: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: var(--s1); border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font: 700 14px var(--display); letter-spacing: .04em; color: var(--ink-2); border-bottom: 2px solid var(--ink); }
+  .swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sw { width: 112px; font: 11px/1.3 var(--mono); border: 1px solid var(--ink-2); }
+  .sw div { height: 32px; }
+  .needs-user { color: var(--warn); font-weight: 600; }
+  @media (max-width: 720px) { .seg { grid-template-columns: 1fr; } .strip { grid-template-columns: repeat(4, 1fr); } h1 { font-size: 34px; } }
+</style>
+</head>
+<body>
+<div class="bar">
+  <b>MOCKUP</b><span>How Didactician teaches</span><span class="sp"></span>
+  <button type="button" id="vw-desk" aria-pressed="true">desktop</button>
+  <button type="button" id="vw-mob" aria-pressed="false">mobile 360</button>
+</div>
+<main>
+  <section id="overview">
+    <div class="rules"></div>
+    <h1>How Didactician Teaches</h1>
+    <div class="rules"></div>
+    <p class="sub">Being an Account of a Machine that Plans Its Pages as Lessons</p>
+    <p class="fleuron" aria-hidden="true">❧</p>
+    <p class="meta" style="text-align:center">For Claude Code users who know skills and subagents (intermediate; new to learning science) · about 9 minutes · scrollytelling in two halves + short article segments · revised after your review (site-1)</p>
+    <div class="panel">
+      <p><b>Shape:</b> The first half is the pipeline process: a sticky pipeline canvas (Diagram I) walks through the 8 stages, each with its real artifact, then returns in a "why" mode (Diagram II) that overlays three design rules. The second half is the pedagogical motivations: cognitive load, built on your code example and one contrasting pair (Diagram III), then a gallery of the building blocks pages are made from, each one a small working example. Rejected: one long scrolly for everything (cognitive load would become something to watch, not predict), and keeping the old § 5 worked example (you found it confusing, H-29).</p>
+      <p><b>Objectives:</b></p>
+      <ul>
+        <li><b>o-1</b> Explain the pipeline at a high level and recognise each stage's artifact. <span class="meta">checks: none — the canvas keeps it all visible and returns twice; a stage-name quiz would test vocabulary</span></li>
+        <li><b>o-2</b> Explain why it's shaped this way: the orchestrator coordinates and never authors; agents communicate only through files in a fixed structure; you approve the plan before anything expensive. <span class="meta">checks: k-01 · now three rules: "scripts gate what's checkable" dropped (H-23)</span></li>
+        <li><b>o-3</b> Explain cognitive load (limited working memory; intrinsic vs. extraneous) and predict how a design choice moves it for a given reader. <span class="meta">checks: k-02</span></li>
+        <li><b>o-4 (changed, H-29; please confirm)</b> Recognise the building blocks Didactician composes pages from (progressive reveal, multiple choice, predict-then-reveal, think-then-reveal, step-through, contrasting cases, sandbox), say what each does for the reader's load, and know agents can go beyond them. <span class="meta">checks: k-05 · was: "how the designer turns load into page decisions: objectives, scope in ideas, cut list, checks and widgets"</span></li>
+      </ul>
+      <p class="meta">check_plan warning: 4 objectives for an 8-min piece (guide ≤ 3); kept per d-02. Estimated length about 9 minutes, under your ~10 ceiling; see "If it runs long" for what to cut first.</p>
+    </div>
+
+    <h2>Visual direction (from your note, d-01)</h2>
+    <div class="panel">
+      <p>A page from a 19th-century natural-philosophy treatise, explaining a modern machine. It is striking at the frontispiece and calm in the body. <b>Light theme = engraved book page; dark theme = chalkboard.</b> This mockup is wearing a rough version of both (switch your OS theme to see the chalkboard).</p>
+      <div class="swatches">
+        <div class="sw"><div style="background:#f4ecd8"></div>paper #f4ecd8</div>
+        <div class="sw"><div style="background:#231a12"></div>ink #231a12</div>
+        <div class="sw"><div style="background:#b03a1e"></div>rubric vermilion: active, human, exercises</div>
+        <div class="sw"><div style="background:#1f3a5f"></div>Prussian blue: scripts / gates</div>
+        <div class="sw"><div style="background:#1d2620"></div>chalkboard (dark)</div>
+      </div>
+      <ul class="prose" style="margin-top:12px">
+        <li>Small-caps display serif for titles and section heads (§ 1 … § 6) and a book serif for the body; mono for files, code and labels. The display face is only used large.</li>
+        <li>Figures are engraved <b>diagrams</b> ("Diagram I. The Apparatus, in Eight Stages"; renamed from "plate" everywhere, H-17): hairline double frames and crosshatched fills, with names written on the parts.</li>
+        <li>Artifact cards are lab-notebook specimens on graph paper. Checks are textbook exercises: "Problem 1 · Predict", and the answer comes under a "Solution." head. The building blocks in § 5 are "Specimen 1 … 7".</li>
+        <li>Out: pastels, rounded cards, soft shadows, gradients, emoji, faux-aged stains. Legibility outranks the look: no texture under text, and contrast holds in both themes.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="segments">
+    <h2>Segments</h2>
+    <p class="meta">Prose is draft wording: it shows what each segment says and in what order. The final prose is written for the reader at build time, and your wording comments (H-02, H-04, H-06…H-16, H-18…H-20, H-27) go straight to the builders. Check prompts, options and answers are final.</p>
+
+    <article class="seg" id="s-01">
+      <header><span class="sec">§ 1</span><span class="id">s-01</span><h3>How Didactician teaches</h3><span class="tag">hero → orientation</span><span class="tag">o-1</span></header>
+      <div>
+        <p class="intent">Within the first screen: what the skill is (a pipeline, not an input/output box), and the two halves of this page.</p>
+        <div class="prose">
+          <p><b>Standfirst (draft):</b> "Didactician is a Claude Code skill for explaining material that is hard to hold in your head. It is a pipeline of agents that plans each page as a lesson, built so that a human reviews the plan before anything is built and the page after. It is multi-agent and heavy on tokens: every stage gets a fresh agent, and two of them review the result. This page was built with it."</p>
+          <p><b>Orienting paragraph (draft):</b> "The first half is about the pipeline process. The second half explains the pedagogical motivations."</p>
+        </div>
+      </div>
+      <div class="fig">
+        <span class="kind">Frontispiece <i>no figure of its own</i></span>
+        Title between thick–thin rules, the italic subtitle, a fleuron, and the meta line "~9 min · for Claude Code users · built with Didactician". Diagram I (w-pipeline, overview state) starts directly below, so on desktop the whole 8-stage strip is on the first screen. At 360px: one column, and the diagram begins within one scroll.
+      </div>
+    </article>
+
+    <article class="seg" id="s-02">
+      <header><span class="sec">§ 2</span><span class="id">s-02</span><h3>The pipeline, one stage at a time</h3><span class="tag">whole first → step-through · B1</span><span class="tag">o-1</span></header>
+      <div>
+        <p class="intent">The whole pipeline as one picture, then each stage opened with the file it produces. Stages are not agents (H-21).</p>
+        <div class="prose">
+          <p><b>Step 0 (draft):</b> "Your main session is the orchestrator. It runs eight stages in order and moves each stage's files on to the next. Most stages are done by a fresh subagent; one is a script, and one is you."</p>
+          <ul>
+            <li><b>1 Intake</b>: the orchestrator turns your request into brief.md: audience, time, objectives.</li>
+            <li><b>2 Research</b>: a fresh researcher agent collects the facts and sources the rest of the pipeline works from.</li>
+            <li><b>3 Plan</b>: the instructional designer writes a learning plan, a wireframe mockup and a cut list.</li>
+            <li><b>4 You approve</b>: always. Approve, revise or rescope before anything is built.</li>
+            <li><b>5 Build</b>: a page builder, plus a fresh builder agent for each complex widget, like the diagram you're looking at.</li>
+            <li><b>6 Gate</b>: a Playwright script renders the page at 360, 768 and 1280px and fails it on overflow, broken arrows, console errors…</li>
+            <li><b>7 Review</b>: two reviewers, one for accuracy and one for teaching and UX, each in a fresh context.</li>
+            <li><b>8 Deliver</b>: a site/ folder for any static host, plus a log.md of everything that happened.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="fig">
+        <span class="kind">Diagram I · w-pipeline · "what" mode <i>complexity high</i></span>
+        <div class="strip" aria-label="sketch of the stage strip">
+          <div class="node dim">Intake</div><div class="node dim">Research</div><div class="node on">Plan</div><div class="node human dim">You</div>
+          <div class="node dim">Build</div><div class="node script dim">Gate</div><div class="node dim">Review</div><div class="node dim">Deliver</div>
+        </div>
+        <div class="card"><b>run/plan/learning-plan.md</b><pre><span>### s-04 — The idea underneath: cognitive load
+objectives: o-3
+readiness: novice · interactivity: high · max-elements: 3
+mode: concrete example (F-code) → rule → contrasting cases</span></pre></div>
+        Sticky canvas with an "orchestrator" bar above the strip; overview caption: "The orchestrator runs the stages and moves their files along" (replaces "Files, never chat"). One stage is inked in vermilion hatching, the rest faded; names always on the nodes. Rectangle = agent, hexagon (blue) = script, oval (vermilion) = you. On mobile: a 2×4 grid in snake order and a ≤ 4-line card, both in a sticky area ≤ 55vh.
+      </div>
+    </article>
+
+    <article class="seg" id="s-03">
+      <header><span class="sec">§ 3</span><span class="id">s-03</span><h3>Why it's built this way</h3><span class="tag">predict → 3 overlays · B1</span><span class="tag">o-2</span></header>
+      <div>
+        <p class="intent">Each structural choice prevents a failure the reader knows from their own agent work. Confront "self-review is enough".</p>
+        <div class="check">
+          <div class="kind">Problem 1 · Predict · k-01</div>
+          The page is built. Before it ships, which check would you trust most to catch a claim it got subtly wrong?
+          <ol>
+            <li>A) Ask the builder to re-read its page and double-check its claims. <span class="meta">(tempting)</span></li>
+            <li class="ok">B) A fresh reviewer that sees only the brief, the page and the fact base, not the builder's reasoning.</li>
+            <li>C) The Playwright gate: if it passes, the page is fine.</li>
+          </ol>
+          <div class="sol"><b>Solution.</b> B. The builder knows what it meant and reads that intent back into the text; LLM judges have been found to rate their own outputs higher than human annotators do (GPT-4, Llama 2). C checks only what a machine can check. Didactician runs C, then B. Whether that split beats one agent reviewing itself hasn't been measured; it's a hypothesis the design still has to test.</div>
+        </div>
+        <div class="prose" style="margin-top:12px">
+          <ul>
+            <li><b>Rule 1 · The orchestrator coordinates, never authors.</b> Your main session is your point of contact: it dispatches agents and records what they return. It never writes the page or judges it, so the reviewer and the author are never the same context.</li>
+            <li><b>Rule 2 · Agents communicate only through files.</b> Each agent gets a handoff prompt in and returns a report out, in a fixed format. Agents never talk to each other. Every prompt and report is kept, so a run can be audited and resumed.</li>
+            <li><b>Rule 3 · You approve the plan before anything expensive.</b> Checking the plan early is part of the design: a wrong premise caught here can't cascade through the build, the gate and the review, which saves the time and tokens of every later stage.</li>
+          </ul>
+          <p class="meta">Dropped (H-23, designer's call): "scripts gate what's checkable". The Gate stage and Problem 1's option C already show a machine checking rendering but not truth; the useful consequence, round caps that bound token spend, is one clause in § 6.</p>
+        </div>
+      </div>
+      <div class="fig">
+        <span class="kind">Diagram II · w-pipeline · "why" mode <i>complexity high</i></span>
+        The same strip from Diagram I. Three states. Rule 1: the orchestrator bar with dispatch lines down to each agent stage; on Review the label "fresh context: brief + page (+ facts or plan), not the builder's reasoning". Rule 2: on one dispatch line, a "handoff prompt" chip going down and a "report" chip coming back, labelled "prompt in · report out (fixed format)"; all artifact chips lit; no lines between agents; note "agents never talk to each other". Rule 3: the "You" node lit, a bracket over Build→Review: "expensive", with "a wrong premise caught here costs nothing downstream". Problem 1 sits above Rule 1 so the reader commits first.
+      </div>
+    </article>
+
+    <article class="seg" id="s-04">
+      <header><span class="sec">§ 4</span><span class="id">s-04</span><h3>The idea underneath: cognitive load</h3><span class="tag">example → rule → contrast · B4</span><span class="tag">o-3</span></header>
+      <div>
+        <p class="intent">Just enough theory to predict whether a design choice adds or removes load for a given reader.</p>
+        <div class="prose">
+          <p><b>Opening (your wording, H-25):</b> "Look at this expression: <code>total = sum(x for x in values if x &gt; 0)</code>. A non-programmer must track about ten separate tokens (total, =, sum, x, for, in, values, if, &gt;, 0), look up what each means, and work out how each connects to the next. An experienced developer reads it at a glance as one familiar pattern: sum the positive numbers. The code doesn't change. For the novice, tracing the syntax uses up working memory before they even work out what the line does. For the developer, long-term memory compresses the whole line into one chunk, leaving room to think about edge cases."</p>
+          <ul>
+            <li>New information passes through a working memory that is limited in capacity and duration. What's already in long-term memory comes back as a chunk, and the limit stops applying to it. (No number is given; the research behind this page doesn't support one.)</li>
+            <li><b>Intrinsic load</b>: how many elements of the material must be held together, relative to what you already know. Only sequencing changes it.</li>
+            <li><b>Extraneous load</b>: effort spent on the presentation rather than the content. This is the part design controls.</li>
+            <li>"Here is extraneous load you can feel: do the same lookup in both versions of Diagram III."</li>
+          </ul>
+          <p class="meta">The collapsed germane-load note is cut (H-28).</p>
+        </div>
+        <div class="check">
+          <div class="kind">Problem 2 · Predict · k-02</div>
+          Suppose this page stopped to explain, step by step, what a subagent is. Reader 1 has never used an AI coding agent. Reader 2 writes subagents every day. What happens to each reader's cognitive load?
+          <ol>
+            <li>A) Lower for both: more explanation always makes things easier. <span class="meta">(tempting)</span></li>
+            <li class="ok">B) Lower for Reader 1, higher for Reader 2.</li>
+            <li>C) Higher for both: it's extra paragraphs to read.</li>
+          </ol>
+          <div class="sol"><b>Solution.</b> B. It's the code line again. For Reader 2, "subagent" is already one chunk; walking through it gives them nothing new, but they still read it and check it against what they know, which is extraneous load. For Reader 1 the same paragraphs build the chunk they lack. Guidance that helps a novice can get in an expert's way (the expertise reversal effect). That's why Didactician fixes one audience per page, and why this page names subagents without explaining them.</div>
+        </div>
+      </div>
+      <div class="fig">
+        <span class="kind">Fig. 1 · F-code <i>static</i></span>
+        The expression set large in mono. Beneath it, two readings. "A non-programmer": the line broken into boxed tokens, labelled "about 10 separate pieces to look up and connect". "An experienced developer": the whole line under one bracket, labelled "one schema: sum the positive numbers". Caption: "The code doesn't change. What the reader already knows does." Side by side on desktop, stacked on mobile.
+        <span class="kind" style="margin-top:12px">Diagram III · F-split <i>static contrast</i></span>
+        Task above both: "Try it in A, then in B: what is the stage that writes findings.md called?" A: the 8 stages as numbered circles in the Diagram I layout with arrows, each circle with only its artifact filename beside it; a separate key underneath maps number → stage name. So the reader finds findings.md, reads "7", then searches the key. B: the same strip with name and artifact on each node; one glance. Caption: "Same information. In A your eyes go back and forth and you hold the number while you search the key; that's extraneous load." Side by side on desktop; stacked on mobile.
+      </div>
+    </article>
+
+    <article class="seg" id="s-05">
+      <header><span class="sec">§ 5</span><span class="id">s-05</span><h3>The building blocks</h3><span class="tag">specimen gallery → apply</span><span class="tag">o-4</span><span class="tag">new (H-29)</span></header>
+      <div>
+        <p class="intent">The blocks pages are built from, each one working on the page, with what it does for the reader's load; then: agents can go beyond them.</p>
+        <div class="prose">
+          <p><b>Opening (draft):</b> "Section 4 was the reason; these are the tools. The designer builds every page from blocks like these and picks each one for what it does to your load, not for decoration. Try them."</p>
+          <p><b>After Problem 3 (draft):</b> "These are the blocks the skill's references describe, not a fixed menu. The designer picks the page's shape freely, and builders can make any widget the plan calls for: completion problems, where you fill in a blanked step, are another. You could imagine going further, with elements driven by a live model: a Socratic tutor that questions your answer, or a Feynman-style challenge where you explain the idea back in your own words and get it critiqued. Didactician's pages are static files with no backend, so these would be a different kind of page; this one has none."</p>
+        </div>
+        <div class="check">
+          <div class="kind">Problem 3 · Apply · k-05</div>
+          You want to teach new backend developers what happens during a TCP connection handshake: a fixed sequence of messages, each depending on the last. Which building block should carry it?
+          <ol>
+            <li>A) A sandbox with sliders for every parameter, so there's lots to explore. <span class="meta">(tempting)</span></li>
+            <li class="ok">B) A step-through, one message at a time, with a prediction before the step that surprises people.</li>
+            <li>C) A multiple-choice quiz at the end of a page of prose.</li>
+          </ol>
+          <div class="sol"><b>Solution.</b> B. A fixed sequence is a process, and a process maps onto a step-through: one change per step, the rest dimmed. A prediction at the surprising step makes it Constructive rather than just clicking "next". A is tempting because it's the most interactive, but more controls are more elements to hold, and a sandbox suits a system you explore, not a sequence you follow: interactive isn't the same as effective. C checks recall afterwards but leaves the hard part to prose.</div>
+        </div>
+      </div>
+      <div class="fig">
+        <span class="kind">w-blocks · 7 specimen cards <i>complexity high</i></span>
+        A 2-column grid (one column on mobile). Each card: "Specimen N · Name", a working example, and one line on what it does for load. All examples reuse the § 4 expression (values = [3, -1, 4, 0]) or the pipeline.
+        <ol style="margin:0;padding-left:18px">
+          <li><b>Progressive reveal</b>: "▸ Show what's in a handoff prompt" opens 4 lines (role, task, inputs, outputs). <i>Optional depth stays out of your working memory until you ask; never hide what every reader needs.</i></li>
+          <li><b>Multiple choice</b>: "Which does a reviewer never see?" the brief / the page / the builder's report ✓. <i>Recalling beats rereading; the explanation of the wrong answer is the payoff.</i></li>
+          <li><b>Predict, then reveal</b>: "What is total?" 6 / 7 ✓ / 8; the reveal shows -1 and 0 filtered out. <i>Committing first means a wrong guess surprises you, and surprise sticks.</i></li>
+          <li><b>Think, then reveal</b>: "Why might the agent that wrote a page miss its own mistakes?" [Show a model answer]; no text box. <i>You generate the answer in your head; no typing.</i></li>
+          <li><b>Step-through</b>: the expression in 3 steps, ‹ 2 of 3 ›: filter → sum → assign; the active part highlighted. <i>One change at a time; Diagrams I–II are the full-size version.</i></li>
+          <li><b>Contrasting cases</b>: two tiny line charts, legend vs. labels on the lines, "Which series is higher in March?" <i>Two cases differing in one feature show what matters; Diagram III is the full-size version.</i></li>
+          <li><b>Sandbox, prediction first</b>: a slider for t in <code>if x &gt; t</code> (0…5), total updating live; "Before you drag: as t rises, when does total first drop below 7?" (t = 3). <i>Dragging alone is Active; predicting first makes it Constructive.</i></li>
+        </ol>
+        Every disclosure shows an arrow and an action label (H-27); reveals appear in place; 44px targets; nothing hover-only.
+      </div>
+    </article>
+
+    <article class="seg" id="s-06">
+      <header><span class="sec">§ 6</span><span class="id">s-06</span><h3>What you get</h3><span class="tag">recap → next step</span><span class="tag">o-1</span><span class="tag">o-2</span></header>
+      <div>
+        <p class="intent">Close the loop: the pipeline in one line, this page's real run folder, the honest limits, and the install line.</p>
+        <div class="prose">
+          <p><b>Recap (draft):</b> "You bring a well-thought-through request, approve a plan, review the page, and get a folder you can deploy, next to a folder that records how it was made."</p>
+          <p><b>Honest limits (draft):</b> whether the separate reviewers beat one agent checking itself is untested; a script caps how many rounds and agents a run may use, which bounds the token spend, but only as long as the orchestrator follows the skill's instructions.</p>
+          <p><b>Install (draft):</b> copy the skill into <code>.claude/skills/didactician/</code>, then <code>/didactician explain X, for Y, ~N minutes</code>.</p>
+        </div>
+      </div>
+      <div class="fig">
+        <span class="kind">Fig. 2 · F-tree <i>static</i></span>
+<pre>explainers/didactician/
+├── site/            ← this page
+└── run/
+    ├── log.md       ← start here
+    ├── brief.md  decisions.md
+    ├── research/  plan/
+    ├── handoffs/NN-role.prompt.md / .report.md
+    ├── history/  gate/
+    └── review/</pre>
+        Taken from the final folder at build time. Overflow is contained on narrow screens.
+      </div>
+    </article>
+  </section>
+
+  <section id="cuts">
+    <h2>Cut list (researched or planned, deliberately left out)</h2>
+    <table>
+      <thead><tr><th>What</th><th>Why it's out</th><th>Cost to add back</th></tr></thead>
+      <tbody>
+        <tr><td>Old § 5: this plan's s-04 entry mapped onto the page (Plate IV / w-plan2page)</td><td>User, human review H-29</td><td>~1.5 min; plan vocabulary first</td></tr>
+        <tr><td>Old Problem 3 (k-04, slider: Active vs. Constructive)</td><td>User, human review H-29; its point now lives on Specimen 7</td><td>One check card</td></tr>
+        <tr><td>The cut-list card and the "scope in ideas" sentence (c-11)</td><td>User, human review H-29; no longer in o-4</td><td>One sentence + small card</td></tr>
+        <tr><td>"Objectives as what the reader can do" (old o-4)</td><td>User, human review H-29</td><td>One sentence in § 5</td></tr>
+        <tr><td>The germane-load note (c-09)</td><td>User, human review H-28</td><td>A plain two-sentence aside with a visible affordance</td></tr>
+        <tr><td>Rule 3, scripts gate what's checkable (c-05)</td><td>Designer's call on H-23: implementation detail for this reader</td><td>A fourth "why" step (~30 s)</td></tr>
+        <tr><td>A working live-LLM element</td><td>I2: static pages, no backend; described as a possibility only</td><td>Needs you to relax I2</td></tr>
+        <tr><td>Completion problems (B3), guidance continuum, 4C/ID</td><td>Frameworks rather than blocks to try in seconds; completion named in one clause</td><td>An eighth specimen (~30 s)</td></tr>
+        <tr><td>A precise working-memory number ("2–3 elements")</td><td>Not verified by the sources read</td><td>Researcher fill-in, then one sentence</td></tr>
+        <tr><td>Redundancy, signalling, segmenting, worked examples</td><td>One effect (split attention) makes the idea predictable</td><td>~30–45 s and a small figure each</td></tr>
+        <tr><td>Learning-styles debunk</td><td>Not a belief this audience brings here</td><td>A short aside in § 4</td></tr>
+        <tr><td>Effect sizes, ICAP evidence base</td><td>Not verified against the originals</td><td>Researcher fill-in, caption line</td></tr>
+        <tr><td>Research depth levels and caps; invariant list, verify.mjs checks</td><td>Operational or out of scope per the brief</td><td>One line on a step card; a disclosure on Gate</td></tr>
+        <tr><td>Namespace writes, history/ snapshots; planner/builder-split nuance</td><td>Adds mechanism; maintainer's nuance</td><td>One sentence each</td></tr>
+        <tr><td>Intake questions, deltas, escalations; install walkthrough</td><td>Rare touchpoints; out of scope</td><td>One line per card; a "Setup" disclosure</td></tr>
+        <tr><td>The word-gate story and its check (old k-03, x-04)</td><td>User removed at checkpoint (d-03)</td><td>Only with your say-so</td></tr>
+        <tr><td>Confronting "hard rules make agents reliable" and "more content is more value"</td><td>Only the removed k-03 and Rule 3 touched them</td><td>A think-then-reveal in § 3 (~30 s)</td></tr>
+      </tbody>
+    </table>
+
+    <h2>If it runs long (in the plan now; cut in this order)</h2>
+    <p class="meta">About 9 minutes after this revision. The prose is written at whatever length clarity needs; if the built page runs long, you pick cuts from here.</p>
+    <table>
+      <thead><tr><th>#</th><th>Cut</th><th>What the reader loses</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Specimen 7 (sandbox)</td><td>Active vs. Constructive shown live; Specimen 3 still shows committing first</td></tr>
+        <tr><td>2</td><td>Specimen 4 (think, then reveal)</td><td>The no-text-box variant</td></tr>
+        <tr><td>3</td><td>Specimens 5 and 6 → one-line pointers to Diagrams I–II and III</td><td>The miniatures; the full-size versions remain</td></tr>
+        <tr><td>4</td><td>Fig. 2 (run-folder tree) → a one-line pointer</td><td>The closing proof that everything is a file; Rule 2 still makes the point</td></tr>
+        <tr><td>5</td><td>Live-LLM possibilities → one sentence</td><td>The Socratic and Feynman examples; "agents can go beyond these" stays</td></tr>
+      </tbody>
+    </table>
+    <p class="meta">Not cuttable without dropping an objective: Diagram I, Problem 1 + Diagram II, Fig. 1 + Diagram III + Problem 2, Specimens 1–3 + Problem 3.</p>
+  </section>
+
+  <section id="assets">
+    <h2>Third-party assets</h2>
+    <table>
+      <thead><tr><th>#</th><th>Asset</th><th>Used in</th><th>Licence</th><th>Clearance</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Google Fonts typefaces (e.g. Cormorant SC, Source Serif 4), loaded from the CDN, not media</td><td>whole page</td><td>SIL Open Font License</td><td>cleared by licence (OFL permits commercial use)</td></tr>
+      </tbody>
+    </table>
+    <p class="meta">No third-party images or media: every diagram and figure is drawn as SVG/HTML. The engraved style is an imitation in line work, not reproduced period engravings.</p>
+  </section>
+</main>
+<script>
+  const d = document.getElementById('vw-desk'), m = document.getElementById('vw-mob');
+  function set(mobile) {
+    document.body.classList.toggle('mobile', mobile);
+    d.setAttribute('aria-pressed', String(!mobile)); m.setAttribute('aria-pressed', String(mobile));
+  }
+  d.onclick = () => set(false); m.onclick = () => set(true);
+</script>
+</body>
+</html>

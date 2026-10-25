@@ -1,0 +1,29 @@
+{
+  "data_origins": [],
+  "cdn": ["https://fonts.googleapis.com", "https://fonts.gstatic.com"],
+  "widgets": {
+    "w-pipeline": {
+      "segment": "s-02, s-03",
+      "mount": "[data-widget=\"w-pipeline\"]",
+      "mounts": {
+        "what": { "segment": "s-02", "selector": "[data-widget=\"w-pipeline\"][data-mode=\"what\"]", "states": "data-step 0 (overview) … 8 (one stage each)", "initial": "0" },
+        "why":  { "segment": "s-03", "selector": "[data-widget=\"w-pipeline\"][data-mode=\"why\"]", "states": "data-step 1…4 = rules W1…W4 (data-rule on the step)", "initial": "\"\" (no step reached yet: plain pipeline, no overlay)" }
+      },
+      "size": {
+        "desktop": "≥ 900px: left 3/5 of the .d-wide scrolly (≈ 540–570px wide); mount min-height 480px (what) / 420px (why); sticky canvas max-height 84vh",
+        "mobile": "< 900px: full column width (≥ 300px at 360); mount min-height min(330px, 55vh − 56px) (what) / min(300px, 55vh − 56px) (why); the sticky canvas (plate head + mount) is capped at 55vh; check landscape 740×360"
+      },
+      "files": ["index.js", "index.css"],
+      "cdn": [],
+      "data_origins": [],
+      "contract": [
+        "Two mounts share the id w-pipeline (one widget folder, two modes), distinguished by data-mode=\"what\" | \"why\". kit/widget.js's Didactician.widget() only initialises the FIRST matching mount, so index.js must init each mount itself (e.g. document.querySelectorAll('[data-widget=\"w-pipeline\"]')).",
+        "The page owns the scroll steps (prose in .d-step[data-step] beside/below each mount) and a driver in assets/page.js. On change it sets data-active-step on the mount and dispatches CustomEvent 'didactician:step' on the mount with detail { step, mode, rule, el }. Read data-active-step at init (the widget may load after the first event).",
+        "The plate frame and the plate title (Plate I / Plate II) are outside the mount; draw only the strip, card and overlays inside it.",
+        "Tokens: role colours are --role-agent (ink), --role-script (= --c1, Prussian blue), --role-human (= --c2 = --accent, vermilion). Engraving stroke width is var(--stroke) (thicker in the dark chalkboard theme). --hatch is a ready-made hatching colour; --grid-line is the graph-paper ruling for specimen cards. Fonts: --font-serif, --font-mono; --font-display only at ≥ 24px.",
+        "Stage kinds as in the skill README: Intake, Research, Plan, Build, Review = agent (rectangle); Gate = script (hexagon); You approve, Deliver = human (rounded pill). Step 0 prose says: 'rectangles are agents, the hexagon is a script, and the rounded stages are where you come in.'",
+        "Plate III in s-04 draws the same 8 stages with these artifact names: brief.md, facts.md, learning-plan.md, decisions.md, site/, page-round-N.json, findings.md, log.md. Keep the card headers consistent with them."
+      ]
+    }
+  }
+}

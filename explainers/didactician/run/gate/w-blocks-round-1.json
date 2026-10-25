@@ -1,0 +1,107 @@
+{
+  "scope": "w-blocks",
+  "round": 1,
+  "when": "2026-10-25T19:54:57.269Z",
+  "pass": true,
+  "checks": [
+    {
+      "id": "overflow",
+      "invariant": "I1",
+      "title": "No horizontal overflow",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "static",
+      "invariant": "I2",
+      "title": "Static only: no runtime calls to undeclared origins",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "media",
+      "invariant": "I3",
+      "title": "Third-party media cleared and attributed",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "replay",
+      "invariant": "I4",
+      "title": "Finite animations have replay",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "carousel",
+      "invariant": "I6",
+      "title": "Carousels do not reflow",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "markers",
+      "invariant": "I7",
+      "title": "SVG markers resolve and are not clipped",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "relative",
+      "invariant": "—",
+      "title": "Relative URLs only",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "console",
+      "invariant": "—",
+      "title": "No console errors",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "resources",
+      "invariant": "—",
+      "title": "All resources load",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "placeholders",
+      "invariant": "—",
+      "title": "No placeholders or empty mounts",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "legibility",
+      "invariant": "—",
+      "title": "SVG/canvas text readable at this width (warn only)",
+      "status": "warn",
+      "details": [
+        "[360px] div.wb-body > div.wb-charts:nth-child(2) > figure.wb-fig:nth-child(1) > svg.wb-chart:nth-child(2): text renders at 10.0px (\"0\"); re-layout for narrow screens (graphics.md \"Mobile diagrams\")",
+        "[360px] div.wb-body > div.wb-charts:nth-child(2) > figure.wb-fig:nth-child(2) > svg.wb-chart:nth-child(2): text renders at 10.0px (\"0\"); re-layout for narrow screens (graphics.md \"Mobile diagrams\")"
+      ]
+    },
+    {
+      "id": "pending",
+      "invariant": "—",
+      "title": "Widgets not built yet (page phase only)",
+      "status": "pass",
+      "details": []
+    }
+  ],
+  "report": {
+    "widths": [
+      360,
+      768,
+      1280
+    ],
+    "reading_minutes": 12.4,
+    "budget_minutes": 8,
+    "weight_kb": 341,
+    "requests": 20
+  },
+  "failing_ids": []
+}

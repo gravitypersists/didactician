@@ -1,0 +1,311 @@
+{
+  "version": 1,
+  "slug": "didactician",
+  "created": "2026-10-25T09:28:58-04:00",
+  "depth": "light",
+  "minutes": 8,
+  "stage": "build",
+  "caps": {
+    "spawns": 18,
+    "agent_minutes": 135,
+    "loops": {
+      "research": 2,
+      "checkpoint": 4,
+      "gate": 6,
+      "review": 2
+    }
+  },
+  "seq": 14,
+  "dispatches": [
+    {
+      "nn": 1,
+      "role": "researcher",
+      "loop": "research",
+      "label": "research",
+      "writes": [
+        "run/research"
+      ],
+      "exclude": [],
+      "opened": "2026-10-25T09:29:19-04:00",
+      "closed": "2026-10-25T09:35:19-04:00",
+      "status": "done_with_concerns",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 9
+    },
+    {
+      "nn": 2,
+      "role": "instructional-designer",
+      "loop": "checkpoint",
+      "label": "plan",
+      "writes": [
+        "run/plan"
+      ],
+      "exclude": [],
+      "opened": "2026-10-25T09:35:20-04:00",
+      "closed": "2026-10-25T09:42:39-04:00",
+      "status": "done_with_concerns",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 10
+    },
+    {
+      "nn": 3,
+      "role": "instructional-designer",
+      "loop": "checkpoint",
+      "label": "revise-k03",
+      "writes": [
+        "run/plan"
+      ],
+      "exclude": [],
+      "opened": "2026-10-25T10:30:40-04:00",
+      "closed": "2026-10-25T10:32:19-04:00",
+      "status": "done_with_concerns",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 8
+    },
+    {
+      "nn": 4,
+      "role": "page-builder",
+      "loop": "gate:page",
+      "label": "build-page",
+      "writes": [
+        "site"
+      ],
+      "exclude": [
+        "site/widgets/*/*"
+      ],
+      "opened": "2026-10-25T10:32:19-04:00",
+      "closed": "2026-10-25T10:49:33-04:00",
+      "status": "done_with_concerns",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 47
+    },
+    {
+      "nn": 5,
+      "role": "widget-builder",
+      "loop": "gate:w-pipeline",
+      "label": "w-pipeline",
+      "writes": [
+        "site/widgets/w-pipeline"
+      ],
+      "exclude": [],
+      "opened": "2026-10-25T10:49:34-04:00",
+      "closed": "2026-10-25T11:04:31-04:00",
+      "status": "done_with_concerns",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 21
+    },
+    {
+      "nn": 6,
+      "role": "accuracy-reviewer",
+      "loop": "review:accuracy",
+      "label": "review-acc-1",
+      "writes": [
+        "run/review/round-1"
+      ],
+      "exclude": [],
+      "opened": "2026-10-25T11:05:01-04:00",
+      "closed": "2026-10-25T11:08:49-04:00",
+      "status": "done",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 54
+    },
+    {
+      "nn": 7,
+      "role": "pedagogy-ux-reviewer",
+      "loop": "review:pedagogy-ux",
+      "label": "review-pux-1",
+      "writes": [
+        "run/review/round-1",
+        "run/screenshots/probe"
+      ],
+      "exclude": [],
+      "opened": "2026-10-25T11:05:02-04:00",
+      "closed": "2026-10-25T11:11:18-04:00",
+      "status": "done_with_concerns",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 60
+    },
+    {
+      "nn": 8,
+      "role": "page-builder",
+      "loop": "gate:page",
+      "label": "fix-r1-page",
+      "writes": [
+        "site"
+      ],
+      "exclude": [
+        "site/widgets/*/*"
+      ],
+      "opened": "2026-10-25T11:11:27-04:00",
+      "closed": "2026-10-25T11:15:56-04:00",
+      "status": "done_with_concerns",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 35
+    },
+    {
+      "nn": 9,
+      "role": "widget-builder",
+      "loop": "gate:w-pipeline",
+      "label": "fix-r1-widget",
+      "writes": [
+        "site/widgets/w-pipeline"
+      ],
+      "exclude": [],
+      "opened": "2026-10-25T11:11:27-04:00",
+      "closed": "2026-10-25T11:15:44-04:00",
+      "status": "done",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 34
+    },
+    {
+      "nn": 10,
+      "role": "instructional-designer",
+      "loop": "checkpoint",
+      "label": "revise-human-site-1",
+      "writes": [
+        "run/plan"
+      ],
+      "exclude": [],
+      "opened": "2026-10-25T15:30:27-04:00",
+      "closed": "2026-10-25T15:40:13-04:00",
+      "status": "done_with_concerns",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 8
+    },
+    {
+      "nn": 11,
+      "role": "page-builder",
+      "loop": "gate:page",
+      "label": "human-site-1",
+      "writes": [
+        "site"
+      ],
+      "exclude": [
+        "site/widgets/*/*"
+      ],
+      "opened": "2026-10-25T15:41:26-04:00",
+      "closed": "2026-10-25T15:49:52-04:00",
+      "status": "done_with_concerns",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 46
+    },
+    {
+      "nn": 12,
+      "role": "widget-builder",
+      "loop": "gate:w-pipeline",
+      "label": "human-site-1",
+      "writes": [
+        "site/widgets/w-pipeline"
+      ],
+      "exclude": [],
+      "opened": "2026-10-25T15:41:26-04:00",
+      "closed": "2026-10-25T15:47:39-04:00",
+      "status": "done",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 40
+    },
+    {
+      "nn": 13,
+      "role": "widget-builder",
+      "loop": "gate:w-blocks",
+      "label": "build-w-blocks",
+      "writes": [
+        "site/widgets/w-blocks"
+      ],
+      "exclude": [],
+      "opened": "2026-10-25T15:49:52-04:00",
+      "closed": "2026-10-25T15:57:34-04:00",
+      "status": "done_with_concerns",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 37
+    },
+    {
+      "nn": 14,
+      "role": "page-builder",
+      "loop": "gate:page",
+      "label": "w-blocks-height",
+      "writes": [
+        "site"
+      ],
+      "exclude": [
+        "site/widgets/*/*"
+      ],
+      "opened": "2026-10-25T15:57:34-04:00",
+      "closed": "2026-10-25T15:58:35-04:00",
+      "status": "done",
+      "ns_ok": true,
+      "pivot": false,
+      "reason": null,
+      "changed": 10
+    }
+  ],
+  "loops": {
+    "research": 1,
+    "checkpoint": 3,
+    "gate:page": 4,
+    "gate:w-pipeline": 3,
+    "review:accuracy": 1,
+    "review:pedagogy-ux": 1,
+    "gate:w-blocks": 1
+  },
+  "gate_history": {
+    "gate:page": [
+      [
+        "markers: #w-plan2page > div.p2p-stage:nth-child(1) > svg.p2p-wire:nth-child(3) > path:nth-child(3): marker-end → url(\"#d-ah-6axrn"
+      ],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    "gate:w-pipeline": [
+      [],
+      [],
+      [],
+      [
+        "console: [360, 768, 1280px] Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "resources: [360, 768, 1280px] http://127.0.0.1:54574/__didactician/site/widgets/w-blocks/index.css → HTTP 404"
+      ]
+    ],
+    "gate:w-blocks": [
+      [],
+      [],
+      []
+    ]
+  },
+  "noprogress": {}
+}

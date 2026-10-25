@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Didactician Teaches</title>
+<meta name="description" content="How the Didactician skill for Claude Code turns “explain X to Y” into an explainer page: an eight-stage multi-agent pipeline with a human in the loop, why it is shaped that way, and the cognitive-load ideas and building blocks that make its pages teach.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/components.css">
+<link rel="stylesheet" href="assets/treatise.css">
+<link rel="stylesheet" href="widgets/w-pipeline/index.css">
+<link rel="stylesheet" href="widgets/w-blocks/index.css">
+</head>
+<body class="d-body">
+<a class="skip" href="#main">Skip to the text</a>
+
+<!-- ============================================================ s-01 · frontispiece -->
+<header class="d-hero frontis" id="s-01">
+  <div class="rule-tt" aria-hidden="true"></div>
+  <h1>How Didactician Teaches</h1>
+  <div class="rule-tt flip" aria-hidden="true"><span class="fleuron">❧</span></div>
+  <p class="subtitle">Being an Account of a Machine that Plans Its Pages as Lessons</p>
+  <p class="meta-line"><span>About 9 minutes</span><span>for Claude Code users</span><span>built with Didactician</span></p>
+  <div class="hero-text">
+    <p class="standfirst">Didactician is a Claude Code skill for explaining material that is hard to hold in your head. It is a pipeline of agents that plans each page as a lesson, built so that a human reviews the plan before anything is built and the page after it. It is multi-agent and heavy on tokens: most stages get a fresh agent of their own, and two more review the result. This page was built with it.</p>
+    <p><span class="runin">§ 1.</span>The first half is about the pipeline process. The second half explains the pedagogical motivations.</p>
+  </div>
+</header>
+
+<div class="d-page">
+  <aside class="d-rail" data-toc data-minutes="9"></aside>
+  <main class="d-main" id="main">
+    <details class="d-toc-mobile" data-toc-mobile></details>
+
+    <!-- ============================================================ s-02 · the pipeline -->
+    <section id="s-02" aria-labelledby="h-s02">
+      <h2 id="h-s02"><span class="sec">§ 2</span> The Pipeline, One Stage at a Time</h2>
+
+      <div class="d-scrolly d-wide" data-scrolly="what">
+        <div class="d-scrolly-canvas">
+          <figure class="diagram">
+            <div class="diagram-inner">
+              <figcaption class="diagram-head"><span>Diagram I. The Apparatus, in Eight Stages</span><span class="no">Diag. I</span></figcaption>
+              <div data-widget="w-pipeline" data-mode="what" data-active-step="0" role="region" aria-label="Diagram I: the eight-stage pipeline and the file each stage produces"></div>
+            </div>
+          </figure>
+        </div>
+        <div class="d-scrolly-steps">
+          <div class="d-step" data-step="0">
+            <p class="step-kicker"><b>The whole apparatus</b></p>
+            <p>Your main session is the orchestrator. It is your point of contact, and it runs the eight stages in order, moving each stage’s files on to the next. Most stages are done by a fresh subagent; one is a script, and one is you.</p>
+            <p>The shape of a stage tells you who does the work: rectangles are agents, the hexagon is a script, and the rounded stages are where you come in. Every stage leaves a file behind that you can open and read.</p>
+          </div>
+          <p class="scroll-cue" aria-hidden="true">Scroll <span>↓</span></p>
+          <div class="d-step" data-step="1">
+            <p class="step-kicker"><b>Stage 1</b> · Intake <span class="file">brief.md</span></p>
+            <p>The orchestrator turns your request into a brief: who the reader is, how long they have, and what they should be able to do afterwards. Every later stage works from the brief, so a well-reasoned request pays off here.</p>
+            <p>The orchestrator will ask you a question only when it can’t infer the answer.</p>
+          </div>
+          <div class="d-step" data-step="2">
+            <p class="step-kicker"><b>Stage 2</b> · Research <span class="file">facts.md</span></p>
+            <p>A fresh researcher agent has one job: to collect the facts and sources that the rest of the pipeline is driven from. It stops at a cap, and every claim it keeps is tied to an objective and recorded with its source, a quote and a confidence.</p>
+            <p>Things that are true but not needed go to a parking lot, and the raw reading never enters the context that writes the page.</p>
+          </div>
+          <div class="d-step" data-step="3">
+            <p class="step-kicker"><b>Stage 3</b> · Plan <span class="file">learning-plan.md</span></p>
+            <p>An instructional designer turns the brief and the facts into a learning plan: what each section is for, how it is laid out, and where the reader is asked to think. It also draws a wireframe mockup and writes a cut list of what it left out.</p>
+            <p>This is the stage that makes the output teach. The second half of this page is about the thinking behind it.</p>
+          </div>
+          <div class="d-step" data-step="4">
+            <p class="step-kicker"><b>Stage 4</b> · You approve <span class="file">decisions.md</span></p>
+            <p>Always, and before anything is built. You open the mockup, read the objectives and the cut list, then approve, revise or rescope.</p>
+            <p>Your answers are written down as decisions that later stages must follow, and which also show up in the audit trail.</p>
+          </div>
+          <div class="d-step" data-step="5">
+            <p class="step-kicker"><b>Stage 5</b> · Build <span class="file">site/</span></p>
+            <p>A page builder agent writes the page: the prose, the figures and the exercises. This is where we also build widgets. The visualization you are looking at now is one of these widgets. Each widget gets a fresh builder agent.</p>
+            <p>Every agent works from the approved plan and the fact base, not from a conversation.</p>
+          </div>
+          <div class="d-step" data-step="6">
+            <p class="step-kicker"><b>Stage 6</b> · Gate <span class="file">page-round-N.json</span></p>
+            <p>A script, <code>verify.mjs</code>, opens the page in a real browser through Playwright at 360, 768 and 1280 pixels wide, and fails it on a fixed list of things a machine can check, such as horizontal overflow, broken resources and console errors.</p>
+            <p>A failure sends the page back to the builder, for a limited number of rounds.</p>
+          </div>
+          <div class="d-step" data-step="7">
+            <p class="step-kicker"><b>Stage 7</b> · Review <span class="file">findings.md</span></p>
+            <p>Two reviewers check the finished page, each starting in a fresh context and never seeing the builder’s report. One checks accuracy: that every claim on the page is supported by the fact base. The other checks the teaching and the UX: whether the page will actually teach its reader, and whether it is clear to use on a phone and a desktop.</p>
+            <p>Each finding gets an ID, and blocking ones go back to the builder before anything ships.</p>
+          </div>
+          <div class="d-step" data-step="8">
+            <p class="step-kicker"><b>Stage 8</b> · Deliver <span class="file">site/ + log.md</span></p>
+            <p>You get <code>site/</code>, a static folder ready for any static host. Beside it sits <code>run/</code>, the record of the whole run, starting with <code>log.md</code>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ s-03 · why -->
+    <section id="s-03" aria-labelledby="h-s03">
+      <h2 id="h-s03"><span class="sec">§ 3</span> Why It’s Built This Way</h2>
+      <p>None of those stages is unusual on its own. What matters is the shape. Each part of the pipeline exists to prevent a failure you have probably met in your own agent work. Start with checking, because a page that teaches something false is worse than no page at all.</p>
+
+      <div class="d-check" data-check="k-01">
+        <p class="d-check-kind">Problem 1 <span>· Predict</span></p>
+        <p class="d-check-prompt" id="k01-q">After the build step, the page is finished. Before it ships, which check would you trust most to catch a claim it got subtly wrong?</p>
+        <div class="d-options" role="group" aria-labelledby="k01-q">
+          <button type="button" class="d-option" aria-pressed="false"><span class="ltr">A</span><span>Have the builder re-check every claim against the fact base before it finishes.</span></button>
+          <button type="button" class="d-option" aria-pressed="false" data-correct><span class="ltr">B</span><span>A second agent that reads only the brief, the fact base and the page.</span></button>
+          <button type="button" class="d-option" aria-pressed="false"><span class="ltr">C</span><span>The Playwright gate, which must pass at every screen width.</span></button>
+        </div>
+        <p class="d-check-hint">Pick one to see the solution.</p>
+        <div class="d-feedback" hidden tabindex="-1">
+          <p><span class="solution">Solution.</span>B. Option A is cheap and tempting, but the builder knows what it meant and reads that intent back into the text. <a href="https://arxiv.org/abs/2404.13076">Studies of LLM judges</a> also find they rate their own outputs higher than human annotators do (shown on GPT-4 and Llama 2).</p>
+          <p>C only checks what a machine can check, such as overflow, broken arrowheads and console errors, never whether a sentence is true. Didactician runs C, then B. Whether that split beats one agent reviewing itself hasn’t been measured; it is a hypothesis the design still has to test.</p>
+        </div>
+      </div>
+
+      <p>The independence you just chose is the first of three rules the pipeline is built on. Diagram II brings back the apparatus from Diagram I, and as you scroll, each rule is drawn on the part of it that the rule protects, so you can see what would go wrong without it.</p>
+
+      <div class="d-scrolly d-wide" data-scrolly="why">
+        <div class="d-scrolly-canvas">
+          <figure class="diagram">
+            <div class="diagram-inner">
+              <figcaption class="diagram-head"><span>Diagram II. The Same Apparatus, with Its Rules</span><span class="no">Diag. II</span></figcaption>
+              <div data-widget="w-pipeline" data-mode="why" data-active-step="" role="region" aria-label="Diagram II: three design rules drawn onto the pipeline"></div>
+            </div>
+          </figure>
+        </div>
+        <div class="d-scrolly-steps">
+          <div class="d-step" data-step="1" data-rule="W1">
+            <p class="step-kicker"><b>Rule 1</b> · The orchestrator coordinates, never authors</p>
+            <p>Your main session is the orchestrator. It acts as your point of communication, and it dispatches agents, recording what they return. It never writes the content, the plan, the site code or a review verdict.</p>
+            <p>Doing the work in separate, fresh contexts keeps two things apart. A reviewer is never the author of the page it judges, so it reads the page without the author’s reasoning in its head. And the raw research stays with the researcher, so the context that writes the prose isn’t crowded with material it doesn’t need.</p>
+          </div>
+          <div class="d-step" data-step="2" data-rule="W2">
+            <p class="step-kicker"><b>Rule 2</b> · Agents communicate only through files</p>
+            <p>Agents never talk to each other. Each one is handed a prompt file and returns a report file, both in a fixed structure, and the orchestrator carries the files between them. Each prompt and its report are saved as a pair under <code>run/handoffs/</code>.</p>
+            <p>Afterwards you can read exactly what every agent was asked and what report it returned, so a run can be audited and resumed.</p>
+          </div>
+          <div class="d-step" data-step="3" data-rule="W3">
+            <p class="step-kicker"><b>Rule 3</b> · You approve before anything expensive</p>
+            <p>Checking the plan early is part of the design. A wrong premise in the plan is the most expensive error in the system, because the build, the gate and the review would all be built on top of it.</p>
+            <p>So the pipeline puts a human check on the plan while the page is still a mockup. A mistake caught there costs nothing downstream, and that saves the time and the tokens of every later stage.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ s-04 · cognitive load -->
+    <section id="s-04" aria-labelledby="h-s04">
+      <h2 id="h-s04"><span class="sec">§ 4</span> The Idea Underneath: Cognitive Load</h2>
+      <p>Look at this expression, and notice how you read it.</p>
+
+      <figure class="d-fig" id="fig-1">
+        <div class="code-fig">
+          <p class="code-line"><code>total = sum(x for x in values if x &gt; 0)</code></p>
+          <div class="chunk-pair">
+            <div class="chunk-panel">
+              <p class="who">A non-programmer</p>
+              <ol class="tok-list" aria-label="the line as ten separate tokens">
+                <li>total</li><li>=</li><li>sum</li><li>x</li><li>for</li><li>in</li><li>values</li><li>if</li><li>&gt;</li><li>0</li>
+              </ol>
+              <p class="count">about 10 separate pieces to look up and connect</p>
+            </div>
+            <div class="chunk-panel">
+              <p class="who">An experienced developer</p>
+              <div class="one-chunk"><code>total = sum(x for x in values if x &gt; 0)</code><span class="bracket" aria-hidden="true"></span></div>
+              <p class="count">one schema: sum the positive numbers</p>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cap"><span class="fig">Fig. 1.</span>The code doesn’t change. What the reader already knows does.</figcaption>
+      </figure>
+
+      <p>A non-programmer has to track about ten separate pieces, look up what each one means, and work out how each connects to the next. An experienced developer reads the same line in a fraction of a second, as one familiar pattern: sum the positive numbers. For the novice, tracing the syntax uses up their working memory before they have even worked out what the line does. For the developer, long-term memory compresses the whole expression into a single chunk, leaving mental bandwidth free to think about architecture or edge cases.</p>
+      <p>Cognitive load theory rests on that premise. New information has to pass through a <em>working memory</em> that holds only a little, and only for a short time. What you have already learned lives in long-term memory, and when you use it, it comes back as a single chunk that escapes those limits <span class="cite">(<a href="https://doi.org/10.1007/s10648-019-09465-5">Sweller, van Merriënboer &amp; Paas, 2019</a>)</span>. An expert doesn’t have a bigger working memory. They have bigger chunks.</p>
+      <p><em>Cognitive load</em> is how much of that working memory a page demands, and it comes from two sources.</p>
+      <dl class="loads">
+        <dt>Intrinsic load</dt>
+        <dd>comes from the material: how many elements have to be held together at once, relative to what the reader already knows. Better presentation can’t remove it. It changes only when you change what is learned at one time, for instance by teaching the parts before the whole, or when the reader’s expertise grows.</dd>
+        <dt>Extraneous load</dt>
+        <dd>comes from the presentation, and from what the page makes the reader do. It adds nothing to learning, and it is the part a designer controls. Most of the effects that researchers report come from varying this kind of load.</dd>
+      </dl>
+      <p>Here is extraneous load you can feel: do the same lookup in both versions of Diagram III. Both hold the same information about the pipeline you have just seen.</p>
+
+      <figure class="d-fig d-wide" id="diagram-3">
+        <div class="diagram"><div class="diagram-inner">
+          <div class="diagram-head"><span>Diagram III. One Machine, Labelled Two Ways</span><span class="no">Diag. III</span></div>
+          <p class="lookup">Try it in A, then in B: what is the stage that writes <code>findings.md</code> called?</p>
+          <div class="split-pair">
+            <div class="split-panel">
+              <p class="panel-label"><b>A</b>Numbered, names in a key</p>
+              <div class="flow-wrap">
+                <ol class="nodes num" aria-label="Eight numbered stages in order, each with the file it writes">
+                  <li><span class="c">1</span><small>brief.md</small></li><li><span class="c">2</span><small>facts.md</small></li><li><span class="c">3</span><small>learning-plan.md</small></li><li><span class="c">4</span><small>decisions.md</small></li><li><span class="c">5</span><small>site/</small></li><li><span class="c">6</span><small>page-round-N.json</small></li><li><span class="c">7</span><small>findings.md</small></li><li><span class="c">8</span><small>log.md</small></li>
+                </ol>
+                <svg class="flow" aria-hidden="true" focusable="false"></svg>
+              </div>
+              <ul class="key">
+                <li class="key-title">Key</li>
+                <li>1 <span>Intake</span></li><li>2 <span>Research</span></li><li>3 <span>Plan</span></li><li>4 <span>You approve</span></li><li>5 <span>Build</span></li><li>6 <span>Gate</span></li><li>7 <span>Review</span></li><li>8 <span>Deliver</span></li>
+              </ul>
+            </div>
+            <div class="split-panel">
+              <p class="panel-label"><b>B</b>Labelled on the parts</p>
+              <div class="flow-wrap">
+                <ol class="nodes lab" aria-label="Eight stages in order, each labelled with its name and file">
+                  <li>Intake <small>brief.md</small></li>
+                  <li>Research <small>facts.md</small></li>
+                  <li>Plan <small>learning-plan.md</small></li>
+                  <li class="human">You approve <small>decisions.md</small></li>
+                  <li>Build <small>site/</small></li>
+                  <li class="script"><svg class="hexbg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><polygon points="9,1 91,1 99,50 91,99 9,99 1,50" vector-effect="non-scaling-stroke"/></svg>Gate <small>page-round-N.json</small></li>
+                  <li>Review <small>findings.md</small></li>
+                  <li class="human">Deliver <small>log.md</small></li>
+                </ol>
+                <svg class="flow" aria-hidden="true" focusable="false"></svg>
+              </div>
+            </div>
+          </div>
+        </div></div>
+        <figcaption class="cap"><span class="fig">Diagram III.</span>Same information. In A your eyes go back and forth, and you hold the number in your head while you search the key; that work is extraneous load (split attention).</figcaption>
+      </figure>
+
+      <p>That is the <em>split-attention effect</em>. When readers have to integrate a figure with text placed somewhere else, load goes up and learning suffers; putting the text on the figure removes the effect <span class="cite">(Sweller et al., 2019)</span>. It’s why Didactician’s figures label the parts directly instead of using a legend, and why every diagram on this page does the same.</p>
+
+      <div class="d-check" data-check="k-02">
+        <p class="d-check-kind">Problem 2 <span>· Predict</span></p>
+        <p class="d-check-prompt" id="k02-q">Suppose this page stopped to explain, step by step, what a subagent is. Reader 1 has never used an AI coding agent. Reader 2 writes subagents every day. What happens to each reader’s cognitive load?</p>
+        <div class="d-options" role="group" aria-labelledby="k02-q">
+          <button type="button" class="d-option" aria-pressed="false"><span class="ltr">A</span><span>Lower for both: more explanation always makes things easier.</span></button>
+          <button type="button" class="d-option" aria-pressed="false" data-correct><span class="ltr">B</span><span>Lower for Reader 1, higher for Reader 2.</span></button>
+          <button type="button" class="d-option" aria-pressed="false"><span class="ltr">C</span><span>Higher for both: it’s extra paragraphs to read.</span></button>
+        </div>
+        <p class="d-check-hint">Pick one to see the solution.</p>
+        <div class="d-feedback" hidden tabindex="-1">
+          <p><span class="solution">Solution.</span>B. It’s the code line again. For Reader 2, “subagent” is already one chunk, like the expression is for the developer. Walking through it gives them nothing new, but they still have to read it and check it against what they know, and that is extraneous load. For Reader 1 the same paragraphs build the chunk they lack, so they lower load.</p>
+          <p>Guidance that helps a novice can get in an expert’s way. This is the <em>expertise reversal effect</em>. That’s why Didactician fixes one audience per page, and why this page names subagents without explaining them.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ s-05 · building blocks -->
+    <section id="s-05" aria-labelledby="h-s05">
+      <h2 id="h-s05"><span class="sec">§ 5</span> The Building Blocks</h2>
+      <p>§ 4 gave the reason; these are the tools. The designer builds every page from blocks like these, and chooses each one for what it does to the reader’s load, not for decoration. Each card below works, so use them. Every example is something you have already met: the code line from § 4, or the pipeline.</p>
+
+      <div class="d-wide blocks-mount" data-widget="w-blocks" role="region" aria-label="Seven working specimens of the building blocks Didactician composes pages from"></div>
+
+      <div class="d-check" data-check="k-05">
+        <p class="d-check-kind">Problem 3 <span>· Apply</span></p>
+        <p class="d-check-prompt" id="k05-q">You want to teach new backend developers what happens during a TCP connection handshake: a fixed sequence of messages, each depending on the last. Which building block should carry it?</p>
+        <div class="d-options" role="group" aria-labelledby="k05-q">
+          <button type="button" class="d-option" aria-pressed="false"><span class="ltr">A</span><span>A sandbox with sliders for every parameter, so there’s lots to explore.</span></button>
+          <button type="button" class="d-option" aria-pressed="false" data-correct><span class="ltr">B</span><span>A step-through, one message at a time, with a prediction before the step that surprises people.</span></button>
+          <button type="button" class="d-option" aria-pressed="false"><span class="ltr">C</span><span>A multiple-choice quiz at the end of a page of prose.</span></button>
+        </div>
+        <p class="d-check-hint">Pick one to see the solution.</p>
+        <div class="d-feedback" hidden tabindex="-1">
+          <p><span class="solution">Solution.</span>B. A fixed sequence is a process, and a process maps onto a step-through: one change per step, the rest dimmed, so the reader holds only what just changed. Adding a prediction at the step people get wrong makes it <em>Constructive</em> rather than just clicking “next” (the <a href="https://doi.org/10.1080/00461520.2014.965823">ICAP framework</a>, which its authors frame as a hypothesis).</p>
+          <p>A is tempting because it is the most interactive, but more controls are more elements to hold, and a sandbox suits a system whose behaviour you discover, not a sequence you follow. Interactive is not the same as effective. C checks recall afterwards but leaves the hard part, following the sequence, to prose.</p>
+        </div>
+      </div>
+
+      <p>These seven are the blocks the skill’s design references describe, and they are not a fixed menu. The designer chooses a page’s shape freely, and builders can make any widget the plan calls for. Completion problems, where the reader fills in a step that has been left blank, are another block from the same references.</p>
+      <p>You can also imagine blocks that go further, driven by a live model: a Socratic tutor that questions your answer, or a Feynman-style challenge where you explain the idea back in your own words and have it critiqued. Those are possibilities, not features. Didactician’s pages are static files with no backend, so a live model would make this a different kind of page, and this page has none.</p>
+    </section>
+
+    <!-- ============================================================ s-06 · what you get -->
+    <section id="s-06" aria-labelledby="h-s06">
+      <h2 id="h-s06"><span class="sec">§ 6</span> What You Get</h2>
+      <p>You bring a well-thought-through request, approve a plan, review the page, and get back a folder you can deploy, next to a folder that records how it was made.</p>
+      <ol class="recap-strip" aria-label="The eight stages">
+        <li><span class="n">Intake</span></li><li><span class="n">Research</span></li><li><span class="n">Plan</span></li><li class="human"><span class="n">You approve</span></li>
+        <li><span class="n">Build</span></li><li class="script"><span class="n">Gate</span></li><li><span class="n">Review</span></li><li class="human"><span class="n">Deliver</span></li>
+      </ol>
+
+      <div class="tree-grid">
+        <div>
+          <p>Here is that second folder, for this page. Start at <code>run/log.md</code>. It is a timeline of the run, and each entry links the files it refers to: the brief, your decisions, and every agent’s prompt and report.</p>
+          <p>Two limits are worth knowing before you install. Nobody has yet measured whether the separate reviewers catch more than one agent checking its own work; that comparison is still to be run. And a script caps how many rounds and agents a run may use, which bounds the token spend, but the caps hold only as long as the orchestrator follows the skill’s instructions: a skipped gate call would show up in the log, but nothing makes it impossible.</p>
+        </div>
+        <figure class="specimen" id="fig-2" style="margin:0">
+          <span class="specimen-label">explainers/didactician/</span>
+<div class="specimen-body"><pre class="tree" aria-label="This page's run folder">├── site/          <span class="note">← this page</span>
+└── run/
+    ├── log.md     <span class="note">← start here</span>
+    ├── brief.md
+    ├── decisions.md
+    ├── research/  <span class="dim">facts, examples</span>
+    ├── plan/      <span class="dim">plan, mockup, cuts</span>
+    ├── handoffs/  <span class="dim">NN-role.prompt.md</span>
+    │              <span class="dim">NN-role.report.md</span>
+    ├── history/
+    ├── gate/
+    └── review/    <span class="dim">incl. your comments</span></pre></div>
+          <figcaption class="cap" style="padding:0 var(--sp-2) var(--sp-1);margin:0;background:var(--surface)"><span class="fig">Fig. 2.</span>This page’s own run folder.</figcaption>
+        </figure>
+      </div>
+
+      <p>To try it, copy the skill folder into your project at <code>.claude/skills/didactician/</code> and ask for a page, saying who it is for and how long they have:</p>
+      <pre class="install"><code>/didactician explain how CRDTs converge, for Hacker News readers, ~10 minutes</code></pre>
+    </section>
+  </main>
+</div>
+
+<script src="assets/toc.js"></script>
+<script src="assets/arrow.js"></script>
+<script src="assets/replay.js"></script>
+<script src="assets/widget.js"></script>
+<script src="assets/page.js"></script>
+<script src="widgets/w-pipeline/index.js"></script>
+<script src="widgets/w-blocks/index.js"></script>
+</body>
+</html>

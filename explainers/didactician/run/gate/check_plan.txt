@@ -1,0 +1,13 @@
+segments:
+  s-01   How Didactician teaches
+  s-02   The pipeline, one stage at a time
+  s-03   Why it's built this way
+  s-04   The idea underneath: cognitive load
+  s-05   The building blocks
+  s-06   What you get
+objectives: 4 · segments: 6 · reader's time: 8 min
+widgets: w-pipeline (high), w-blocks (high)
+checks: 3 · acceptance criteria: 14
+info  claims not used by any segment: c-05, c-09, c-11 (should appear in cut-list.md)
+warn  4 objectives for a 8-min piece (guide: ≤ 3); broad scope invites bloat
+RESULT: PASS

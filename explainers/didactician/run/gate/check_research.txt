@@ -1,0 +1,5 @@
+depth: light
+counts: claims 12/12, sources 6/8, examples 5/5, misconceptions 4/4
+assets: 0 (0 need the user)
+unresolved questions: none
+RESULT: PASS

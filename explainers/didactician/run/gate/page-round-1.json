@@ -1,0 +1,114 @@
+{
+  "scope": "page",
+  "round": 1,
+  "when": "2026-10-25T14:44:01.407Z",
+  "pass": false,
+  "checks": [
+    {
+      "id": "overflow",
+      "invariant": "I1",
+      "title": "No horizontal overflow",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "static",
+      "invariant": "I2",
+      "title": "Static only: no runtime calls to undeclared origins",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "media",
+      "invariant": "I3",
+      "title": "Third-party media cleared and attributed",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "replay",
+      "invariant": "I4",
+      "title": "Finite animations have replay",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "carousel",
+      "invariant": "I6",
+      "title": "Carousels do not reflow",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "markers",
+      "invariant": "I7",
+      "title": "SVG markers resolve and are not clipped",
+      "status": "fail",
+      "details": [
+        "[360px] #w-plan2page > div.p2p-stage:nth-child(1) > svg.p2p-wire:nth-child(3) > path:nth-child(3): marker-end → url(\"#d-ah-6axrng\") does not resolve to a <marker>",
+        "[768px] #w-plan2page > div.p2p-stage:nth-child(1) > svg.p2p-wire:nth-child(3) > path:nth-child(3): marker-end → url(\"#d-ah-27uzad\") does not resolve to a <marker>",
+        "[1280px] #w-plan2page > div.p2p-stage:nth-child(1) > svg.p2p-wire:nth-child(3) > path:nth-child(3): marker-end → url(\"#d-ah-wzmzbc\") does not resolve to a <marker>"
+      ]
+    },
+    {
+      "id": "relative",
+      "invariant": "—",
+      "title": "Relative URLs only",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "console",
+      "invariant": "—",
+      "title": "No console errors",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "resources",
+      "invariant": "—",
+      "title": "All resources load",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "placeholders",
+      "invariant": "—",
+      "title": "No placeholders or empty mounts",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "legibility",
+      "invariant": "—",
+      "title": "SVG/canvas text readable at this width (warn only)",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "id": "pending",
+      "invariant": "—",
+      "title": "Widgets not built yet (page phase only)",
+      "status": "warn",
+      "details": [
+        "http://127.0.0.1:54116/__didactician/site/widgets/w-pipeline/index.css not built yet",
+        "http://127.0.0.1:54116/__didactician/site/widgets/w-pipeline/index.js not built yet",
+        "mount [data-widget=\"w-pipeline\"] awaits its widget builder"
+      ]
+    }
+  ],
+  "report": {
+    "widths": [
+      360,
+      768,
+      1280
+    ],
+    "reading_minutes": 9.6,
+    "budget_minutes": 8,
+    "weight_kb": 209,
+    "requests": 19
+  },
+  "failing_ids": [
+    "markers: #w-plan2page > div.p2p-stage:nth-child(1) > svg.p2p-wire:nth-child(3) > path:nth-child(3): marker-end → url(\"#d-ah-6axrn"
+  ]
+}

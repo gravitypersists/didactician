@@ -1,0 +1,17 @@
+{
+  "target": "site",
+  "round": 1,
+  "started": "2026-10-25T13:29:27-04:00",
+  "ended": "2026-10-25T15:05:06-04:00",
+  "how": "submitted",
+  "submitted": true,
+  "count": 30,
+  "build": "sha256:7f02c200cb073833bab798fe1281c3c8e26385537a04a3c200006343cd44dd75",
+  "snapshotted": "2026-10-25T15:13:40-04:00",
+  "reopened": [
+    {
+      "at": "2026-10-25T15:15:47-04:00",
+      "how": "window closed"
+    }
+  ]
+}
