@@ -8,5 +8,5 @@
 question: <what was asked, short>
 answer: "<the user's answer, verbatim>"
 decision: <approved | rejected | revise | rescope | waived | extended | other>
-applies_to: <plan | asset a-03 | invariant I1 | cap spawns | brief field <name>>
+applies_to: <plan | asset a-03 | invariant I1 | cap spawns | brief field <name> | human-review site-1 | H-03 H-07>
 notes: <optional: how it was applied>

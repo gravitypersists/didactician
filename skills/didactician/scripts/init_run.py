@@ -35,6 +35,27 @@ def caps_for(minutes: float, depth: str) -> dict:
     return {"spawns": spawns, "agent_minutes": agent_minutes, "loops": dict(LOOP_CAPS)}
 
 
+def report_human_reviews(run: Path):
+    """Where each human review round stands: still open, finished but unconfirmed, or ingested."""
+    review = run / "review"
+    reg = json.loads((review / "registry.json").read_text()) if (review / "registry.json").exists() else {}
+    ingested = {r.get("comment_id") for r in reg.get("findings", {}).values()}
+    for d in sorted(review.glob("human-*-*"), key=lambda p: (p.name.rsplit("-", 1)[0], int(p.name.rsplit("-", 1)[1]))):
+        meta = json.loads((d / "meta.json").read_text()) if (d / "meta.json").exists() else {}
+        comments = (json.loads((d / "comments.json").read_text()) if (d / "comments.json").exists() else {}).get("comments", [])
+        name = d.name.removeprefix("human-")
+        if not meta.get("ended"):
+            state = "never finished (the session was interrupted); reopen it"
+        elif name.startswith("plan-"):
+            state = f"{meta.get('how')}; its comments are revise notes for the checkpoint question"
+        elif comments and all(c["id"] in ingested for c in comments if not c.get("resolved")):
+            state = "ingested as H- findings"
+        else:
+            state = (f"{meta.get('how')}, NOT ingested. Ask the user whether they are finished with it "
+                     f"(the browser's Send button is easy to hit early); ingest only on a recorded yes")
+        print(f"  human review {name}: {len(comments)} comment(s), {state}")
+
+
 def report_existing(out: Path, run: Path):
     state = json.loads((run / "state.json").read_text())
     open_d = [d for d in state["dispatches"] if not d.get("closed")]
@@ -43,6 +64,7 @@ def report_existing(out: Path, run: Path):
     print(f"dispatches: {len(state['dispatches'])} (cap {state['caps']['spawns']})")
     for d in open_d:
         print(f"  open: {d['nn']:02d} {d['role']} loop={d['loop']} label={d['label']} (never received)")
+    report_human_reviews(run)
     if open_d:
         print("Open dispatches can't be continued from a new session: respawn fresh with the last report,")
         print("open findings and current artifacts, then `round_gate.py receive` the old NN with --abandon.")

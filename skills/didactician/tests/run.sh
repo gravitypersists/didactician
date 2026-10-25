@@ -63,6 +63,33 @@ p = sys.argv[1] + "/run/state.json"; s = json.load(open(p)); s["caps"]["spawns"]
 EOF
 python3 "$SKILL/scripts/round_gate.py" "$R" dispatch --role researcher --loop research --writes run/research --label z > /dev/null 2>&1; expect_exit "spawn cap enforced" 2 $?
 
+echo "findings.py (human review)"
+H="$R/run/review/human-site-1"; mkdir -p "$H"
+cat > "$H/comments.json" <<'EOF'
+{"comments":[
+ {"id":"c1","type":"highlight","text":"Too wordy.","anchor":{"exact":"some words","prefix":"","suffix":""},"resolved":false,"replies":[]},
+ {"id":"c2","type":"block","text":"Say who built this.","geom":{"kind":"block","selector":"#s-01 > p"},"resolved":false,"replies":[]},
+ {"id":"c3","type":"highlight","text":"Fine now.","anchor":{"exact":"x","prefix":"","suffix":""},"resolved":true,"replies":[]}],
+ "didactician":{"targets":{"c2":"Being an Account"},"shots":{}}}
+EOF
+echo '{"ended":"x","how":"submitted","submitted":true}' > "$H/meta.json"
+python3 "$SKILL/scripts/init_run.py" "$R" --slug t --depth light --minutes 5 > "$TMP/resume.txt"
+expect_grep "resume flags an unconfirmed round" "NOT ingested" "$TMP/resume.txt"
+python3 "$SKILL/scripts/findings.py" "$R" ingest-human site-1 --decision d-01 > /dev/null 2>&1; expect_exit "ingest refused without a decision" 1 $?
+printf '\n### d-01 · t · delta\nquestion: done?\nanswer: "keep going"\ndecision: other\napplies_to: human-review site-1\n' >> "$R/run/decisions.md"
+python3 "$SKILL/scripts/findings.py" "$R" ingest-human site-1 --decision d-01 > /dev/null 2>&1; expect_exit "ingest refused unless the user said finished" 1 $?
+printf '\n### d-02 · t · delta\nquestion: done?\nanswer: "yes, done"\ndecision: approved\napplies_to: human-review site-1\n' >> "$R/run/decisions.md"
+python3 "$SKILL/scripts/findings.py" "$R" ingest-human site-1 --decision d-02 > "$TMP/h.txt" 2>&1; expect_exit "ingest on the user's yes" 0 $?
+expect_grep "open comments become H- findings" "new: H-01, H-02" "$TMP/h.txt"
+python3 "$SKILL/scripts/findings.py" "$R" ingest-human site-1 --decision d-02 > "$TMP/h2.txt" 2>&1
+expect_grep "re-ingest adds nothing twice" "new: none" "$TMP/h2.txt"
+python3 "$SKILL/scripts/init_run.py" "$R" --slug t --depth light --minutes 5 > "$TMP/resume2.txt"
+expect_grep "resume sees the round ingested" "ingested as H- findings" "$TMP/resume2.txt"
+python3 "$SKILL/scripts/findings.py" "$R" status > /dev/null; expect_exit "open H- findings block" 1 $?
+python3 "$SKILL/scripts/findings.py" "$R" close H-01 H-02 --decision d-09 > /dev/null 2>&1; expect_exit "close needs a recorded decision" 1 $?
+python3 "$SKILL/scripts/findings.py" "$R" close H-01 H-02 --decision d-02 > /dev/null; expect_exit "close on the user's word" 0 $?
+python3 "$SKILL/scripts/findings.py" "$R" status > /dev/null; expect_exit "nothing blocking after close" 0 $?
+
 echo
 echo "passed $PASS, failed $FAILN"
 [ "$FAILN" -eq 0 ]

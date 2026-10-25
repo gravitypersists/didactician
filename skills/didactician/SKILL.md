@@ -1,6 +1,6 @@
 ---
 name: didactician
-description: Produce a clear, accurate, deployable explanation of a concept as a static HTML page, from a short article to scrollytelling to a full-page explorable widget, for a specific audience. Runs a governed pipeline. Intake (audience, scope, research depth) → bounded research → learning plan and wireframe mockup → human checkpoint → build → deterministic Playwright gate → independent accuracy and pedagogy/UX review. Use when the user asks to explain, teach, or make an explainer, explorable explanation, interactive tutorial, or visual essay about any concept, general or from their codebase.
+description: Produce a clear, accurate, deployable explanation of a concept as a static HTML page, from a short article to scrollytelling to a full-page explorable widget, for a specific audience. Runs a governed pipeline. Intake (audience, scope, research depth) → bounded research → learning plan and wireframe mockup → human checkpoint → build → deterministic Playwright gate → independent accuracy and pedagogy/UX review → human review of the built page, annotated in the browser. Use when the user asks to explain, teach, or make an explainer, explorable explanation, interactive tutorial, or visual essay about any concept, general or from their codebase.
 ---
 
 # Didactician
@@ -37,7 +37,7 @@ Preferences, in rank order: **accuracy > instructional effectiveness > UX clarit
 ├── site/                     deployable output; relative URLs only
 └── run/                      audit trail; never deployed
     ├── brief.md  decisions.md  log.md  state.json  escalation.md
-    ├── research/  plan/  review/round-N/  gate/  screenshots/
+    ├── research/  plan/  review/round-N/  review/human-<plan|site>-N/  gate/  screenshots/
     ├── handoffs/NN-<role>.prompt.md   handoffs/NN-<role>.report.md
     └── history/NN-<role>/   (automatic snapshot before each dispatch)
 ```
@@ -46,7 +46,7 @@ Namespaces (who may write):
 
 | Role | Writes |
 |---|---|
-| orchestrator (you) | `run/brief.md`, `run/decisions.md`, `run/handoffs/`, `run/escalation.md`. `log.md`, `state.json`, `gate/` and `history/` go only through scripts |
+| orchestrator (you) | `run/brief.md`, `run/decisions.md`, `run/handoffs/`, `run/escalation.md`. `log.md`, `state.json`, `gate/`, `history/` and `review/human-*/` go only through scripts |
 | researcher | `run/research/` |
 | instructional-designer | `run/plan/` |
 | page-builder | `site/` except `site/widgets/<id>/` |
@@ -101,7 +101,7 @@ Scale effort to the piece. Most runs should be small.
 | 5–20 min | 1 | one per widget the plan marks `complexity: high` | 2 (accuracy ∥ pedagogy-ux) |
 | > 20 min or deep research | 2–3, split by objective | as above; more than ~4 means check the plan first | 2 |
 
-Record each stage transition with `python3 <skill>/scripts/round_gate.py <out> stage <intake|research|plan|checkpoint|build|review|deliver|done>`. It feeds the log and resume.
+Record each stage transition with `python3 <skill>/scripts/round_gate.py <out> stage <intake|research|plan|checkpoint|build|review|human-review|deliver|done>`. It feeds the log and resume.
 
 ## Stage 0: Intake
 
@@ -145,9 +145,23 @@ Record each stage transition with `python3 <skill>/scripts/round_gate.py <out> s
   - **Warnings** (orphan segments, objectives with no check and no stated reason, too many objectives, no cut order) don't block. Carry them into the checkpoint summary.
 - **A `blocked: contradiction` (scope infeasible) goes to the user** with the designer's rescoping options.
 
+## Human review sessions
+
+The user reviews the mockup and the built page in a browser with an annotation layer: they highlight text, leave notes on sections, and draw on figures and widgets. Their comments are saved to disk as they go.
+
+```
+node <skill>/scripts/human_review.mjs --out <out> --target plan|site [--round N] [--note "<what to look at>"]
+```
+
+- Run it in the background. It ends when the user clicks **Send feedback** or closes the window, and writes `run/review/human-<target>-N/`: `comments.md` (each comment numbered `#N` like its badge in the browser, with the quoted text or the text of the element it is on, plus a screenshot for drawn shapes), `comments.json`, `meta.json`, and `build/`, a frozen copy of what was reviewed.
+- **The user may not be there.** Give them the command so they can run it whenever they like. Stop the turn if they want to review later. Everything is on disk, and the next session picks it up (see "Resuming").
+- Without `--round`, an unfinished round is reopened with its comments in place. Otherwise a new round starts on a fresh copy of the current build. `--round N` reopens round N on its own frozen copy, for adding comments or replies.
+- **Ending the session is not a decision.** Send is easy to hit by accident. Never act on a round until the user has told you, in this conversation, that they are finished with it.
+- `comments.md` holds the user's words. Quote them; don't paraphrase them into your own.
+
 ## Checkpoint (always; the human reviews the plan)
 
-1. Open the mockup in the user's browser: `open <out>/run/plan/mockup.html` (macOS) or `xdg-open`.
+1. Start a plan review session (`--target plan`, see above) and tell the user the mockup is open for comments. If the plan is a revision, say what changed since their last round.
 2. In your message, give:
    - the objectives;
    - the chosen shape and why, in two or three lines;
@@ -157,9 +171,9 @@ Record each stage transition with `python3 <skill>/scripts/round_gate.py <out> s
    - any assets with `clearance: needs-user`.
 
    For those assets, if `intended_use` is unknown, ask it now.
-3. AskUserQuestion: **approve** / **revise** (notes) / **rescope**. Asset decisions can go in the same call: batch several assets per question, or point to the numbered asset panel and accept one reply.
-4. Record every answer **verbatim** in `run/decisions.md` (format in the template) and log it.
-5. **On revise:** continue the designer with a handoff that quotes the notes (`--loop checkpoint --writes run/plan`). `round_gate` refuses when the user's last two revise notes are identical (`decision: revise` entries in `decisions.md`): the revision isn't landing. Show the user what changed and ask what's still wrong, instead of looping.
+3. When the session ends, read `run/review/human-plan-N/comments.md`. Then AskUserQuestion: **approve** / **revise** (notes) / **rescope**, plus **keep reviewing** (reopen the same round). If there are open comments, say how many, and make revise the first option. Asset decisions can go in the same call: batch several assets per question, or point to the numbered asset panel and accept one reply. This question is the confirmation for a plan round; Send alone approves nothing.
+4. Record every answer **verbatim** in `run/decisions.md` (format in the template) and log it. A revise that carries comments gets `notes: comments in review/human-plan-N/comments.md`.
+5. **On revise:** continue the designer with a handoff that quotes the notes and points to the round's `comments.md` (`--loop checkpoint --writes run/plan`). The next checkpoint is a new plan round on the revised mockup. `round_gate` refuses when the user's last two revise notes are identical (`decision: revise` entries in `decisions.md`): the revision isn't landing. Show the user what changed and ask what's still wrong, instead of looping.
 
 ## Stage 3: Build
 
@@ -184,9 +198,23 @@ Record each stage transition with `python3 <skill>/scripts/round_gate.py <out> s
 - **Ingest:** `python3 <skill>/scripts/findings.py <run> ingest <round>` assigns stable IDs (`A-NN` accuracy, `P-NN` pedagogy/UX) and writes `run/review/round-N/findings.md`.
 - **Done** when no `blocking` findings are open (`python3 <skill>/scripts/findings.py <run> status` exits 0). `should` findings are fixed where cheap. `nit`s are listed in the final report.
 - **Revise:** route each blocking or `should` finding to its owning builder (continue it) with the IDs. The builder answers each one with a disposition: `fixed`, `disputed` (with evidence), or `blocked`. Re-run the gate.
-- **Closure round (round 2):** dispatch fresh reviewers with the previous `findings.md` and the dispositions. They mark each finding `closed`, `still-open` or `dispute-upheld`, and may raise **new** findings only at `blocking` severity. The cap is 2 review rounds. Anything still open after that goes to the user with options.
+- After the round 1 fixes pass the gate, go to **Human review** (below) before the closure round.
+- **Closure round (round 2):** dispatch fresh reviewers with the previous `findings.md` and the dispositions. They also check any text that changed for `H-` findings, against the facts and the plan, but they don't close `H-` findings. They mark each finding `closed`, `still-open` or `dispute-upheld`, and may raise **new** findings only at `blocking` severity. The cap is 2 review rounds. Anything still open after that goes to the user with options.
 - **Disputes:** if the closure reviewer and the builder still disagree, the user decides.
 - If an accuracy finding shows `facts.md` itself is wrong, run a researcher fill-in within caps. Then stop and fix any widget builders whose work cites the bad claim.
+
+## Stage 4b: Human review (always, once the round 1 fixes pass the gate)
+
+Reviewers judge the page against the brief; only the user can say whether it's what they wanted. Doing this after round 1 means the user doesn't spend time on what the reviewers already caught.
+
+1. `round_gate.py <out> stage human-review`. Start a site review session (`--target site`, see "Human review sessions"). Tell the user what changed since the plan, and that the session can wait until they have time.
+2. **The speed bump.** When the session ends, give the comment count and a one-line gist of the themes, then AskUserQuestion: **finished with this review** / **keep reviewing** (reopen the same round) / **skip human review**. Record the answer verbatim with `applies_to: human-review site-N` and `decision: approved` only for "finished". Never infer it from the session having ended, and never ingest on a skip.
+3. **Ingest:** `python3 <skill>/scripts/findings.py <run> ingest-human site-N --decision d-NN` turns each open comment into an `H-NN` finding at `blocking`. It refuses without that decision.
+4. **Route** each `H-` finding to its owner, as with reviewer findings:
+   - wording, layout or a widget → the builder that owns it, with the IDs;
+   - anything that changes objectives, segments, the overall shape, or what a segment teaches → the designer (`--loop checkpoint`), quoting the comments. The user's comment is the decision; tell them it reopens the plan, then rebuild.
+   - Comments that contradict each other, or are unclear → ask the user before dispatching.
+5. Re-run the gate. Show the user each `H-` disposition. Offer a new site round to look at the changes. **Only the user closes an `H-` finding:** record their answer, then `findings.py <run> close H-NN… --decision d-NN`. Then run the closure round.
 
 ## Stage 5: Deliver
 
@@ -233,7 +261,7 @@ Then ask with AskUserQuestion. If the user extends a cap, run `round_gate.py <ru
 
 ## Resuming
 
-`init_run.py` on an existing `<out>` prints the stage and any open dispatch. Agents from a previous session can't be continued. Respawn the role fresh with its last report, the open findings, and the current artifacts, and log that it is a respawn.
+`init_run.py` on an existing `<out>` prints the stage, any open dispatch, and where each human review round stands. A round reported as **not ingested** needs the user's confirmation that they're finished (Stage 4b, step 2), even if `meta.json` says it was submitted: ask before ingesting. Agents from a previous session can't be continued. Respawn the role fresh with its last report, the open findings, and the current artifacts, and log that it is a respawn.
 
 ## Files
 
@@ -243,4 +271,5 @@ Then ask with AskUserQuestion. If the user extends a cap, run `round_gate.py <ru
   - `learning-science-patterns.md` and `cognitive-design-patterns.md` (instructional design);
   - `ux-ui.md`, `graphics.md`, `widgets.md`, `sourcing.md`.
 - `kit/`: optional runtime helpers that builders copy into `site/assets/`: `tokens.css`, `components.css`, `toc.js`, `arrow.js`, `replay.js`, `carousel.js`, `widget.js`.
-- `scripts/`: `preflight.sh`, `init_run.py`, `round_gate.py`, `log.py`, `check_research.py`, `check_plan.py`, `findings.py`, `verify.mjs`, `probe.mjs`. `tests/run.sh` self-tests the gate and scripts.
+- `scripts/`: `preflight.sh`, `init_run.py`, `round_gate.py`, `log.py`, `check_research.py`, `check_plan.py`, `findings.py`, `verify.mjs`, `probe.mjs`, `human_review.mjs`.
+- `vendor/annotate/`: the annotation layer `human_review.mjs` injects into the review browser. It is never copied into `site/`. `tests/run.sh` self-tests the gate and scripts.

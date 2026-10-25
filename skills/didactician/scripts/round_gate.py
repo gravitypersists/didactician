@@ -34,7 +34,7 @@ from _common import (  # noqa: E402
     load_state, under, write_atomic, blocks,
 )
 
-STAGES = ["intake", "research", "plan", "checkpoint", "build", "review", "deliver", "done"]
+STAGES = ["intake", "research", "plan", "checkpoint", "build", "review", "human-review", "deliver", "done"]
 
 
 def agent_minutes(state: dict) -> float:

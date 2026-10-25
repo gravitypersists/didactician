@@ -25,6 +25,7 @@ ORCHESTRATOR_NS = [
     "run/screenshots",
     "run/review/registry.json",
     "run/review/round-*/findings.md",
+    "run/review/human-*",  # written by human_review.mjs and findings.py, which the orchestrator runs
 ]
 
 
@@ -82,13 +83,13 @@ def kv_lines(text: str) -> dict:
 
 
 def blocks(text: str, id_pattern: str) -> list[tuple[str, str, dict]]:
-    """Split on `### <id>[ — title]` headings whose id matches id_pattern.
+    """Split on `### <id>[ — title]` (or `### <id> · …`) headings whose id matches id_pattern.
 
     Returns (id, title, fields) where fields are the `key: value` lines in the block.
     Indented `  key: value` lines under a `key:` line are folded in as `parent.key`.
     """
     text = strip_comments(text)
-    heads = list(re.finditer(rf"^###\s+({id_pattern})\b[ \t]*(?:[—–-]+[ \t]*(.*))?$", text, flags=re.M))
+    heads = list(re.finditer(rf"^###\s+({id_pattern})\b[ \t]*(?:(?:[—–-]+|·)[ \t]*(.*))?$", text, flags=re.M))
     out = []
     for i, m in enumerate(heads):
         end = heads[i + 1].start() if i + 1 < len(heads) else len(text)

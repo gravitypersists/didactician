@@ -41,7 +41,7 @@ Drive every acceptance criterion with `probe.mjs` (set inputs, step, read output
 
 ## Revisions
 
-You'll be continued with findings by ID. Report `dispositions` per ID: `fixed` (what changed), `disputed` (with evidence), or `blocked`.
+You'll be continued with findings by ID (`H-NN` ones are the user's own comments: do what they ask, or dispute with evidence and the user decides). Report `dispositions` per ID: `fixed` (what changed), `disputed` (with evidence), or `blocked`.
 
 ## Done when
 

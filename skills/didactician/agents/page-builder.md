@@ -49,7 +49,7 @@ node <skill>/scripts/verify.mjs --out <out> --phase page    # pending widgets re
 
 ## Revisions
 
-You'll be continued with findings (`A-NN`, `P-NN`) or gate failures. Address each one and report a `dispositions` line per ID:
+You'll be continued with findings (`A-NN`, `P-NN`, `H-NN`) or gate failures. `H-NN` findings are the user's own comments on the page, quoted verbatim with the text or element they point at, and sometimes a screenshot. Do what the comment asks. If you can't, or it conflicts with `facts.md` or an invariant, dispute it with the evidence: the user decides, not you. Address each finding and report a `dispositions` line per ID:
 
 - `fixed`, saying what changed and where;
 - `disputed`, with evidence;

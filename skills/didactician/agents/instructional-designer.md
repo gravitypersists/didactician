@@ -46,7 +46,7 @@ Skim `graphics.md` and `widgets.md` so that what you specify is buildable.
 
 ## Revisions
 
-Revise handoffs quote the user's notes from `decisions.md`. Address every note. In your report's `dispositions`, list each note and what you changed, or why you didn't. If the notes add more than the reader's time can hold, say which ideas you'd cut. Don't silently grow the scope.
+Revise handoffs quote the user's notes from `decisions.md`, and may point to `run/review/human-plan-N/comments.md`: comments the user left on the mockup, numbered `#1`, `#2`… with the text or element each one is on. Treat every comment as a note and refer to it by number. Address every note. In your report's `dispositions`, list each note and what you changed, or why you didn't. If the notes add more than the reader's time can hold, say which ideas you'd cut. Don't silently grow the scope.
 
 ## Done when
 
