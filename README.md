@@ -2,6 +2,8 @@
 
 `npx skills add gravitypersists/didactician`
 
+See an example output from [Didactician](https://gravitypersists.github.io/didactician/) run against itself, explaining itself. 
+
 Development repo for **Didactician**, a Claude Code skill that turns "explain X to Y" into a deployable static explainer: a long-form article, a scrollytelling piece, a full-page explorable widget, or a mix. It runs a governed multi-agent pipeline: bounded research, a plan you approve, a Playwright gate, and independent accuracy and pedagogy/UX review.
 
 The skill itself, with its full documentation, lives in [`skills/didactician/`](skills/didactician/README.md). This page only covers how the repo is laid out and how to work on it.
