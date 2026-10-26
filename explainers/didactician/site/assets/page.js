@@ -49,8 +49,9 @@
 
   function trigger() {
     // Desktop: steps sit beside the canvas, so the middle of the viewport.
-    // Mobile: the canvas covers the top ~55%, so the step must reach the lower part of the screen.
-    return window.innerHeight * (window.innerWidth >= 900 ? 0.6 : 0.82);
+    // Mobile: the canvas covers the top ~55% and the steps are stacked, so the active step is the one
+    // whose top has scrolled up to just below the canvas.
+    return window.innerHeight * (window.innerWidth >= 900 ? 0.6 : 0.65);
   }
 
   function update() {

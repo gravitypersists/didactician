@@ -1,6 +1,6 @@
-/* w-blocks: seven small working specimens of the building blocks Didactician composes pages from.
+/* w-blocks: six small working specimens of the building blocks Didactician composes pages from.
    One mount, no scroll steps, no network. Every specimen is independent and works in any order.
-   All examples reuse what the reader already has: the § 4 line
+   All examples reuse what the reader already has: the § 3 line
        total = sum(x for x in values if x > 0)      with values = [3, -1, 4, 0]
    or the pipeline itself (handoff prompts, reviewers). */
 Didactician.widget('w-blocks', function (el, ctx) {
@@ -342,98 +342,11 @@ Didactician.widget('w-blocks', function (el, ctx) {
       h('p', { class: 'wb-note' }, 'Illustrative numbers, not from a run.')
     ];
     return card(6, 'Contrasting cases', body,
-      'Put two cases that differ in one feature side by side and ask what differs before saying. Labels on the lines avoid matching at a distance (split attention). Diagram III is the full-size version.');
-  }
-
-  // ---- 7. Sandbox, with a prediction first -----------------------------------------------
-  function totalFor(t) { return VALUES.reduce(function (s, x) { return x > t ? s + x : s; }, 0); }
-  function spec7() {
-    var qid = nid('q'), sid = nid('t');
-    var predicted = null, moved = false;
-    var predBtns = [1, 2, 3, 4, 5].map(function (v) {
-      var b = h('button', { type: 'button', class: 'wb-chip', 'aria-pressed': 'false' }, 't = ' + v);
-      b.addEventListener('click', function () { commitPrediction(v); });
-      return b;
-    });
-    var pred = h('div', { class: 'wb-chips', role: 'group', 'aria-labelledby': qid }, predBtns);
-    var lockNote = h('p', { class: 'wb-note wb-lock' }, 'Choose a prediction to unlock the slider.');
-
-    var tOut = h('b', { class: 'wb-t' }, '0');
-    var line = h('p', { class: 'wb-codebox wb-codeline', 'aria-hidden': 'true' },
-      'total = sum(x for x in values if x > ', tOut, ')');
-    var valsHost = h('div', { class: 'wb-valshost' });
-    var totalOut = h('p', { class: 'wb-total' }, 'total = ', h('b', null, '7'));
-    var slider = h('input', { type: 'range', class: 'wb-range', id: sid, min: '0', max: '5', step: '1', value: '0', disabled: true });
-    var ticks = h('div', { class: 'wb-ticks', 'aria-hidden': 'true' });
-    for (var k = 0; k <= 5; k++) ticks.appendChild(h('span', { style: '--i:' + k }, String(k)));
-    var live = h('p', { class: 'wb-live', 'aria-live': 'polite' });
-    var check = h('button', { type: 'button', class: 'wb-btn', disabled: true }, 'Check my prediction');
-    var result = h('div', { class: 'wb-fb', 'aria-live': 'polite' });
-    var again = h('button', { type: 'button', class: 'wb-again' }, '↺ Try again');
-
-    function update() {
-      var t = +slider.value;
-      tOut.textContent = String(t);
-      valsHost.textContent = '';
-      valsHost.appendChild(keptRow(t, false));
-      var tot = totalFor(t);
-      totalOut.textContent = '';
-      totalOut.appendChild(document.createTextNode('total = '));
-      totalOut.appendChild(h('b', null, String(tot)));
-      var kept = VALUES.filter(function (x) { return x > t; });
-      live.textContent = 't = ' + t + '. Kept ' + (kept.length ? kept.join(' and ') : 'nothing') + '. total = ' + tot + '.';
-      slider.setAttribute('aria-valuetext', 't = ' + t + ', total = ' + tot);
-    }
-    function refreshCheck() { check.disabled = !(predicted !== null && moved); }
-    function commitPrediction(v) {
-      if (predicted !== null) return;
-      predicted = v;
-      predBtns.forEach(function (b, j) { b.setAttribute('aria-pressed', String(j + 1 === v)); b.disabled = true; });
-      slider.disabled = false;
-      lockNote.textContent = 'Prediction locked: t = ' + v + '. Now drag the slider and watch total.';
-      refreshCheck();
-    }
-    slider.addEventListener('input', function () { moved = true; update(); refreshCheck(); });
-    check.addEventListener('click', function () {
-      var ok = predicted === 3;
-      result.textContent = '';
-      result.appendChild(h('p', { class: 'wb-verdict' },
-        h('span', { class: 'wb-solution' }, ok ? 'Correct.' : 'Not quite.'),
-        ' You predicted t = ' + predicted + '. Total first drops below 7 at t = 3, where total = 4. ' +
-        'At t = 0, 1 and 2 the 3 and the 4 both pass the test, so total stays 7 (−1 and 0 never counted). ' +
-        'At t = 3 the 3 is no longer greater than 3, so only the 4 is left.'));
-      result.appendChild(again);
-      check.disabled = true;
-    });
-    again.addEventListener('click', function () {
-      predicted = null; moved = false;
-      predBtns.forEach(function (b) { b.disabled = false; b.setAttribute('aria-pressed', 'false'); });
-      slider.value = '0'; slider.disabled = true;
-      lockNote.textContent = 'Choose a prediction to unlock the slider.';
-      result.textContent = '';
-      update(); refreshCheck();
-      predBtns[0].focus();
-    });
-    update();
-
-    var body = [
-      h('p', { class: 'wb-q', id: qid }, 'Before you drag: as t rises from 0, at what value does total first drop below 7?'),
-      pred, lockNote,
-      h('div', { class: 'wb-stage' }, line, valsHost, totalOut),
-      h('div', { class: 'wb-slider' },
-        h('label', { class: 'wb-sl-label', for: sid }, 'Threshold ', h('i', null, 't'), ' (0 to 5, whole numbers)'),
-        slider, ticks),
-      live,
-      h('div', { class: 'wb-ctrl wb-ctrl-left' }, check),
-      result
-    ];
-    return card(7, 'Sandbox, with a prediction first', body,
-      'Moving a slider alone counts only as Active. Asking the reader to predict first is meant to make it Constructive (ICAP; its authors frame it as a hypothesis, not a settled result).',
-      'wb-wide');
+      'Put two cases that differ in one feature side by side and ask what differs before telling them. Labels on the lines avoid matching at a distance (split attention). Diagram III is the full-size version.');
   }
 
   // ---- assemble ---------------------------------------------------------------------------
-  var grid = h('div', { class: 'wb-grid-cards' }, spec1(), spec2(), spec3(), spec4(), spec5(), spec6(), spec7());
+  var grid = h('div', { class: 'wb-grid-cards' }, spec1(), spec2(), spec3(), spec4(), spec5(), spec6());
   el.appendChild(grid);
 
   ctx.onResize(function (w) { grid.classList.toggle('wb-two', w >= 800); });

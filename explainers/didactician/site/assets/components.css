@@ -51,7 +51,7 @@ a { color: var(--accent); text-underline-offset: 0.15em; }
 .d-rail-title.on { max-height: 160px; opacity: 1; transform: none; margin-bottom: var(--sp-3); }
 .d-rail-label { letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: var(--sp-1); }
 .d-rail nav { overflow-y: auto; min-height: 0; }
-.d-rail a { display: block; color: var(--ink-2); text-decoration: none; padding: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.d-rail a { display: block; color: var(--ink-2); text-decoration: none; padding: var(--sp-half) 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .d-rail a:hover, .d-rail a.on { color: var(--ink); }
 .d-rail a .br { color: var(--ink-4); margin-right: var(--sp-1); }
 .d-rail a.on .br { color: var(--ink-2); }
@@ -103,7 +103,7 @@ a { color: var(--accent); text-underline-offset: 0.15em; }
 .d-btn[aria-pressed="true"], .d-btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 @media (pointer: coarse) { .d-btn { min-height: var(--tap); } }
 .d-replay { font: 600 var(--fs-caption)/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2);
-  background: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; min-height: 32px; }
+  background: none; border: 1px solid var(--line); border-radius: 999px; padding: var(--sp-1) var(--sp-2); cursor: pointer; min-height: 32px; }
 .d-replay::before { content: "↻ "; }
 .d-replay:hover { color: var(--ink); border-color: var(--ink-4); }
 .d-control { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--sp-2); font: var(--fs-small)/var(--lh-small) var(--font-sans); }

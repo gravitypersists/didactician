@@ -1,7 +1,7 @@
 /* w-pipeline: Diagrams I and II. Scoped to the mounts; tokens only (assets/tokens.css).
    Engraved look: hairline ink outlines, line hatching inside shapes only, labels on a
    paper-coloured halo; the specimen card is graph paper with text on solid paper. */
-[data-widget="w-pipeline"] { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+[data-widget="w-pipeline"] { position: relative; display: flex; flex-direction: column; justify-content: center; gap: var(--sp-1); }
 [data-widget="w-pipeline"] .wp-strip { flex: none; }
 [data-widget="w-pipeline"] .wp-svg { display: block; max-width: 100%; height: auto; }
 
@@ -77,7 +77,7 @@
 [data-widget="w-pipeline"] .wp-card { flex: none; border: 1px solid var(--ink-2); border-radius: 2px; background-color: var(--surface);
   background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 16px 16px; color: var(--ink); min-width: 0; }
-[data-widget="w-pipeline"] .wp-card-head { display: block; padding: 6px 12px; border-bottom: 1px solid var(--ink-2); background: var(--surface); min-width: 0; }
+[data-widget="w-pipeline"] .wp-card-head { display: block; padding: var(--sp-1) var(--sp-2); border-bottom: 1px solid var(--ink-2); background: var(--surface); min-width: 0; }
 [data-widget="w-pipeline"] .wp-card-path { display: block; font: 500 0.8125rem/18px var(--font-mono); letter-spacing: .02em; white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis; }
 [data-widget="w-pipeline"] .wp-card-tag { display: block; font: italic 400 0.75rem/16px var(--font-serif); color: var(--ink-3); white-space: nowrap;
@@ -85,7 +85,7 @@
 [data-widget="w-pipeline"] .wp-card.is-format { border-style: dashed; }
 [data-widget="w-pipeline"] .wp-card.is-format .wp-card-head { border-bottom-style: dashed; }
 [data-widget="w-pipeline"] .wp-card.is-format .wp-card-tag { color: var(--accent); font-style: normal; font-weight: 600; }
-[data-widget="w-pipeline"] .wp-card-body { list-style: none; margin: 0; padding: 7px 12px; overflow: hidden; box-sizing: border-box; }
+[data-widget="w-pipeline"] .wp-card-body { list-style: none; margin: 0; padding: var(--sp-1) var(--sp-2); overflow: hidden; box-sizing: border-box; }
 [data-widget="w-pipeline"] .wp-card-body li { font: 400 0.8125rem/20px var(--font-mono); white-space: pre; overflow: hidden; text-overflow: ellipsis; }
 [data-widget="w-pipeline"] .wp-card-body li > span { background: var(--surface); }   /* text never sits on the ruling */
 [data-widget="w-pipeline"] .wp-card.is-collapsed .wp-card-body { padding: 0; }
@@ -96,9 +96,9 @@
 @keyframes wp-ink { from { opacity: .15; } to { opacity: 1; } }
 
 /* narrow: smaller card type (still ≥ 11px) */
-[data-widget="w-pipeline"].wp-narrow .wp-card-body { padding: 5px 8px; }
+[data-widget="w-pipeline"].wp-narrow .wp-card-body { padding: var(--sp-half) var(--sp-1); }
 [data-widget="w-pipeline"].wp-narrow .wp-card-body li { font-size: 0.75rem; line-height: 18px; }
-[data-widget="w-pipeline"].wp-narrow .wp-card-head { padding: 4px 8px; }
+[data-widget="w-pipeline"].wp-narrow .wp-card-head { padding: var(--sp-half) var(--sp-1); }
 [data-widget="w-pipeline"].wp-narrow .wp-card-path { font-size: 0.75rem; line-height: 17px; }
 [data-widget="w-pipeline"].wp-narrow .wp-card-tag { font-size: 0.6875rem; line-height: 14px; }
 
