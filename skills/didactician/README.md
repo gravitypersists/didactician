@@ -85,21 +85,21 @@ sequenceDiagram
 
 ## What you'll be asked, and when
 
-| When | What | Why it's you |
-|---|---|---|
-| **Intake** (only if it can't infer) | Audience, time budget, standalone vs. part of a course, research depth | They change everything downstream |
-| **Checkpoint** (always) | Approve / revise / rescope the plan. The mockup opens in your browser. Also: decisions on any third-party media whose licence isn't clearly fine for your use | A wrong plan is the most expensive error. Media clearance depends on use (commercial vs. blog) |
-| **Deltas** (rare) | A post-approval change to objectives, segments, shape or assets | You approved a plan; changes to it come back to you |
-| **Escalations** (rare) | A cap hit, a false premise, an infeasible scope, a dispute between a builder and a reviewer | Only the source of a constraint can relax it |
+| When                                | What                                                                                                                                                          | Why it's you                                                                                   |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| **Intake** (only if it can't infer) | Audience, time budget, standalone vs. part of a course, research depth                                                                                        | They change everything downstream                                                              |
+| **Checkpoint** (always)             | Approve / revise / rescope the plan. The mockup opens in your browser. Also: decisions on any third-party media whose licence isn't clearly fine for your use | A wrong plan is the most expensive error. Media clearance depends on use (commercial vs. blog) |
+| **Deltas** (rare)                   | A post-approval change to objectives, segments, shape or assets                                                                                               | You approved a plan; changes to it come back to you                                            |
+| **Escalations** (rare)              | A cap hit, a false premise, an infeasible scope, a dispute between a builder and a reviewer                                                                   | Only the source of a constraint can relax it                                                   |
 
 ### Research depth (you choose per run)
 
-| Depth | Use for | What it costs |
-|---|---|---|
-| `none` | Well-trodden topics | No researcher. The accuracy reviewer web-checks core claims instead |
-| `light` | Default for ≤ 10 min | 1 researcher, ≤ 12 claims, ≤ 8 sources |
-| `standard` | Default for longer; niche, recent, or codebase topics | 1 researcher, ≤ 25 claims, ≤ 15 sources |
-| `deep` | Contested, technical, high-stakes | 2–3 researchers, ≤ 40 claims, ≤ 25 sources |
+| Depth      | Use for                                               | What it costs                                                       |
+| ---------- | ----------------------------------------------------- | ------------------------------------------------------------------- |
+| `none`     | Well-trodden topics                                   | No researcher. The accuracy reviewer web-checks core claims instead |
+| `light`    | Default for ≤ 10 min                                  | 1 researcher, ≤ 12 claims, ≤ 8 sources                              |
+| `standard` | Default for longer; niche, recent, or codebase topics | 1 researcher, ≤ 25 claims, ≤ 15 sources                             |
+| `deep`     | Contested, technical, high-stakes                     | 2–3 researchers, ≤ 40 claims, ≤ 25 sources                          |
 
 **Research can't bloat the piece.** Researchers answer questions derived from the objectives, not "the topic". Each claim is a single assertion tied to an objective, and anything off-topic goes to a parking lot the designer only skims. The designer scopes the plan by how many ideas fit your time, not by word counts, so the prose is written at whatever length clarity needs. Everything researched but left out appears in the **cut list** at the checkpoint, so you can pull items back in. The cut list also ranks what to cut first if the built page runs long, and you choose.
 
@@ -109,19 +109,19 @@ sequenceDiagram
 
 **Enforced by scripts.** These fail the stage, and only you can relax them:
 
-| | Invariant |
-|---|---|
-| I1 | No horizontal overflow at 360px (unless you waive mobile) |
-| I2 | Static only: no runtime calls to undeclared origins (CDNs are fine) |
-| I3 | Third-party media is cleared and visibly attributed |
-| I4 | One-shot animations have a replay control |
-| I6 | Carousels don't reflow the page |
-| I7 | SVG arrowheads resolve and aren't clipped |
-| I8 | Each agent writes only in its own folder (detected after the fact) |
+|     | Invariant                                                           |
+| --- | ------------------------------------------------------------------- |
+| I1  | No horizontal overflow at 360px (unless you waive mobile)           |
+| I2  | Static only: no runtime calls to undeclared origins (CDNs are fine) |
+| I3  | Third-party media is cleared and visibly attributed                 |
+| I4  | One-shot animations have a replay control                           |
+| I6  | Carousels don't reflow the page                                     |
+| I7  | SVG arrowheads resolve and aren't clipped                           |
+| I8  | Each agent writes only in its own folder (detected after the fact)  |
 
 The gate also fails on: console errors, broken resources, root-absolute URLs (the site must work under any sub-path), and leftover placeholders. It **warns** on SVG text too small to read on a phone.
 
-**Judged by agents.** These are deliberately *not* rules:
+**Judged by agents.** These are deliberately _not_ rules:
 
 - whether to use scrollytelling, an article or a full-page widget;
 - whether to include comprehension checks or a ToC;
@@ -153,12 +153,16 @@ A sample of `log.md`:
 
 ```markdown
 ### 2026-10-19T12:19:33-04:00 · orchestrator · dispatch
+
 Dispatch 02 → **instructional-designer** (plan), loop checkpoint round 1/4. May write: `run/plan`.
 Usage: 2/12 dispatches, 0/45 agent-min.
+
 - [handoffs/02-instructional-designer.prompt.md](handoffs/02-instructional-designer.prompt.md)
 
 ### 2026-10-19T12:20:23-04:00 · orchestrator · findings
+
 Round 2 ingested: 3 finding(s) touched; open: 0 blocking, 1 should, 1 nit.
+
 - [review/round-2/findings.md](review/round-2/findings.md)
 ```
 
@@ -183,19 +187,44 @@ bash tests/run.sh      # gate on bad/good/kit fixtures + round_gate behaviour; e
 
 ## What's in this folder
 
-| Path | What | Who reads it |
-|---|---|---|
-| `SKILL.md` | The orchestrator's workflow | Your main Claude session |
-| `agents/*.md` | One contract per role: researcher, instructional-designer, page-builder, widget-builder, accuracy-reviewer, pedagogy-ux-reviewer | Each subagent |
-| `references/` | Learning science (`learning-science-patterns.md`, `cognitive-design-patterns.md`), `ux-ui.md`, `graphics.md`, `widgets.md`, `sourcing.md` | Designer, builders, reviewers |
-| `templates/` | Formats for the brief, plan, handoffs, reports, reviews, decisions, and the mockup skeleton | Everyone. The scripts parse these |
-| `kit/` | Optional page runtime: design tokens (8px grid, light/dark), components, ToC rail, SVG arrows, replay, carousel, widget helper | Builders copy it into `site/assets/` |
-| `scripts/` | `round_gate.py`, `verify.mjs`, `probe.mjs`, `check_*.py`, `findings.py`, `init_run.py`, `log.py`, `preflight.sh` | Orchestrator and agents |
-| `DESIGN.md` | Why it's built this way: failure-mode review, constraint ledger, and the **assumption ledger** of scaffolding to test removing as models improve | Maintainers |
+| Path          | What                                                                                                                                             | Who reads it                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------ |
+| `SKILL.md`    | The orchestrator's workflow                                                                                                                      | Your main Claude session             |
+| `agents/*.md` | One contract per role: researcher, instructional-designer, page-builder, widget-builder, accuracy-reviewer, pedagogy-ux-reviewer                 | Each subagent                        |
+| `references/` | Learning science (`learning-science-patterns.md`, `cognitive-design-patterns.md`), `ux-ui.md`, `graphics.md`, `widgets.md`, `sourcing.md`        | Designer, builders, reviewers        |
+| `templates/`  | Formats for the brief, plan, handoffs, reports, reviews, decisions, and the mockup skeleton                                                      | Everyone. The scripts parse these    |
+| `kit/`        | Optional page runtime: design tokens (8px grid, light/dark), components, ToC rail, SVG arrows, replay, carousel, widget helper                   | Builders copy it into `site/assets/` |
+| `scripts/`    | `round_gate.py`, `verify.mjs`, `probe.mjs`, `check_*.py`, `findings.py`, `init_run.py`, `log.py`, `preflight.sh`                                 | Orchestrator and agents              |
+| `DESIGN.md`   | Why it's built this way: failure-mode review, constraint ledger, and the **assumption ledger** of scaffolding to test removing as models improve | Maintainers                          |
 
 ## Known limits
 
-- **Privilege boundaries are prompt-level.** A drop-in skill can't restrict subagents' tools. Out-of-namespace writes are *detected* (and block the next dispatch until acknowledged), not prevented. See DESIGN.md "Soft vs. enforced".
+- **Privilege boundaries are prompt-level.** A drop-in skill can't restrict subagents' tools. Out-of-namespace writes are _detected_ (and block the next dispatch until acknowledged), not prevented. See DESIGN.md "Soft vs. enforced".
 - **Caps hold only while the orchestrator follows SKILL.md.** A skipped gate call shows up in the log as a dispatch without an entry.
 - **The gate checks what's checkable.** It can tell an arrowhead is clipped, not that it points at the wrong node. That's what the screenshots and the reviewers are for.
 - **Not yet battle-tested** end to end with real agents. The first practice runs will tune the prompts.
+
+## Building a design system
+
+This prompt is provided for convenience if you'd like to produce a style guide within claude design or your favorite tool (be sure to edit to your liking):
+
+```
+Design a system for interactive explainers: static, single-page HTML essays that teach one concept. A page is mostly long-form prose, with diagrams, a few interactive widgets (sliders, step-through animations) and the occasional comprehension check. Readers spend 5–20 minutes on one, often on a phone.
+
+Feel: <ADD YOUR FEEL>
+
+What I need (basics only, not a component library):
+
+1. Color: a neutral background/surface/ink scale, one accent, good/bad/warn, and six diagram series colors that stay distinguishable in light and dark mode and for common color-vision deficiencies, each with a soft tint for fills. Body text ≥ 4.5:1 contrast in both themes.
+
+2. Type: serif body (18/28 desktop, 17/26 mobile), sans headings, mono for UI chrome and changing numbers, 13px captions and labels. Prose measure about 66ch.
+
+3. Spacing: 8px grid, with radii, one shadow, and motion durations.
+
+4. Sample treatments for: page hero (kicker, title, standfirst, meta row), body prose with h2/h3, a figure with caption and directly labeled SVG, a slider widget with a live readout, and a comprehension-check card (PREDICT / EXPLAIN / APPLY label, large option buttons, inline feedback).
+
+Hard constraint: deliver the tokens as CSS custom properties with exactly these names so they drop into my existing kit:
+ --bg --surface --surface-2 --ink --ink-2 --ink-3 --ink-4 --line --accent --accent-ink --focus --good --bad --warn --c1…--c6 --c1-soft…--c4-soft --font-sans --font-serif --font-mono --font-body --fs-caption/--lh-caption --fs-small/--lh-small --fs-body/--lh-body --fs-h1…h3/--lh-h1…h3 --measure --sp-half --sp-1…--sp-12 --radius-1…3 --shadow-1 --stroke --tap --ease-out --dur-1…3
+ Dark mode goes under prefers-color-scheme: dark and under [data-theme="dark"].
+
+```
