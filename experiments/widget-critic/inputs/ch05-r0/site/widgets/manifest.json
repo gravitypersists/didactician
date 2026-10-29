@@ -1,0 +1,32 @@
+{
+  "data_origins": [],
+  "widgets": {
+    "w-friday-scrolly": {
+      "segment": "s-03",
+      "mount": "[data-widget=\"w-friday-scrolly\"]",
+      "mounts": {
+        "F": "[data-widget=\"w-friday-scrolly\"][data-lanes=\"F\"] (s-03, lane F 'Friday, 17:45', steps F1–F5, gated on k-03 in F2)"
+      },
+      "size": {
+        "desktop": "≥900px: .d-wide (≤960px); a two-column grid: canvas slot ~55% wide, sticky at top var(--sp-4), 600px reserved (five node columns reserved from F1); step cards ~45%, each ≥40vh",
+        "mobile": "<900px: one column; canvas slot sticky at top, opaque, ≤50vh (min(480px,50vh) at 600–899px, min(360px,50vh) under 600px); steps scroll beneath. Height <560px, or a canvas that can't fit (data-cs-fit=\"inline\"): canvas hidden, per-step snapshot in [data-step-snap]"
+      },
+      "files": ["data.js", "index.js", "index.css"],
+      "pool": ["pool/cluster/cluster.css", "pool/cluster/cluster.js", "pool/cluster/lanes.js"],
+      "cdn": [],
+      "data_origins": []
+    },
+    "w-sizing-sandbox": {
+      "segment": "s-04",
+      "mount": "[data-widget=\"w-sizing-sandbox\"]",
+      "size": {
+        "desktop": "≥900px: .d-wide (≤960px); controls and readouts in a left column (~40%), nodes on the right in up to two rows of four; 560px reserved (the tallest state). 600–899px: the same, 620px reserved",
+        "mobile": "<600px: one column: readout strip and idle bar, warnings, controls (44px steppers, 44px switch row), then nodes in rows of four; 560px load-time minimum, not the tallest state (CURRICULUM §8 step 6)"
+      },
+      "files": ["data.js", "model.js", "index.js", "index.css"],
+      "pool": ["pool/cluster/cluster.css", "pool/cluster/cluster.js", "pool/widget.js"],
+      "cdn": [],
+      "data_origins": []
+    }
+  }
+}

@@ -1,0 +1,25 @@
+/* w-friday-scrolly · Ch 05's load-time height reservation for lane F. The drawing's styles, the step
+   kicker and the measured inline fallback are the pool's (pool/cluster/cluster.css); the lane scaffold
+   (.cs-*) is the page's (assets/page.css).
+
+   The page reserves the canvas slot (min-height): min(360px, 50vh) under 600px, min(480px, 50vh) at
+   600–899px, 600px from 900px. Lane F draws taller (five record rows, the WAITING strip, verdict lines,
+   the processor footer and up to three note lines), so it is reserved here, before the script runs.
+   Measured drawing heights:
+   - from 900px wide: 717px where the canvas is 440px wide or more (900–1099px and from about 1240px
+     wide), 621px in the narrow chrome (the canvas is 422px wide at 1100px, beside the rail); the lane
+     shrinks its unit to stay within the viewport (665px at 1280×720) and falls back to inline snapshots
+     under about 710px tall;
+   - under 900px the drawing is fitted to 50vh (576px at 390×1200, 595px at 768×1200), plus the slot's
+     16px padding; where it can't fit, which is most phones and short tablets, the lane shows inline
+     snapshots per step instead and hides this slot (data-cs-fit="inline"). */
+[data-widget="w-friday-scrolly"] .cs-lane[data-lane="F"] .cs-canvas { min-height: min(592px, calc(50vh + 16px)); }
+@media (min-width: 600px) {
+  [data-widget="w-friday-scrolly"] .cs-lane[data-lane="F"] .cs-canvas { min-height: min(611px, calc(50vh + 16px)); }
+}
+@media (min-width: 900px) {
+  [data-widget="w-friday-scrolly"] .cs-lane[data-lane="F"] .cs-canvas { min-height: min(717px, calc(100vh - 48px)); }
+}
+@media (max-height: 559px) {
+  [data-widget="w-friday-scrolly"] .cs-lane[data-lane="F"] .cs-canvas { min-height: 0; }
+}

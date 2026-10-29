@@ -1,0 +1,165 @@
+/* Didactician kit components. Requires tokens.css. Optional: builders may restyle or replace
+   any of this, but keep the data-attributes (verify.mjs and the kit scripts rely on them).
+
+   Page skeleton:
+     <body class="d-body">
+       <header class="d-hero">…</header>
+       <div class="d-page">
+         <aside class="d-rail" data-toc></aside>          (desktop rail; toc.js fills it)
+         <main class="d-main" id="main">
+           <details class="d-toc-mobile" data-toc-mobile></details>   (mobile; toc.js fills it)
+           <section id="…"><h2>…</h2> … </section>
+         </main>
+       </div>
+     </body>
+   Width classes for blocks inside .d-main: (default = prose measure), .d-wide, .d-full */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: var(--sp-3); }
+body.d-body { margin: 0; background: var(--bg); color: var(--ink); font: var(--fs-body)/var(--lh-body) var(--font-body);
+  text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+img, svg, video, canvas, iframe { max-width: 100%; }
+img, video { height: auto; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+
+/* ---- hero ------------------------------------------------------------------------------- */
+.d-hero { max-width: 1200px; margin: 0 auto; padding: var(--sp-10) var(--sp-2) var(--sp-4); }
+.d-kicker { font: 600 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.d-hero h1 { font: 700 var(--fs-h1)/var(--lh-h1) var(--font-sans); letter-spacing: -0.02em; margin: var(--sp-1) 0 var(--sp-2); max-width: 22ch; text-wrap: balance; }
+.d-standfirst { font-size: calc(var(--fs-body) * 1.15); line-height: 1.5; color: var(--ink-2); max-width: var(--measure); margin: 0; }
+.d-meta { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-4); }
+.d-meta div { font: var(--fs-caption)/var(--lh-caption) var(--font-mono); color: var(--ink-2); }
+.d-meta b { display: block; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+
+/* ---- page grid: rail + prose ------------------------------------------------------------- */
+.d-page { max-width: 1200px; margin: 0 auto; padding: 0 var(--sp-2) var(--sp-12); display: grid;
+  grid-template-columns: minmax(0, 1fr); }
+.d-main > * { max-width: var(--measure); }
+.d-main > .d-wide { max-width: min(100%, 960px); }
+.d-main > .d-full { max-width: none; }
+.d-main h2 { font: 700 var(--fs-h2)/var(--lh-h2) var(--font-sans); letter-spacing: -0.01em; margin: var(--sp-10) 0 var(--sp-2); text-wrap: balance; }
+.d-main h3 { font: 650 var(--fs-h3)/var(--lh-h3) var(--font-sans); margin: var(--sp-5) 0 var(--sp-1); }
+.d-main p { margin: 0 0 var(--sp-3); }
+.d-main code { font: 0.9em var(--font-mono); background: var(--surface-2); padding: 0.1em 0.3em; border-radius: var(--radius-1); }
+
+/* ---- ToC rail (pattern: claude.dev blog) ------------------------------------------------- */
+.d-rail { display: none; flex-direction: column; position: sticky; top: var(--sp-4); align-self: start;
+  max-height: calc(100dvh - var(--sp-8)); font: var(--fs-caption)/var(--lh-caption) var(--font-mono); padding-top: var(--sp-10); }
+.d-rail-title { font: 600 var(--fs-small)/1.4 var(--font-sans); color: var(--ink); max-height: 0; opacity: 0; overflow: hidden;
+  transform: translateY(8px); transition: opacity var(--dur-2) ease, transform var(--dur-2) var(--ease-out), max-height var(--dur-2) ease, margin var(--dur-2) ease; }
+.d-rail-title.on { max-height: 160px; opacity: 1; transform: none; margin-bottom: var(--sp-3); }
+.d-rail-label { letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: var(--sp-1); }
+.d-rail nav { overflow-y: auto; min-height: 0; }
+.d-rail a { display: block; color: var(--ink-2); text-decoration: none; padding: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.d-rail a:hover, .d-rail a.on { color: var(--ink); }
+.d-rail a .br { color: var(--ink-4); margin-right: var(--sp-1); }
+.d-rail a.on .br { color: var(--ink-2); }
+.d-rail .subs { display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows var(--dur-2) var(--ease-out), visibility var(--dur-2); }
+.d-rail .subs.open, .d-rail .subs:has(:focus-visible) { grid-template-rows: 1fr; visibility: visible; }
+.d-rail .subs > div { min-height: 0; overflow: hidden; }
+.d-rail .subs a { padding-left: var(--sp-2); }
+.d-rail-prog { margin-top: var(--sp-3); color: var(--ink-4); white-space: nowrap; overflow: hidden; }
+.d-rail-prog b { color: var(--ink); font-weight: 400; }
+.d-rail-prog .pct { color: var(--ink-2); margin-left: var(--sp-1); }
+.d-rail-time { margin-top: var(--sp-1); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.d-toc-mobile { margin: 0 0 var(--sp-4); border: 1px solid var(--line); border-radius: var(--radius-2); background: var(--surface);
+  font: var(--fs-small)/var(--lh-small) var(--font-mono); }
+.d-toc-mobile summary { cursor: pointer; padding: var(--sp-1) var(--sp-2); min-height: var(--tap); display: flex; align-items: center; color: var(--ink-2); }
+.d-toc-mobile nav { padding: 0 var(--sp-2) var(--sp-2); }
+.d-toc-mobile a { display: block; padding: var(--sp-half) 0; color: var(--ink-2); text-decoration: none; }
+.d-toc-mobile a .br { color: var(--ink-4); margin-right: var(--sp-1); }
+
+/* desktop: two columns only when the page has a rail (the designer may decide there's no ToC) */
+@media (min-width: 1100px) {
+  .d-page:has(> .d-rail) { grid-template-columns: 220px minmax(0, 1fr); column-gap: var(--sp-6); }
+  .d-page > .d-rail { display: flex; grid-column: 1; grid-row: 1; }
+  .d-page > .d-main { grid-column: -2; grid-row: 1; }
+  .d-toc-mobile { display: none; }
+}
+
+/* ---- figures & captions ------------------------------------------------------------------- */
+/* Captions are small, sit directly under (or beside) the figure, and add what the figure can't
+   say. They never restate what is visible. One style everywhere. */
+.d-figure { margin: var(--sp-5) 0; }
+.d-figure > .d-canvas { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-2); padding: var(--sp-2); }
+.d-figure figcaption, .d-caption { font: var(--fs-caption)/var(--lh-caption) var(--font-sans); color: var(--ink-3); margin-top: var(--sp-1); max-width: var(--measure); }
+.d-figure figcaption b, .d-caption b { color: var(--ink-2); font-weight: 600; }
+.d-attrib { font: 11px/16px var(--font-sans); color: var(--ink-3); }
+.d-figure-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-1); margin-bottom: var(--sp-1); }
+
+/* SVG text: direct labels on the diagram (never a legend). Halo keeps labels legible over lines. */
+.d-svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--font-sans); }
+.d-svg text, .d-label { font: 500 13px/1 var(--font-sans); fill: var(--ink-2); }
+.d-svg .d-label-strong { fill: var(--ink); font-weight: 650; }
+.d-svg .d-halo { paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.d-svg .d-stroke { stroke: var(--ink-2); stroke-width: var(--stroke); fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---- controls ---------------------------------------------------------------------------- */
+.d-btn { font: 600 var(--fs-small)/1 var(--font-sans); display: inline-flex; align-items: center; gap: var(--sp-1);
+  min-height: 36px; padding: 0 var(--sp-2); border-radius: var(--radius-2); border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); cursor: pointer; }
+.d-btn:hover { border-color: var(--ink-4); }
+.d-btn[aria-pressed="true"], .d-btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+@media (pointer: coarse) { .d-btn { min-height: var(--tap); } }
+.d-replay { font: 600 var(--fs-caption)/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2);
+  background: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; min-height: 32px; }
+.d-replay::before { content: "↻ "; }
+.d-replay:hover { color: var(--ink); border-color: var(--ink-4); }
+.d-control { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--sp-2); font: var(--fs-small)/var(--lh-small) var(--font-sans); }
+.d-control output { font: 600 var(--fs-small)/1 var(--font-mono); min-width: 6ch; text-align: right; color: var(--ink); }
+input[type="range"] { accent-color: var(--accent); width: 100%; min-height: var(--tap); }
+
+/* ---- comprehension checks -------------------------------------------------------------- */
+/* Commit first, then reveal. Feedback explains why, especially why the tempting answer is wrong. */
+.d-check { margin: var(--sp-5) 0; padding: var(--sp-3); border-radius: var(--radius-2); background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); }
+.d-check-kind { font: 600 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: var(--sp-1); }
+.d-check-prompt { font: 600 var(--fs-body)/var(--lh-body) var(--font-sans); margin: 0 0 var(--sp-2); }
+.d-options { display: grid; gap: var(--sp-1); }
+.d-option { text-align: left; font: var(--fs-small)/var(--lh-small) var(--font-sans); padding: var(--sp-1) var(--sp-2); min-height: var(--tap);
+  border: 1px solid var(--line); border-radius: var(--radius-2); background: var(--bg); color: var(--ink); cursor: pointer; }
+.d-option[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.d-option.is-right { border-color: var(--good); box-shadow: inset 0 0 0 1px var(--good); }
+.d-option.is-wrong { border-color: var(--bad); }
+.d-feedback { margin-top: var(--sp-2); font: var(--fs-small)/var(--lh-small) var(--font-sans); color: var(--ink-2); }
+.d-feedback[hidden] { display: none; }
+
+/* ---- reader-controlled scaffolding (expertise reversal) --------------------------------- */
+.d-more { margin: var(--sp-2) 0 var(--sp-3); border-left: 2px solid var(--line); padding-left: var(--sp-2); }
+.d-more summary { cursor: pointer; font: 600 var(--fs-small)/var(--lh-small) var(--font-sans); color: var(--ink-2); min-height: 32px; display: flex; align-items: center; }
+
+/* ---- callouts ---------------------------------------------------------------------------- */
+.d-aside { margin: var(--sp-4) 0; padding: var(--sp-2) var(--sp-3); background: var(--surface-2); border-radius: var(--radius-2); font: var(--fs-small)/var(--lh-small) var(--font-sans); color: var(--ink-2); }
+
+/* ---- carousel (no reflow: all pages share one grid cell, so height = tallest page) -------- */
+.d-carousel-pages { display: grid; }
+.d-carousel-pages > [data-carousel-page] { grid-area: 1 / 1; visibility: hidden; opacity: 0; transition: opacity var(--dur-2) ease; }
+.d-carousel-pages > [data-carousel-page].on { visibility: visible; opacity: 1; }
+.d-pager { display: flex; align-items: center; justify-content: center; gap: var(--sp-half); margin-top: var(--sp-2); font: 600 var(--fs-small)/1 var(--font-mono); }
+.d-pager button { min-width: 36px; min-height: 36px; border-radius: var(--radius-1); border: 1px solid transparent; background: none; color: var(--ink-3); cursor: pointer; font: inherit; }
+.d-pager button:hover { color: var(--ink); }
+.d-pager button[aria-current="true"] { color: var(--ink); border-color: var(--line); background: var(--surface); }
+.d-pager button:disabled { opacity: .35; cursor: default; }
+@media (pointer: coarse) { .d-pager button { min-width: var(--tap); min-height: var(--tap); } }
+
+/* ---- scrollytelling: sticky canvas + steps ----------------------------------------------- */
+/* Desktop: canvas sticks beside the steps. Mobile: canvas sticks on top (max 55vh), steps scroll
+   over a solid card so text never sits on top of the diagram. */
+.d-scrolly { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-4); margin: var(--sp-6) 0; }
+.d-scrolly-canvas { position: sticky; top: var(--sp-2); align-self: start; z-index: 0; max-height: 55vh; }
+.d-scrolly-steps { position: relative; z-index: 1; }
+.d-step { margin: 0 0 60vh; padding: var(--sp-2) var(--sp-3); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-2); box-shadow: var(--shadow-1); }
+.d-step:last-child { margin-bottom: 20vh; }
+.d-step.is-active { border-color: var(--accent); }
+@media (min-width: 900px) {
+  .d-scrolly { grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); max-width: none; }
+  .d-scrolly-canvas { grid-column: 1; grid-row: 1; top: 15vh; max-height: 70vh; }
+  .d-scrolly-steps { grid-column: 2; grid-row: 1; padding-top: 30vh; }
+}
+
+/* ---- motion helpers ---------------------------------------------------------------------- */
+/* Animations that should start when visible: add data-anim-autoplay="visible"; replay.js adds
+   .is-playing on first view. Key your CSS animation off .is-playing. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
+}

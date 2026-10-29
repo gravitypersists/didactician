@@ -1,0 +1,90 @@
+[
+  {
+    "check": "sibling",
+    "severity": "error",
+    "where": null,
+    "quote": null,
+    "message": "Service.memory_request is adjustable for storefront, orders, dispatch but not for payments, notifications",
+    "evidence": "the text asks the reader to change payments in the widget"
+  },
+  {
+    "check": "coverage",
+    "severity": "error",
+    "where": "k-04",
+    "quote": "the payments team doubles its memory request … W-02, below, shows how far it goes.",
+    "message": "the text asks the reader to change payments memory_request in the widget, which has no control for it",
+    "evidence": "controls: memory_request for storefront, orders, dispatch; spare switch; reset"
+  },
+  {
+    "check": "execute",
+    "severity": "error",
+    "where": "k-09",
+    "quote": "on nodes that are already full, that can mean another node on the bill (try orders at 8 and then 12 GB in W-02)",
+    "message": "from the default state the widget does not show what the text says (0/6 plausible starts pass)",
+    "evidence": "expected nodes_total increases state 1 (implied); got nodes_total = 5 (state 1: 5) | states: storefront 4, orders 6, dispatch 2, spare on → storefront 4, orders 8, dispatch 2, spare on → storefront 4, orders 12, dispatch 2, spare on"
+  },
+  {
+    "check": "execute",
+    "severity": "error",
+    "where": "k-04",
+    "quote": "each payments Pod takes twice the room, and on a full cluster that’s another node, or a Pod that waits. W-02, below, shows how far it goes.",
+    "message": "the pointer needs a setting the widget has no control for",
+    "evidence": "payments has no control: scaling payments is not possible in the widget; applied to the model only where noted"
+  },
+  {
+    "check": "execute",
+    "severity": "error",
+    "where": "k-04",
+    "quote": "each payments Pod takes twice the room, and on a full cluster that’s another node, or a Pod that waits. W-02, below, shows how far it goes.",
+    "message": "from the default state the widget does not show what the text says (0/1 plausible starts pass)",
+    "evidence": "expected reserved_gb increases state 0 (implied); got reserved_gb = 38 (state 0: 38); expected nodes_total increases state 0 (implied); got nodes_total = 5 (state 0: 5) | states: storefront 4, orders 6, dispatch 2, spare on → storefront 4, orders 6, dispatch 2, spare on"
+  },
+  {
+    "check": "execute",
+    "severity": "error",
+    "where": "k-08",
+    "quote": "Halved requests fit onto fewer nodes, but at the rush several services would use more than they reserved. … (W-02’s warnings show which services.)",
+    "message": "from the default state the widget does not show what the text says (0/1 plausible starts pass)",
+    "evidence": "expected services_over count_gte 2; got services_over = [orders] | states: storefront 4, orders 6, dispatch 2, spare on → storefront 2, orders 3, dispatch 1, spare on"
+  },
+  {
+    "check": "naming",
+    "severity": "warn",
+    "where": "s-04",
+    "quote": "Each Pod’s outline is what it reserves",
+    "message": "the text calls a widget part \"Pod outline (reserved)\", which the widget never prints",
+    "evidence": "nearest printed: \"Reserved\", \"Reserved, not used\", \"Reserved,\""
+  },
+  {
+    "check": "naming",
+    "severity": "warn",
+    "where": "s-04",
+    "quote": "the solid fill inside it is what it used at last Friday’s rush",
+    "message": "the text calls a widget part \"Pod solid fill (used at the rush)\", which the widget never prints",
+    "evidence": "nearest printed: \"Used at the rush\", \"Used at the rush\", \"{svc} requests {req} GB and used {use} GB at the rush: first in line if a node runs short (§08).\""
+  },
+  {
+    "check": "naming",
+    "severity": "warn",
+    "where": "s-04",
+    "quote": "The first is room that no Pod has reserved",
+    "message": "the text calls a widget part \"idle bar: room no Pod has reserved\", which the widget never prints",
+    "evidence": "nearest printed: \", gb: ev.idle.notReserved, seg: segFree, name: T.idle.notReserved }\n    ];\n    var x = 0;\n    parts.forEach(function (p) {\n      p.pct = room ? p.gb / room * 100 : 0;\n      p.left = x;\n      p.seg.style.width = p.pct + \", \", gb: ev.idle.reservedUnused, seg: segRes, name: T.idle.reservedUnused },\n      { key: \", \"Reserved\""
+  },
+  {
+    "check": "naming",
+    "severity": "warn",
+    "where": "s-04",
+    "quote": "The second is room that Pods have reserved and don’t use",
+    "message": "the text calls a widget part \"idle bar: reserved, not used\", which the widget never prints",
+    "evidence": "nearest printed: \", gb: ev.idle.reservedUnused, seg: segRes, name: T.idle.reservedUnused },\n      { key: \", \"Reserved, not used\", \"{change}{nodes} nodes, set by {setBy}. {reserved} of {rented} GB reserved; {used} GB used at the rush. {warn}\""
+  },
+  {
+    "check": "naming",
+    "severity": "warn",
+    "where": "s-05",
+    "quote": "the spare-node switch in W-02",
+    "message": "the text calls a widget part \"spare-node switch\", which the widget never prints",
+    "evidence": "nearest printed: \"Spare node {state}. \", \";\n    if (lastChange && lastChange.svc) change = fill(T.liveChange, { svc: D.SERVICES[lastChange.svc].label, v: gb(req[lastChange.svc]) });\n    else if (lastChange && lastChange.spare) change = fill(T.liveSpare, { state: spare ? T.spareOn.toLowerCase() : T.spareOff.toLowerCase() });\n    else if (lastChange && lastChange.reset) change = T.liveReset;\n    var w = ev.over.length ? fill(T.liveOver, { list: list(ev.over.map(function (s) { return D.SERVICES[s].label; })) }) : T.liveOk;\n    if (!ev.feasible) {\n      var nv = list(ev.never.map(function (n) { return fill(T.liveNever, { svc: D.SERVICES[n.service].label, req: gb(n.request) }); }));\n      return fill(T.liveNone, { change: change, never: nv, warn: w });\n    }\n    return fill(T.live, {\n      change: change, nodes: ev.nodes, setBy: T.setByWord[ev.setBy].toLowerCase(),\n      reserved: gb(ev.reserved), rented: gb(ev.rented), used: gb(ev.used), warn: w\n    });\n  }\n\n  var current = null;\n  function update() {\n    D.ORDER.forEach(function (s) { RD.SERVICES[s].size = req[s]; });\n    R.reset();\n    var ev = M.evaluate(D, req, spare);\n    current = ev;\n\n    /* readouts */\n    rNodes.val.textContent = ev.feasible ? pad2(ev.nodes) : T.nodesNone;\n    rNodes.sub.textContent = T.nodesSub;\n    sub2.textContent = !ev.feasible ? T.nodesNoneSub : fill(spare ? T.nodesSpare : T.nodesNoSpare, { n: ev.base });\n    rSet.val.textContent = ev.feasible ? T.setByWord[ev.setBy] : T.setByWord.none;\n    rSet.sub.textContent = ev.feasible ? fill(T.setBySub, { mem: ev.memOnly, cpu: ev.cpuOnly }) : T.setBySubNone;\n    rRes.val.textContent = ev.feasible ? fill(T.reservedOf, { reserved: gb(ev.reserved), rented: gb(ev.rented) }) : fill(T.reservedNone, { reserved: gb(ev.reserved) });\n    rUsed.val.textContent = fill(T.usedVal, { used: gb(ev.used) });\n    if (lastChange) {\n      /* the count\", \";\n    /* the drawing: the most nodes any setting needs (every request at its maximum, spare on), and the\n       never-placeable bar above it */\n    var bigReq = {};\n    D.ORDER.forEach(function (s) { bigReq[s] = D.SERVICES[s].adjustable.max; });\n    bigReq.orders = D.CAPACITY.memory;\n    var big = M.evaluate(D, bigReq, true);\n    D.ORDER.forEach(function (s) { RD.SERVICES[s].size = bigReq[s]; });\n    R.reset();\n    render(big, []);\n    drawNever({ never: [{ service: \""
+  }
+]

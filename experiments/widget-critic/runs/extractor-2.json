@@ -1,0 +1,114 @@
+{
+  "pointers": [
+    {
+      "id": "p1",
+      "where": "s-04",
+      "quote": "It opens on Fennel’s requests as the teams set them, and counts the nodes those requests need if the Pods are packed as tightly as they will go, plus one spare node",
+      "start": "default",
+      "steps": [],
+      "expect": [
+        { "at": 0, "observable": "nodes_total", "op": "lte", "value": 5, "implied": true }
+      ]
+    },
+    {
+      "id": "p2",
+      "where": "s-04",
+      "quote": "Set each request to what that service used at the rush. How many nodes does Fennel need now, and what sets that number?",
+      "start": "default",
+      "steps": [ { "set_to_use": "all" } ],
+      "expect": [
+        { "at": 1, "observable": "nodes_total", "op": "decreases", "relative_to": 0, "implied": true },
+        { "at": 1, "observable": "services_over", "op": "count_eq", "value": 0, "implied": true }
+      ]
+    },
+    {
+      "id": "p3",
+      "where": "s-04",
+      "quote": "Switch off the spare node. What does insurance cost?",
+      "start": "previous",
+      "steps": [ { "spare": false } ],
+      "expect": [
+        { "at": 1, "observable": "nodes_total", "op": "decreases", "relative_to": 0, "implied": true },
+        { "at": 1, "observable": "nodes_for_pods", "op": "unchanged", "relative_to": 0, "implied": true }
+      ]
+    },
+    {
+      "id": "p4",
+      "where": "s-04",
+      "quote": "Push orders past 13 GB.",
+      "start": "previous",
+      "steps": [ { "set": { "orders": 13.5 } } ],
+      "expect": [
+        { "at": 1, "observable": "services_never_placeable", "op": "includes", "value": "orders", "implied": true }
+      ]
+    },
+    {
+      "id": "p5",
+      "where": "s-06",
+      "quote": "a Pod larger than every node will never be placed, and W-02 shows it when you push orders past 13 GB",
+      "start": "unspecified",
+      "steps": [ { "set": { "orders": 13.5 } } ],
+      "expect": [
+        { "at": 1, "observable": "services_never_placeable", "op": "includes", "value": "orders" }
+      ]
+    },
+    {
+      "id": "p6",
+      "where": "k-04",
+      "quote": "each payments Pod takes twice the room, and on a full cluster that’s another node, or a Pod that waits. W-02, below, shows how far it goes.",
+      "start": "default",
+      "steps": [ { "scale": { "factor": 2, "services": ["payments"] } } ],
+      "expect": [
+        { "at": 1, "observable": "reserved_gb", "op": "increases", "relative_to": 0, "implied": true },
+        { "at": 1, "observable": "nodes_total", "op": "increases", "relative_to": 0, "implied": true },
+        { "at": 1, "observable": "used_gb", "op": "unchanged", "relative_to": 0, "implied": true }
+      ]
+    },
+    {
+      "id": "p7",
+      "where": "k-08",
+      "quote": "Halved requests fit onto fewer nodes, but at the rush several services would use more than they reserved. … (W-02’s warnings show which services.)",
+      "start": "default",
+      "steps": [ { "scale": { "factor": 0.5, "services": "all" } } ],
+      "expect": [
+        { "at": 1, "observable": "services_over", "op": "count_gte", "value": 2 },
+        { "at": 1, "observable": "nodes_for_pods", "op": "decreases", "relative_to": 0, "implied": true }
+      ]
+    },
+    {
+      "id": "p8",
+      "where": "k-09",
+      "quote": "on nodes that are already full, that can mean another node on the bill (try orders at 8 and then 12 GB in W-02)",
+      "start": "unspecified",
+      "steps": [ { "set": { "orders": 8 } }, { "set": { "orders": 12 } } ],
+      "expect": [
+        { "at": 2, "observable": "nodes_total", "op": "increases", "relative_to": 1, "implied": true }
+      ]
+    }
+  ],
+  "manipulations": [
+    { "where": "s-04", "quote": "Set each request to what that service used at the rush.", "service": null, "attribute": "memory_request" },
+    { "where": "s-04", "quote": "Switch off the spare node.", "service": null, "attribute": "spare_switch" },
+    { "where": "s-04", "quote": "Push orders past 13 GB.", "service": "orders", "attribute": "memory_request" },
+    { "where": "s-04", "quote": "W-02, Ari’s sizing sheet: change three services’ memory requests and the spare-node switch, and see how many nodes Fennel must rent", "service": null, "attribute": "memory_request" },
+    { "where": "s-04", "quote": "W-02, Ari’s sizing sheet: change three services’ memory requests and the spare-node switch", "service": null, "attribute": "spare_switch" },
+    { "where": "k-04", "quote": "the payments team doubles its memory request … W-02, below, shows how far it goes.", "service": "payments", "attribute": "memory_request" },
+    { "where": "s-05", "quote": "the spare-node switch in W-02 shows what it costs", "service": null, "attribute": "spare_switch" },
+    { "where": "s-06", "quote": "W-02 shows it when you push orders past 13 GB", "service": "orders", "attribute": "memory_request" },
+    { "where": "k-08", "quote": "halving every service’s memory request … (W-02’s warnings show which services.)", "service": null, "attribute": "memory_request" },
+    { "where": "k-09", "quote": "try orders at 8 and then 12 GB in W-02", "service": "orders", "attribute": "memory_request" }
+  ],
+  "named_elements": [
+    { "where": "s-04", "quote": "W-02 is Ari’s sizing sheet.", "name": "Ari's sizing sheet" },
+    { "where": "s-03", "quote": "the sizing sheet in §04, need JavaScript", "name": "sizing sheet" },
+    { "where": "s-04", "quote": "Each Pod’s outline is what it reserves", "name": "Pod outline (reserved)" },
+    { "where": "s-04", "quote": "the solid fill inside it is what it used at last Friday’s rush", "name": "Pod solid fill (used at the rush)" },
+    { "where": "s-04", "quote": "plus one spare node", "name": "spare node" },
+    { "where": "s-04", "quote": "W-02’s idle bar splits the room Fennel rents but doesn’t use into two kinds", "name": "idle bar" },
+    { "where": "s-04", "quote": "The first is room that no Pod has reserved", "name": "idle bar: room no Pod has reserved" },
+    { "where": "s-04", "quote": "The second is room that Pods have reserved and don’t use", "name": "idle bar: reserved, not used" },
+    { "where": "s-05", "quote": "the spare-node switch in W-02", "name": "spare-node switch" },
+    { "where": "k-08", "quote": "W-02’s warnings show which services.", "name": "warnings" }
+  ],
+  "notes": "Scope: I encoded only reader-facing text (prose, check options/feedback/reveal, captions, aria-labels, noscript). The HTML comment 'MOUNT CONTRACT · w-sizing-sandbox' in s-04 contains builder-facing specifics (control list, step size 0.5 GB, default readouts like NODES 05 / RESERVED 38 OF 65 GB, and 'Expected values (ac-08)') that a reader never sees; I deliberately left these out. Consequently: (1) 'past 13 GB' is encoded as 13.5 GB (the reader text gives no step size; any value >13 is meant). (2) p1: the text says Fennel rents five nodes because of the requests, and the W-02 caption says a real cluster needs 'at least this many' as the sheet counts, so the sheet's count at default is implied to be ≤ 5; the text never states the default number. (3) 'All' ambiguity in p2 (set_to_use all) and p7 (halve every service): the prose says 'each request'/'every service', but the W-02 caption says the memory requests of payments and notifications stay as the teams set them and the aria-label says 'three services' memory requests'; so in W-02 'all' can at most cover storefront, orders and dispatch (the three are not named in reader text; inferred as the services other than payments and notifications). (4) p6 (k-04, doubling payments) points into W-02, but the W-02 caption says payments' memory request is not adjustable; I encoded the pointer as the text states it and flag the tension here without judging it. (5) p2's 'what sets that number?' implies the set_by readout is informative after the change (possibly no longer memory alone) but the text does not say what it becomes, so it is not encoded. p2's services_over count_eq 0 is implied by requests equalling use. (6) p3/p4 start: the three 'things to notice' are a list with no reset instruction between them, so I used 'previous'; they could also be read as independent from default. p3: the lead says the sheet counts the nodes needed 'plus one spare node', so switching it off implies nodes_total drops (by one) and nodes_for_pods is unchanged; 'by exactly one' is not expressible. (7) p8: 'another node on the bill' encoded as nodes_total (the bill counts what is rented, spare included); the text hedges with 'can mean' and 'on nodes that are already full'. p7: 'fewer nodes' is said of the cluster, applied to W-02 as implied. (8) Not encodable: bin-packing description ('W-02 does it to count the fewest nodes Fennel could manage with'); the caption's 'Each change places every Pod afresh'; 'Processor requests ... stay as the teams set them' (non-manipulable attributes); the idle bar is implied to sum to what the dashboard's 'less than a third busy' reflects (used < 1/3 of rented), but there is no observable for rented total. s-04's closing claim that requests closer to use 'would let Fennel rent fewer nodes, but not as few as possible' supports p2's implied decrease. No reader text mentions a Reset control."
+}

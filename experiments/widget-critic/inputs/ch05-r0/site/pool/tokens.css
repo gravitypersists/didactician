@@ -1,0 +1,154 @@
+/* Control Plane — explainer tokens. Generated from tokens.json; drop-in for the kit. */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Space+Mono:wght@400;700&display=swap");
+
+:root {
+  color-scheme: light;
+  --bg: #eeeee8;
+  --surface: #f9f9f6;
+  --surface-2: #e2e2db;
+  --ink: #111110;
+  --ink-2: #353533;
+  --ink-3: #595955;
+  --ink-4: #87877f;
+  --line: #c3c3bb;
+  --accent: #c43c00;
+  --accent-ink: #ffffff;
+  --focus: #0047e0;
+  --good: #007357;
+  --bad: #b0004c;
+  --warn: #8a6200;
+  --c1: #c23a00;
+  --c2: #00468c;
+  --c3: #00876c;
+  --c4: #a58300;
+  --c5: #9c3a84;
+  --c6: #3a3a37;
+  --c1-soft: #f6d9c9;
+  --c2-soft: #d3e3f2;
+  --c3-soft: #cfe8df;
+  --c4-soft: #f5eed6;
+  --c5-soft: #efd8e7;
+  --c6-soft: #dcdcd6;
+  --shadow-1: 4px 4px 0 0 #111110;
+  --font-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --font-mono: "Space Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-body: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --fs-caption: 13px;
+  --fs-small: 15px;
+  --fs-body: 18px;
+  --fs-h1: 56px;
+  --fs-h2: 32px;
+  --fs-h3: 22px;
+  --lh-caption: 18px;
+  --lh-small: 22px;
+  --lh-body: 28px;
+  --lh-h1: 56px;
+  --lh-h2: 36px;
+  --lh-h3: 28px;
+  --measure: 66ch;
+  --stroke: 1.5px;
+  --tap: 44px;
+  --sp-0: 0;
+  --sp-half: 4px;
+  --sp-1: 8px;
+  --sp-2: 16px;
+  --sp-3: 24px;
+  --sp-4: 32px;
+  --sp-5: 40px;
+  --sp-6: 48px;
+  --sp-7: 56px;
+  --sp-8: 64px;
+  --sp-9: 72px;
+  --sp-10: 80px;
+  --sp-11: 88px;
+  --sp-12: 96px;
+  --radius-1: 2px;
+  --radius-2: 4px;
+  --radius-3: 999px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-1: 120ms;
+  --dur-2: 220ms;
+  --dur-3: 420ms;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --fs-body: 17px;
+    --lh-body: 26px;
+    --fs-h1: 36px;
+    --lh-h1: 38px;
+    --fs-h2: 26px;
+    --lh-h2: 30px;
+    --fs-h3: 20px;
+    --lh-h3: 26px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0c0c0b;
+    --surface: #161615;
+    --surface-2: #222220;
+    --ink: #ecece6;
+    --ink-2: #c6c6bf;
+    --ink-3: #9c9c95;
+    --ink-4: #6c6c66;
+    --line: #34342f;
+    --accent: #ff7433;
+    --accent-ink: #0c0c0b;
+    --focus: #6aa8ff;
+    --good: #3ccb9e;
+    --bad: #ff6b98;
+    --warn: #f0c03c;
+    --c1: #ff7a3d;
+    --c2: #3d8cff;
+    --c3: #5fdcb0;
+    --c4: #f5d04e;
+    --c5: #ee93d6;
+    --c6: #7c7c75;
+    --c1-soft: #3a2014;
+    --c2-soft: #13263a;
+    --c3-soft: #0f2e26;
+    --c4-soft: #2f2710;
+    --c5-soft: #36182c;
+    --c6-soft: #2a2a27;
+    --shadow-1: 4px 4px 0 0 #4a4a45;
+  }
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0c0c0b;
+  --surface: #161615;
+  --surface-2: #222220;
+  --ink: #ecece6;
+  --ink-2: #c6c6bf;
+  --ink-3: #9c9c95;
+  --ink-4: #6c6c66;
+  --line: #34342f;
+  --accent: #ff7433;
+  --accent-ink: #0c0c0b;
+  --focus: #6aa8ff;
+  --good: #3ccb9e;
+  --bad: #ff6b98;
+  --warn: #f0c03c;
+  --c1: #ff7a3d;
+  --c2: #3d8cff;
+  --c3: #5fdcb0;
+  --c4: #f5d04e;
+  --c5: #ee93d6;
+  --c6: #7c7c75;
+  --c1-soft: #3a2014;
+  --c2-soft: #13263a;
+  --c3-soft: #0f2e26;
+  --c4-soft: #2f2710;
+  --c5-soft: #36182c;
+  --c6-soft: #2a2a27;
+  --shadow-1: 4px 4px 0 0 #4a4a45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-1: 0ms; --dur-2: 0ms; --dur-3: 0ms; }
+}

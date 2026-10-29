@@ -1,0 +1,352 @@
+/* pool/cluster/cluster.css · styles for the cluster drawing (cluster.js, renderCluster) and the lane
+   controller's step kicker and measured inline fallback (lanes.js). Promoted from Ch 04's
+   w-cluster-scrolly/index.css (Ch 03's w-fleet-scrolly, extended). Scoped under the drawing's own root,
+   .wc, so it works in any widget; each widget's selectors keep the specificity they had under
+   [data-widget="…"] (.wc.wc and .wc .x stand in for it). The page owns the lane scaffold (.cs-* in the
+   chapter's assets/page.css) and any load-time height reservation (in the widget's own index.css).
+   Every value is a token. Grammar (README "Cluster drawing"): things different in kind look different.
+     a written intention  the cluster's record: c4 stroke on c4-soft, mono rows
+     an actor (a loop)    c3 pill on c3-soft with a typographic ↻; idle loops at 0.35 opacity
+     a running thing      Ch 02's c1 chip inside an inset ink ring (the Pod), height = size
+     only a record        a Pod not started: dashed, no fill, no lamp
+     no node yet          a WAITING Pod: dashed c1 chip, no fill, no lamp, in the WAITING strip
+     reality              a dead machine: dashed ink-3 frame, DOWN in its body, its Pods LOST
+     use                  solid c1 fill from the chip's bottom; above the reservation, hatched (warn)
+   Status is always a word plus colour. No arrows on the canvas; the step highlight (3px ink outline)
+   marks what changed. No shadow: the drawing isn't interactive. */
+
+.wc.wc,
+.wc.wc * { box-sizing: border-box; }
+
+.wc.wc {
+  position: relative;
+  background: var(--surface);
+  border: var(--stroke) solid var(--ink);
+  border-radius: var(--radius-1);
+  color: var(--ink);
+  font: 700 var(--fs-caption)/16px var(--font-mono);
+}
+
+/* header bar: W-01 · THE CLUSTER · LANE … CLOCK  STEP n / N */
+.wc .wc__bar {
+  display: flex; align-items: center; gap: var(--sp-1);
+  min-height: 26px; padding: 3px var(--sp-1);
+  border-bottom: var(--stroke) solid var(--ink);
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono);
+  letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
+}
+.wc.wc--narrow .wc__bar { min-height: 22px; padding: 1px 6px; gap: 6px; }
+/* an inline snapshot on a phone bleeds into the step card's padding (see drawSnaps) */
+.wc.wc--bleed { margin-inline: -10px; }
+.wc .wc__title { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--ink); }
+.wc .wc__clock { flex: none; color: var(--ink); font-variant-numeric: tabular-nums; }
+.wc .wc__step { flex: none; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+/* blueprint ground (the style guide's .cp-blueprint, scoped) */
+.wc .wc__ground {
+  display: flex; flex-direction: column; gap: var(--wc-row, 8px);
+  padding: var(--wc-pad, 8px);
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: var(--sp-4) var(--sp-4);
+  background-position: -1px -1px;
+}
+.wc .wc__ground > * { margin: 0; }
+
+/* "what if" banner (Ch 03's; unused in Ch 04) */
+.wc .wc__banner { display: flex; align-items: flex-start; }
+.wc .wc__banner-t {
+  padding: 2px var(--sp-1);
+  background: var(--surface); border: var(--stroke) dashed var(--ink); border-radius: var(--radius-1);
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .08em; text-transform: uppercase;
+}
+
+/* ---- the cluster's record: a written intention (page .cp-rec) ---- */
+.wc .wc-rec {
+  min-width: 0;
+  background: var(--c4-soft); border: var(--stroke) solid var(--c4); border-radius: var(--radius-1);
+  color: var(--ink);
+}
+.wc .wc-rec__head {
+  margin: 0; padding: 2px var(--wc-recpad, 8px);
+  border-bottom: var(--stroke) solid var(--c4);
+  font: 700 var(--fs-caption)/16px var(--font-mono); letter-spacing: .06em; text-transform: uppercase;
+  white-space: nowrap; overflow: hidden;
+}
+/* rows sit 2px apart; a highlighted row's outline is drawn 1px inside its box, so it reaches exactly
+   to the next row and never covers that row's text */
+.wc .wc-rec__rows { display: flex; flex-direction: column; gap: 2px; padding: 4px calc(var(--wc-recpad, 8px) - 2px); }
+.wc .wc-rec__row {
+  display: grid; grid-template-columns: var(--wc-cols); column-gap: var(--wc-recgap, 12px); align-items: center;
+  padding: 0 2px; border-radius: var(--radius-1);
+  font: 400 var(--fs-caption)/17px var(--font-mono); white-space: nowrap;
+}
+.wc.wc--narrow .wc-rec__row { line-height: 15px; }
+.wc.wc--narrow .wc-rec__rows { padding-top: 2px; padding-bottom: 2px; }
+.wc.wc--narrow .wc-rec__head { line-height: 15px; padding-top: 0; padding-bottom: 0; }
+.wc .wc-rec__row.is-hl { outline-offset: -1px; }
+.wc .wc-rec__name { font-weight: 700; overflow: hidden; }
+.wc .wc-rec__want { color: var(--ink-2); }
+.wc .wc-rec__marks { display: flex; align-items: center; gap: 4px; }
+.wc .wc-rec__word { justify-self: end; font-weight: 700; overflow: hidden; }
+.wc .wc-rec__sep { color: var(--ink-3); }
+/* one mark per Pod record: filled = the record says running; hollow dashed = recorded, not running;
+   "?" = on a node marked unknown. Glyphs, not text (10px squares). */
+.wc .wc-mark { display: inline-block; flex: none; width: 10px; height: 10px; font-style: normal; }
+.wc .wc-mark--run { background: var(--good); }
+.wc .wc-mark--rec { border: var(--stroke) dashed var(--ink-3); }
+/* marked for deletion: still in the record, struck through, not counted */
+.wc .wc-mark--del {
+  border: var(--stroke) solid var(--ink-3);
+  background: linear-gradient(to top right, transparent 42%, var(--ink-3) 42%, var(--ink-3) 58%, transparent 58%);
+}
+.wc .wc-mark--unk { font: 700 var(--fs-caption)/10px var(--font-mono); text-align: center; color: var(--warn); }
+
+/* status and tone words: word + colour, never colour alone */
+.wc .wc-tone--good { color: var(--good); }
+.wc .wc-tone--bad { color: var(--bad); }
+.wc .wc-tone--warn { color: var(--warn); }
+.wc .wc-tone--mute { color: var(--ink-3); }
+
+/* ---- loops: actors (page .cp-loop) and the lens line ---- */
+.wc .wc-loops { display: flex; flex-direction: column; gap: var(--sp-half); }
+.wc .wc-loops__pills { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px; }
+.wc .wc-pill {
+  display: inline-flex; align-items: center; gap: var(--sp-half);
+  height: 22px; padding: 0 var(--wc-pillpad, 6px);
+  background: var(--c3-soft); border: var(--stroke) solid var(--c3); border-radius: var(--radius-3);
+  font: 700 var(--fs-caption)/1 var(--font-mono); letter-spacing: 0; white-space: nowrap; color: var(--ink);
+  opacity: .35;
+  transition: opacity var(--dur-2) var(--ease-out);
+}
+.wc .wc-pill.is-on { opacity: 1; }
+.wc .wc-pill__mark { font-weight: 700; }
+.wc.wc--narrow .wc-pill { height: 18px; }
+.wc.wc--narrow .wc-loops { gap: 2px; }
+.wc.wc--narrow .wc-loops__pills { padding: 0 1px; }
+/* the lens block is padded inside its step-highlight outline, so the outline never sits on its text */
+.wc .wc-lens { padding: 2px var(--sp-half); border-radius: var(--radius-1); }
+.wc.wc--narrow .wc-lens { padding: 1px var(--sp-half); }
+.wc .wc-lens.is-hl { outline-offset: 0; }
+.wc .wc-lens__line {
+  margin: 0;
+  font: 400 var(--fs-caption)/17px var(--font-mono); color: var(--ink);
+}
+.wc.wc--narrow .wc-lens__line { line-height: 15px; }
+.wc .wc-lens__k { font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+
+/* ---- nodes: Ch 03's machine frame, NODE · NN, with the node agent and the record's view on the bar ---- */
+.wc .wc__nodes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--wc-gapm, 8px); }
+.wc .wc-n {
+  min-width: 0;
+  background: var(--surface);
+  border: var(--stroke) solid var(--ink); border-radius: var(--radius-1);
+}
+.wc .wc-n__bar {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  padding: 2px var(--wc-barpad, 4px) var(--sp-half);
+  border-bottom: var(--stroke) solid var(--ink);
+  font: 700 var(--fs-caption)/16px var(--font-mono); letter-spacing: .04em; text-transform: uppercase;
+  white-space: nowrap; overflow: hidden;
+}
+.wc.wc--narrow .wc-n__bar { gap: 0; padding-top: 0; padding-bottom: 2px; line-height: 15px; }
+.wc.wc--narrow .wc-pill--agent { height: 16px; }
+.wc .wc-n__bar--row { flex-direction: row; align-items: center; justify-content: space-between; gap: 6px; padding-bottom: 2px; }
+.wc .wc-n__id { display: block; color: var(--ink); font-variant-numeric: tabular-nums; }
+.wc .wc-n__row { display: flex; align-items: center; gap: var(--sp-half); min-height: 18px; }
+.wc .wc-n__st { font-weight: 700; letter-spacing: .04em; border-radius: var(--radius-1); }
+.wc .wc-pill--agent {
+  height: 18px; padding: 0 var(--wc-barpad, 4px); gap: 2px;
+  text-transform: none; letter-spacing: 0;
+}
+.wc .wc-n.is-down { border-style: dashed; border-color: var(--ink-3); }
+.wc .wc-n.is-down .wc-n__bar { border-bottom-style: dashed; border-bottom-color: var(--ink-3); }
+.wc .wc-n__body {
+  display: flex; flex-direction: column; gap: var(--wc-gapu, 4px);
+  padding: var(--wc-bodypad, 3px);
+}
+
+/* Pod = Ch 02's container chip inside an inset ink ring (page .cp-pod); height = size in room units */
+.wc .wc-p {
+  flex: none; min-width: 0; padding: var(--wc-ringpad, 2px);
+  border: var(--stroke) solid var(--ink); border-radius: var(--radius-1);
+  background: var(--surface);
+}
+.wc .wc-c {
+  display: flex; flex-direction: column; justify-content: flex-start;
+  height: 100%; min-width: 0; overflow: hidden;
+  padding: 1px var(--wc-chippad, 3px);
+  background: var(--c1-soft); border: var(--stroke) solid var(--c1); border-radius: 1px;
+  font: 700 var(--fs-caption)/16px var(--font-mono); letter-spacing: 0; color: var(--ink);
+}
+.wc.wc--narrow .wc-c { line-height: 14px; letter-spacing: -0.02em; }
+/* small units: 1px Pod strokes, no ring inset (see geometry) */
+.wc.wc--thin .wc-p,
+.wc.wc--thin .wc-c { border-width: 1px; }
+.wc .wc-c--tight { padding-top: 0; padding-bottom: 0; justify-content: center; }
+.wc .wc-c--tight .wc-c__ln { line-height: 14px; }
+.wc .wc-c__ln { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wc .wc-c__ln > .wc-lamp { vertical-align: 0; }
+/* NOT STARTED: the Pod exists only as a record, so dashed, no fill, no lamp */
+.wc .wc-p--notstarted { border-style: dashed; border-color: var(--ink-3); background: transparent; }
+.wc .wc-p--notstarted .wc-c { background: transparent; border-style: dashed; color: var(--ink-3); }
+/* LOST (on a dead machine) and STOPPED: dashed, no fill, so the Pod reads as gone */
+.wc .wc-p--lost,
+.wc .wc-p--stopped { border-style: dashed; border-color: var(--ink-3); background: transparent; }
+.wc .wc-p--lost .wc-c,
+.wc .wc-p--stopped .wc-c { background: transparent; border-style: dashed; border-color: var(--ink-3); color: var(--ink-3); }
+
+.wc .wc-st { font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
+.wc .wc-st--running { color: var(--good); }
+.wc .wc-st--starting,
+.wc .wc-st--newaddr { color: var(--warn); }
+.wc .wc-st--lost,
+.wc .wc-st--crashed { color: var(--bad); }
+.wc .wc-st--notstarted,
+.wc .wc-st--stopped { color: var(--ink-3); }
+.wc .wc-lamp {
+  display: inline-block; flex: none; width: var(--sp-1); height: var(--sp-1);
+  margin: 0 var(--sp-half) 0 0; background: currentColor;
+}
+
+/* unused room: c6 dashed, labelled N FREE */
+.wc .wc-free,
+.wc .wc-down {
+  flex: none; display: grid; place-items: center; min-width: 0; overflow: hidden;
+  border-radius: var(--radius-1);
+  font: 400 var(--fs-caption)/16px var(--font-mono); letter-spacing: .04em; text-transform: uppercase;
+  white-space: nowrap;
+}
+.wc .wc-free { border: var(--stroke) dashed var(--c6); color: var(--ink-3); }
+/* a dead machine's body: reality, in words (what the record believes is on the bar) */
+.wc .wc-down { font-weight: 700; color: var(--bad); }
+
+/* note lines: what customers experience, and the connection line */
+.wc .wc__notes { display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-half); padding: 2px; }
+.wc.wc--narrow .wc__notes { gap: 2px; padding: 0 2px; }
+/* notes sit 2px apart on a phone: a highlighted note's outline is drawn 1px inside its box */
+.wc.wc--narrow .wc-note.is-hl { outline-offset: -1px; }
+.wc .wc-note {
+  margin: 0; padding: 0 var(--sp-half);
+  background: var(--surface); border-radius: var(--radius-1);
+  font: 400 var(--fs-caption)/17px var(--font-mono); color: var(--ink);
+}
+.wc.wc--narrow .wc-note { line-height: 15px; }
+.wc .wc-note .wc-tone--good,
+.wc .wc-note .wc-tone--bad,
+.wc .wc-note .wc-tone--warn { font-weight: 700; }
+.wc .wc-note__k { font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+
+/* step highlight: what changed in this step gets a 3px ink outline, for this step only.
+   It eases in over dur-2 (≤ 300ms); the tokens make it instant under prefers-reduced-motion. */
+.wc .is-hl {
+  outline: 3px solid transparent; outline-offset: 1px;
+  transition: outline-color var(--dur-2) var(--ease-out), opacity var(--dur-2) var(--ease-out);
+}
+.wc .wc-p.is-hl,
+.wc .wc-free.is-hl { outline-offset: 0; }
+.wc.wc.is-lit .is-hl { outline-color: var(--ink); }
+
+/* step text: the clock kicker above a step ("~03:04:50") */
+.cs-lane .cs-step__text .wc-kicker {
+  margin: 0 0 var(--sp-1);
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-3); font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wc .is-hl,
+  .wc .wc-pill { transition: none; }
+}
+
+/* Measured fallback (plan size:, CURRICULUM §8 step 6): where the fitted canvas would still be taller
+   than 50vh (under 900px) or the viewport (above), the controller sets data-cs-fit="inline" on the
+   mount; the lane then works like the page's short-viewport rule: no sticky canvas, and each step
+   shows its own snapshot above its text. */
+[data-widget][data-cs-fit="inline"] .cs-lane__grid { grid-template-columns: minmax(0, 1fr); }
+[data-widget][data-cs-fit="inline"] .cs-canvas { display: none; }
+[data-widget][data-cs-fit="inline"] .cs-step { min-height: 0; }
+[data-widget][data-cs-fit="inline"] .cs-step__snap { display: block; margin-bottom: var(--sp-2); }
+
+
+/* ---------------- optional features (Ch 05; drawn only when their snapshot fields are present) ---------------- */
+
+/* free room in two lines where "N GB FREE" doesn't fit one */
+.wc .wc-free--2 { align-content: center; }
+.wc .wc-free__ln { display: block; line-height: 15px; }
+.wc .wc-free--short { overflow: visible; line-height: 1; }
+
+/* a spare node: rented and kept empty; c6, so dashed */
+.wc .wc-n.is-spare { border-style: dashed; border-color: var(--c6); }
+.wc .wc-n.is-spare .wc-n__bar { border-bottom-style: dashed; border-bottom-color: var(--c6); }
+.wc .wc-free--spare { font-weight: 700; }
+
+/* NEW: a node added in this step (the word on an ink tag) */
+.wc .wc-tag {
+  display: inline-block; padding: 0 4px;
+  background: var(--ink); color: var(--surface); border-radius: var(--radius-1);
+  font: 700 var(--fs-caption)/16px var(--font-mono); letter-spacing: .04em; text-transform: uppercase;
+}
+.wc.wc--narrow .wc-tag { line-height: 15px; }
+.wc .wc-n__tags { display: block; }
+
+/* the scheduler's verdict on the node bar: FITS (good) / NO MEMORY · NO PROCESSOR (warn), free amounts in ink-2 */
+.wc .wc-n__verdict { display: flex; flex-direction: column; align-items: flex-start; max-width: 100%; border-radius: var(--radius-1); }
+.wc .wc-n__vln { display: block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wc .wc-n__vln > .wc-tone--good,
+.wc .wc-n__vln > .wc-tone--warn { font-weight: 700; }
+.wc .wc-n__vfree { font-weight: 400; color: var(--ink-2); }
+.wc .wc-n__verdict.is-hl { outline-offset: 0; }
+
+/* the processor footer: CPU reserved / room for Pods */
+.wc .wc-n__foot {
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 1px var(--wc-barpad, 4px);
+  border-top: var(--stroke) solid var(--ink);
+  font: 400 var(--fs-caption)/16px var(--font-mono); letter-spacing: .04em; text-transform: uppercase;
+  color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden;
+}
+.wc.wc--narrow .wc-n__foot { padding-top: 0; padding-bottom: 0; line-height: 15px; }
+.wc .wc-n.is-down .wc-n__foot { border-top-style: dashed; border-top-color: var(--ink-3); }
+.wc .wc-n.is-spare .wc-n__foot { border-top-style: dashed; border-top-color: var(--c6); }
+.wc .wc-n__fln { display: block; }
+.wc .wc-n__foot.is-hl { outline-offset: 0; }
+
+/* WAITING: a strip above the nodes, headed WAITING · NO ROOM (warn); its chips sit in the node columns */
+.wc .wc-wait { display: flex; flex-direction: column; gap: 2px; border-radius: var(--radius-1); }
+.wc .wc-wait__head {
+  margin: 0; padding: 0 2px;
+  font: 700 var(--fs-caption)/16px var(--font-mono); letter-spacing: .06em; text-transform: uppercase;
+}
+.wc.wc--narrow .wc-wait__head { line-height: 15px; }
+.wc .wc-wait__pods { display: grid; gap: var(--wc-gapm, 8px); align-items: start; }
+.wc .wc-wait__pods > .wc-p { margin: 0 calc(var(--stroke) + var(--wc-bodypad, 3px)); }
+.wc .wc-wait.is-hl { outline-offset: 0; }
+.wc .wc-p--waiting { border-style: dashed; border-color: var(--ink-3); background: transparent; }
+.wc .wc-p--waiting .wc-c { background: transparent; border-style: dashed; border-color: var(--c1); }
+.wc .wc-st--waiting { color: var(--warn); }
+
+/* use: what a Pod used, as a solid c1 fill from the chip's bottom; text keeps a c1-soft plate */
+.wc .wc-c--use { position: relative; }
+.wc .wc-use { position: absolute; left: 0; right: 0; bottom: 0; background: var(--c1); }
+.wc .wc-c--use .wc-c__ln { position: relative; z-index: 1; width: fit-content; max-width: 100%; background: var(--c1-soft); }
+/* above the reservation: hatched, rising over whatever sits above the chip (clipped at the node's top) */
+.wc .wc-p.is-over { position: relative; }
+.wc .wc-over {
+  position: absolute; z-index: 2;
+  left: var(--wc-ringpad, 2px); right: var(--wc-ringpad, 2px); bottom: calc(100% - var(--wc-ringpad, 2px));
+  background: repeating-linear-gradient(-45deg, var(--c1) 0 2px, transparent 2px 6px);
+  border: var(--stroke) solid var(--warn); border-bottom: 0;
+}
+.wc .wc-over.is-clipped { border-top-style: dashed; }
+.wc .wc-st--over { color: var(--warn); }
+
+/* the record where the row word doesn't fit beside the marks (pool-02; laneLayout decides, lane-wide):
+   smaller marks first, then the word on a line of its own under its row */
+.wc .wc-rec--tight .wc-rec__marks { gap: 2px; }
+.wc .wc-rec--tight .wc-mark { width: 8px; height: 8px; }
+.wc .wc-rec--tight .wc-mark--unk { line-height: 8px; }
+.wc .wc-rec--below .wc-rec__row { row-gap: 0; }
+.wc .wc-rec--below .wc-rec__word { grid-column: 1 / -1; }

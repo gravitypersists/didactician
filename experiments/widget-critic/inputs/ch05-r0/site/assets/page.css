@@ -1,0 +1,629 @@
+/* Ch 05 page layer. The course's page components are reimplemented from Ch 04's assets/page.css (the
+   reference implementation, itself from Ch 03): base, hero, page column, prose, asides with their
+   breaks line, quotes, recap, sources, cast strip, disclosures (.cp-more), term cards (.cp-term and its
+   payoff variant), figure plates, status words, the record and loop grammar, the manifest plate, the
+   loop lens table, the scrollytelling scaffold (.cs-*) and the check card look and behave as in Ch 04.
+   Control Plane treatments (design/control-plane/components/bundle.css) fitted to the kit skeleton
+   (pool/components.css). Every value is a token; no raw colours.
+   New in Ch 05 (plan ## Visual grammar): f-02 (one node, two counts), f-03 (node pools), the charts
+   f-05 and f-07, the NEW IN CH 5 tag in f-06, lane F's reserved heights and the W-02 frame. */
+
+/* ---------- base ---------- */
+body.d-body { -webkit-font-smoothing: antialiased; }
+:where(body) :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.cp-label {
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.cp-blueprint {
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: var(--sp-4) var(--sp-4);
+  background-position: -1px -1px;
+}
+
+/* ---------- hero ---------- */
+.cp-hero { padding: var(--sp-11) var(--sp-3) var(--sp-6); border-bottom: 3px solid var(--ink); }
+.cp-hero__inner { max-width: 960px; margin: 0 auto; }
+.cp-hero__kicker { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-2); align-items: center; margin: 0 0 var(--sp-3); }
+.cp-hero__idx {
+  background: var(--accent); color: var(--accent-ink);
+  padding: 0 var(--sp-1); border-radius: var(--radius-1);
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .08em;
+}
+.cp-hero__title {
+  margin: 0 0 var(--sp-3); max-width: 18ch;
+  font: 800 var(--fs-h1)/var(--lh-h1) var(--font-sans);
+  font-stretch: 112%; letter-spacing: -0.02em; color: var(--ink); text-wrap: balance;
+}
+.cp-hero__standfirst { margin: 0 0 var(--sp-5); max-width: var(--measure); font: italic 400 22px/32px var(--font-serif); color: var(--ink-2); }
+.cp-meta { display: flex; flex-wrap: wrap; margin: 0; padding: 0; border-top: var(--stroke) solid var(--ink); }
+.cp-meta > div { display: flex; flex-direction: column; gap: 2px; padding: var(--sp-1) var(--sp-3) 0 0; margin-right: var(--sp-3); }
+.cp-meta dt { font: 400 var(--fs-caption)/var(--lh-caption) var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); }
+.cp-meta dd { margin: 0; font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) {
+  .cp-hero { padding: var(--sp-8) var(--sp-2) var(--sp-5); }
+  .cp-hero__standfirst { font-size: 19px; line-height: 28px; }
+}
+
+/* ---------- page column ---------- */
+.d-page { padding-top: var(--sp-4); }
+.d-rail { padding-top: var(--sp-6); }
+/* Sections hold the prose measure (66ch in body type); wide blocks break out symmetrically,
+   bounded by the main column (container query units), so the left edge of all prose lines up. */
+.d-main { container-type: inline-size; }
+.d-main > * { margin-inline: auto; }
+.d-main section > .d-wide {
+  width: min(960px, 100cqw); max-width: none;
+  margin-left: calc((100% - min(960px, 100cqw)) / 2);
+}
+.d-main section > .cp-check {
+  width: min(720px, 100cqw); max-width: none;
+  margin-left: calc((100% - min(720px, 100cqw)) / 2);
+}
+
+/* ---------- prose ---------- */
+.d-main p { hanging-punctuation: first; }
+.d-main h2 {
+  margin: var(--sp-9) auto var(--sp-3);
+  padding-top: var(--sp-2);
+  border-top: var(--stroke) solid var(--ink);
+  font: 700 var(--fs-h2)/var(--lh-h2) var(--font-sans);
+  font-stretch: 106%; letter-spacing: -0.01em; text-wrap: balance;
+}
+.d-main section:first-of-type h2 { margin-top: var(--sp-4); }
+.cp-sec {
+  display: block; margin-bottom: var(--sp-1);
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono);
+  letter-spacing: .08em; color: var(--accent);
+}
+.d-main a {
+  color: var(--accent);
+  text-decoration: underline; text-decoration-thickness: var(--stroke); text-underline-offset: 3px;
+  transition: color var(--dur-1) var(--ease-out);
+}
+.d-main a:hover { color: var(--ink); }
+.d-main dfn { font-style: normal; font-weight: 600; box-shadow: inset 0 -0.35em 0 var(--c1-soft); }
+.d-main ul { padding-left: var(--sp-3); }
+.d-main li { margin-bottom: var(--sp-1); }
+.cp-aside {
+  margin-top: var(--sp-4); margin-bottom: var(--sp-4);
+  padding: var(--sp-2) 0 var(--sp-2) var(--sp-3);
+  border-top: var(--stroke) solid var(--line); border-bottom: var(--stroke) solid var(--line);
+  font: var(--fs-small)/var(--lh-small) var(--font-sans); color: var(--ink-2);
+}
+.cp-aside p { margin: 0 0 var(--sp-1); }
+.cp-aside p:last-child { margin-bottom: 0; }
+.cp-aside b { font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .08em; color: var(--ink); margin-right: var(--sp-1); }
+.cp-aside .cp-breaks b { color: var(--ink-3); }
+.cp-quote {
+  margin: var(--sp-3) 0;
+  padding: var(--sp-1) 0 var(--sp-1) var(--sp-3);
+  border-left: 3px solid var(--ink);
+  font: italic 400 22px/32px var(--font-serif); color: var(--ink);
+}
+.cp-quote p { margin: 0; }
+.cp-quote cite { display: block; margin-top: var(--sp-half); font: 400 var(--fs-caption)/var(--lh-caption) var(--font-mono); font-style: normal; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.cp-recap { margin-top: var(--sp-6); padding-top: var(--sp-2); border-top: var(--stroke) solid var(--ink); }
+.cp-recap ul { margin: var(--sp-1) 0 var(--sp-3); padding-left: var(--sp-3); }
+.cp-recap li { margin-bottom: var(--sp-1); }
+.cp-sources { margin-top: var(--sp-9); padding-top: var(--sp-2); border-top: var(--stroke) solid var(--line); font: var(--fs-small)/var(--lh-small) var(--font-sans); color: var(--ink-2); }
+.cp-sources ol { margin: var(--sp-1) 0 var(--sp-2); padding-left: var(--sp-3); }
+.cp-sources li { margin-bottom: var(--sp-half); }
+.cp-sources p { margin: 0 0 var(--sp-1); }
+
+/* ---------- cast strip (course convention from Ch 03, CURRICULUM §2.11) ---------- */
+.cp-cast {
+  margin-top: 0; margin-bottom: var(--sp-2); padding: var(--sp-2) 0;
+  border-top: var(--stroke) solid var(--line); border-bottom: var(--stroke) solid var(--line);
+  font: var(--fs-small)/var(--lh-small) var(--font-sans); color: var(--ink-2);
+}
+.d-main .cp-cast > .cp-label { margin: 0 0 var(--sp-1); }
+.cp-cast dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-half) var(--sp-2); margin: 0; }
+.cp-cast dt { font: 700 var(--fs-caption)/var(--lh-small) var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+.cp-cast dd { margin: 0; }
+
+/* ---------- disclosures: optional notes, collapsed by default (ink ▸ / ▾ markers, as Ch 02's "why" lists) ---------- */
+.d-more.cp-more { margin: var(--sp-2) auto var(--sp-3); padding-left: var(--sp-2); border-left: var(--stroke) solid var(--ink); }
+.cp-more > summary {
+  display: flex; align-items: center; min-height: var(--tap); cursor: pointer; list-style: none;
+  font: 600 var(--fs-small)/var(--lh-small) var(--font-sans); color: var(--ink);
+}
+.cp-more > summary::-webkit-details-marker { display: none; }
+.cp-more > summary::before { content: "▸"; flex: none; margin-right: var(--sp-1); font-family: var(--font-mono); color: var(--ink); }
+.cp-more[open] > summary::before { content: "▾"; }
+.cp-more__body { padding-bottom: var(--sp-1); font: var(--fs-small)/var(--lh-small) var(--font-serif); color: var(--ink-2); }
+.cp-more__body p, .cp-more__body ul { margin: 0 0 var(--sp-1); }
+.cp-more__body p:last-child, .cp-more__body ul:last-child { margin-bottom: 0; }
+.cp-more__body ul { padding-left: var(--sp-3); }
+.cp-more__body li { margin-bottom: var(--sp-half); }
+
+/* ---------- term cards (course convention from Ch 03, CURRICULUM §8 step 4; plan ## Figures) ----------
+   Outlined plate, no shadow (not interactive). One accent mark: the kicker. The payoff variant
+   (blueprint ground, larger term, job strip) appears at most once per chapter. Static: no animation. */
+.cp-term {
+  margin-top: var(--sp-6); margin-bottom: var(--sp-6);
+  padding: var(--sp-3);
+  background-color: var(--surface); border: var(--stroke) solid var(--ink); border-radius: var(--radius-1);
+}
+.cp-term > p { margin: 0; }
+.cp-term__kicker { font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.cp-term .cp-term__term {
+  margin: var(--sp-1) 0 var(--sp-2);
+  font: 800 32px/36px var(--font-sans); font-stretch: 112%; letter-spacing: -0.02em; color: var(--ink);
+  text-wrap: balance; overflow-wrap: anywhere;
+}
+.cp-term__sep { font-family: var(--font-mono); font-weight: 400; color: var(--ink-3); }
+.cp-term .cp-term__def { margin-bottom: var(--sp-2); font: 400 var(--fs-body)/var(--lh-body) var(--font-serif); color: var(--ink); }
+.cp-term__back { font: 400 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .04em; color: var(--ink-3); }
+.cp-term--payoff { padding: var(--sp-4) var(--sp-3); }
+.cp-term--payoff .cp-term__term { font-size: 40px; line-height: 44px; }
+.cp-term__jobs {
+  padding-top: var(--sp-1); border-top: var(--stroke) solid var(--ink);
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .04em; color: var(--ink);
+}
+@media (max-width: 640px) {
+  .cp-term { padding: var(--sp-2); }
+  .cp-term .cp-term__term { font-size: 28px; line-height: 32px; }
+  .cp-term--payoff { padding: var(--sp-3) var(--sp-2); }
+  .cp-term--payoff .cp-term__term { font-size: 32px; line-height: 36px; }
+}
+
+/* ---------- figure plate ---------- */
+.cp-fig { margin: var(--sp-8) 0; }
+.cp-fig__plate { border: var(--stroke) solid var(--ink); border-radius: var(--radius-1); overflow: hidden; }
+.cp-fig__bar {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0 var(--sp-2);
+  padding: var(--sp-1) var(--sp-2);
+  border-bottom: var(--stroke) solid var(--ink);
+  background: var(--surface);
+}
+.cp-fig__bar .cp-label:first-child { color: var(--ink); }
+.cp-fig svg { display: block; width: 100%; height: auto; }
+.cp-fig figcaption {
+  display: grid; grid-template-columns: auto 1fr; gap: var(--sp-2);
+  max-width: var(--measure); margin-top: var(--sp-1);
+  font: 400 var(--fs-caption)/var(--lh-caption) var(--font-sans); color: var(--ink-2);
+}
+.cp-fig figcaption .cp-label { color: var(--ink); }
+
+/* ---------- status words and lamps (word + colour, never colour alone) ---------- */
+.st { font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+.st--good { color: var(--good); }
+.st--bad { color: var(--bad); }
+.st--warn { color: var(--warn); }
+.lamp { display: inline-block; width: var(--sp-1); height: var(--sp-1); margin-right: var(--sp-half); vertical-align: 1px; }
+.st--good .lamp { background: var(--good); }
+.st--bad .lamp { background: var(--bad); }
+.st--warn .lamp { background: var(--warn); }
+.cp-rec {
+  min-width: 0;
+  background: var(--c4-soft); border: var(--stroke) solid var(--c4); border-radius: var(--radius-1);
+  color: var(--ink);
+}
+.cp-loop {
+  display: inline-flex; align-items: center; gap: var(--sp-half);
+  padding: 2px var(--sp-1); border-radius: var(--radius-3);
+  background: var(--c3-soft); border: var(--stroke) solid var(--c3);
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); color: var(--ink);
+  white-space: nowrap;
+}
+.cp-loop__mark { font-weight: 700; }
+.cp-loop--later { background: none; border-style: dashed; border-color: var(--ink-3); color: var(--ink-3); }
+/* ---------- f-01 and f-04: manifest plates (Ch 04's f-02 treatment) ----------
+   One row per line: the code line (record ground) and, beside it on wide plates, its annotation;
+   under 600px the annotation drops under its line, so the block never scrolls sideways. */
+.mf { padding: var(--sp-3); }
+.mf__code { padding: var(--sp-1) 0; }
+.mf__row { display: grid; grid-template-columns: minmax(0, 1fr); padding: 0 var(--sp-2); }
+.cp-fig .mf__line {
+  display: block; margin: 0; white-space: pre;
+  font: 400 var(--fs-caption)/var(--lh-small) var(--font-mono); color: var(--ink);
+  background: none; padding: 0;
+}
+.mf__line .mf__k { font-weight: 700; }
+.mf__line .mf__c { color: var(--ink-2); font-style: italic; }
+.cp-fig .mf__ann {
+  margin: 0 0 var(--sp-half); padding-left: var(--sp-2);
+  font: italic 400 var(--fs-caption)/var(--lh-caption) var(--font-sans); color: var(--ink-2);
+}
+.cp-fig .mf__ann::before { content: "↑ "; font-style: normal; font-family: var(--font-mono); color: var(--ink-3); }
+.cp-fig .mf__ann--key { font: 700 var(--fs-caption)/var(--lh-caption) var(--font-sans); font-style: normal; color: var(--accent); }
+.mf__row--key .mf__line { font-weight: 700; }
+@media (min-width: 600px) {
+  .mf__row { grid-template-columns: minmax(0, 30ch) minmax(0, 1fr); column-gap: var(--sp-2); align-items: baseline; }
+  .cp-fig .mf__ann { margin: 0; padding-left: 0; }
+  .cp-fig .mf__ann::before { content: "← "; }
+}
+@media (max-width: 599px) { .mf { padding: var(--sp-2) var(--sp-1); } .mf__row { padding: 0 var(--sp-1); } }
+/* ---------- f-06: the loop lens table (built from CH05_LOOPS in assets/page.js; Ch 04's f-04) ----------
+   A table on the blueprint plate; under 600px each row becomes a card (the loop as its header, then
+   three labelled lines). Rows for loops met later (Ch 07, Ch 08) are dashed and muted. */
+.lens { padding: var(--sp-3); }
+.lens table { width: 100%; border-collapse: collapse; background: var(--surface); border: var(--stroke) solid var(--ink); }
+.lens th, .lens td { padding: var(--sp-1) var(--sp-2); text-align: left; vertical-align: top; border-bottom: var(--stroke) solid var(--line); }
+.lens thead th { font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); border-bottom: var(--stroke) solid var(--ink); }
+.lens tbody th { width: 1%; white-space: nowrap; font-weight: 400; }
+.lens td { font: 400 var(--fs-small)/var(--lh-small) var(--font-serif); color: var(--ink); }
+.lens td.lens__job { font-style: italic; }
+.lens__per { display: block; margin-top: var(--sp-half); font: 400 var(--fs-caption)/var(--lh-caption) var(--font-sans); color: var(--ink-2); white-space: normal; }
+.lens tr.is-later td, .lens tr.is-later .lens__per { color: var(--ink-3); }
+.lens tr.is-later th, .lens tr.is-later td { border-top: var(--stroke) dashed var(--ink-4); }
+.lens tfoot td { border-top: var(--stroke) solid var(--ink); border-bottom: 0; font: 400 var(--fs-caption)/var(--lh-caption) var(--font-sans); color: var(--ink-2); }
+.lens td[data-label]::before { display: none; }
+@media (max-width: 599px) {
+  /* phone: one card per loop. Header row = the loop pill (left) and Sam's job (right); then WANTS, SEES
+     and DOES with their labels inline. */
+  .lens { padding: var(--sp-2) var(--sp-1); }
+  .lens table, .lens tbody, .lens tfoot, .lens td { display: block; width: auto; }
+  .lens table { background: none; border: 0; }
+  .lens thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .lens tbody tr {
+    display: grid; grid-template-columns: max-content minmax(0, 1fr); grid-template-areas: "loop job" "w w" "s s" "d d";
+    margin-bottom: var(--sp-1); background: var(--surface); border: var(--stroke) solid var(--ink); border-radius: var(--radius-1);
+  }
+  .lens tbody tr.is-later { border-style: dashed; border-color: var(--ink-3); }
+  .lens tbody th { grid-area: loop; width: auto; white-space: normal; padding: var(--sp-half) var(--sp-1); border-bottom: var(--stroke) solid var(--line); }
+  .lens tbody td:nth-of-type(1) { grid-area: w; }
+  .lens tbody td:nth-of-type(2) { grid-area: s; }
+  .lens tbody td:nth-of-type(3) { grid-area: d; }
+  .lens tbody td.lens__job { grid-area: job; padding: var(--sp-half) var(--sp-1); border-bottom: var(--stroke) solid var(--line); text-align: right; }
+  .lens tr.is-later th, .lens tr.is-later td { border-top: 0; }
+  .lens td { padding: var(--sp-half) var(--sp-1); border-bottom: 0; }
+  .lens tbody td:nth-of-type(3) { padding-bottom: var(--sp-1); }
+  .lens td[data-label]::before {
+    content: attr(data-label); display: inline; margin-right: var(--sp-1);
+    font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); font-style: normal; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .lens td.lens__job::before { display: block; margin-right: 0; white-space: nowrap; }
+  .lens tfoot tr { display: block; margin-top: var(--sp-2); }
+  .lens tfoot td { border-top: 0; padding: 0; }
+}
+/* ---------- term card additions (Ch 04's mono line under the definition) ---------- */
+.cp-term__jobs + .cp-term__back { margin-top: var(--sp-1); }
+.cp-term__line {
+  margin-bottom: var(--sp-2) !important;
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .04em; color: var(--ink-2);
+}
+/* ---------- §03 scrollytelling scaffold: w-friday-scrolly, lane F (course convention, CURRICULUM §8 step 7) ----------
+   Ch 04's .cs-* scaffold, unchanged except for the reserved heights. The page owns this layout; the
+   widget (widgets/w-friday-scrolly/, glue over pool/cluster/) renders into the [data-canvas],
+   [data-step-text] and [data-step-snap] slots and runs activation and gates. Mount contract: see the
+   comment above the mount in index.html §03.
+   Reserved canvas heights (plan w-friday-scrolly size:, about 600px on desktop with five record rows and
+   the WAITING strip): 600px from 900px wide; min(480px, 50vh) at 600–899px; min(360px, 50vh) under
+   600px. The widget's index.css may raise these to its measured heights (as Ch 04's did). */
+.cs { margin-top: var(--sp-5); margin-bottom: var(--sp-8); }
+.cs-lane__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); }
+/* under 900px: canvas sticky at the top (≤ 50vh), opaque, steps scroll beneath it */
+.cs-canvas {
+  position: sticky; top: 0; z-index: 2; align-self: start;
+  min-height: min(360px, 50vh); padding: var(--sp-1) 0;
+  background: var(--bg);
+}
+@media (min-width: 600px) { .cs-canvas { min-height: min(480px, 50vh); } }
+.cs-steps { position: relative; z-index: 1; display: grid; gap: var(--sp-3); margin: 0; padding: 0; list-style: none; }
+.d-main .cs-steps > li { margin: 0; }
+.cs-step {
+  position: relative; min-height: 40vh;
+  padding: var(--sp-3);
+  background: var(--surface); border: var(--stroke) solid var(--line); border-radius: var(--radius-1);
+  transition: border-color var(--dur-2) var(--ease-out);
+}
+.cs-step.is-active { border-color: var(--ink); }
+.cs-step__text { font: 400 var(--fs-body)/var(--lh-body) var(--font-serif); color: var(--ink); }
+.cs-step__text p { margin: 0 0 var(--sp-2); }
+.cs-step__text p:last-child { margin-bottom: 0; }
+.cs-step__snap { display: none; }
+.cs-step > .cp-more { margin: var(--sp-2) 0 0; }
+.cs-step > .cp-check { margin: var(--sp-3) 0 0; padding: var(--sp-3) var(--sp-2); }
+/* gated steps: the controller adds .is-locked until every check named in data-gate is committed */
+.cs-step__lock { display: none; }
+.cs-step.is-locked { border-style: dashed; border-color: var(--ink-4); }
+.cs-step.is-locked > :not(.cs-step__lock) { visibility: hidden; }
+.cs-step.is-locked > .cs-step__lock {
+  display: block; position: absolute; top: var(--sp-3); left: var(--sp-3); right: var(--sp-3); margin: 0;
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3);
+}
+.cs-step.is-unlocked > * { animation: cp-in var(--dur-2) var(--ease-out); }
+@media (max-width: 599px) {
+  .cs-step { padding: var(--sp-2); }
+  .cs-step.is-locked > .cs-step__lock { top: var(--sp-2); left: var(--sp-2); right: var(--sp-2); }
+  .cs-step > .cp-check { padding: var(--sp-2) var(--sp-1); }
+}
+/* ≥ 900px: canvas sticky on the left (about 55%), steps on the right (about 45%) */
+@media (min-width: 900px) {
+  .cs-lane__grid { grid-template-columns: minmax(0, 11fr) minmax(0, 9fr); column-gap: var(--sp-4); align-items: start; }
+  .cs-canvas { top: var(--sp-4); z-index: auto; min-height: 600px; padding: 0; background: none; }
+}
+/* short viewports (under 560px tall, e.g. a phone in landscape): no sticky canvas; each step shows its
+   own snapshot above its text, rendered by the widget into [data-step-snap] */
+@media (max-height: 559px) {
+  .cs-lane__grid { grid-template-columns: minmax(0, 1fr); }
+  .cs-canvas { display: none; }
+  .cs-step { min-height: 0; }
+  .cs-step__snap { display: block; margin-bottom: var(--sp-2); }
+}
+.cs-noscript { padding: var(--sp-2); border: var(--stroke) dashed var(--ink-4); font: var(--fs-small)/var(--lh-small) var(--font-sans); color: var(--ink-2); }
+/* ---------- comprehension checks (copied from Ch 03, itself from Ch 02) ---------- */
+.cp-check {
+  margin-top: var(--sp-6); margin-bottom: var(--sp-6);
+  background: var(--surface);
+  border: var(--stroke) solid var(--ink); border-radius: var(--radius-1);
+  box-shadow: var(--shadow-1);
+  padding: var(--sp-3);
+}
+@media (max-width: 599px) { .cp-check { padding: var(--sp-2); } }
+@media (min-width: 560px) { .cp-check { padding: var(--sp-4); } }
+.cp-check__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-1) var(--sp-2); margin-bottom: var(--sp-2); }
+.cp-chip {
+  display: inline-block; padding: var(--sp-half) var(--sp-1);
+  background: var(--accent); color: var(--accent-ink); border-radius: var(--radius-1);
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .1em;
+}
+.cp-chip--explain { background: var(--ink); color: var(--bg); }
+.cp-chip--apply { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 var(--stroke) var(--ink); }
+.cp-check__q { margin: 0 0 var(--sp-3) !important; font: 600 20px/28px var(--font-serif); color: var(--ink); }
+.cp-check__q code, .cp-option code { font: 700 0.9em var(--font-mono); background: var(--surface-2); padding: 0.1em 0.3em; border-radius: var(--radius-1); }
+.cp-chores { margin: 0 0 var(--sp-3); padding-left: var(--sp-4); font: 400 var(--fs-small)/var(--lh-small) var(--font-serif); color: var(--ink); }
+.d-main .cp-chores li { margin-bottom: var(--sp-half); padding-left: var(--sp-half); }
+.cp-chores li::marker { font: 700 var(--fs-caption)/1 var(--font-mono); color: var(--ink-3); }
+.cp-options { display: grid; gap: var(--sp-1); margin: 0; padding: 0; list-style: none; }
+.d-main .cp-options { padding: 0; }
+.d-main .cp-options li { margin: 0; }
+.cp-option {
+  display: grid; grid-template-columns: var(--sp-4) minmax(0, 1fr) auto; align-items: center; gap: var(--sp-2);
+  width: 100%; min-height: calc(var(--tap) + var(--sp-1));
+  padding: var(--sp-1) var(--sp-2);
+  background: var(--surface); color: var(--ink);
+  border: var(--stroke) solid var(--ink); border-radius: var(--radius-1);
+  font: 500 var(--fs-small)/var(--lh-small) var(--font-sans); text-align: left;
+  cursor: pointer;
+  transition: background var(--dur-1) var(--ease-out), transform var(--dur-1) var(--ease-out), box-shadow var(--dur-1) var(--ease-out);
+}
+@media (min-width: 560px) { .cp-option { font-size: 17px; line-height: 24px; } }
+@media (max-width: 599px) { .cp-option { gap: var(--sp-1); padding-inline: var(--sp-1); } }
+.cp-option__key {
+  display: grid; place-items: center; width: var(--sp-4); height: var(--sp-4);
+  border: var(--stroke) solid var(--ink); border-radius: var(--radius-1);
+  font: 700 var(--fs-caption)/1 var(--font-mono);
+}
+.cp-option__tag { font: 700 var(--fs-caption)/1 var(--font-mono); letter-spacing: .08em; }
+.cp-option:hover:not(:disabled) { background: var(--surface-2); transform: translate(-2px, -2px); box-shadow: 2px 2px 0 0 var(--ink); }
+.cp-option:active:not(:disabled) { transform: none; box-shadow: none; }
+.cp-option:disabled { cursor: default; color: var(--ink-3); border-color: var(--ink-4); }
+.cp-option:disabled .cp-option__key { border-color: var(--ink-4); }
+.cp-option.is-right { color: var(--ink); border: 3px solid var(--good); padding-inline: calc(var(--sp-2) - 1.5px); }
+.cp-option.is-right .cp-option__key { background: var(--good); border-color: var(--good); color: var(--surface); }
+.cp-option.is-right .cp-option__tag { color: var(--good); }
+.cp-option.is-wrong { color: var(--ink); border: 3px solid var(--bad); padding-inline: calc(var(--sp-2) - 1.5px); }
+.cp-option.is-wrong .cp-option__key { background: var(--bad); border-color: var(--bad); color: var(--surface); }
+.cp-option.is-wrong .cp-option__tag { color: var(--bad); }
+@media (max-width: 599px) { .cp-option.is-right, .cp-option.is-wrong { padding-inline: calc(var(--sp-1) - 1.5px); } }
+.cp-feedback {
+  margin-top: var(--sp-2); padding-top: var(--sp-2);
+  border-top: var(--stroke) dashed var(--ink-4);
+  font: var(--fs-small)/var(--lh-small) var(--font-serif); color: var(--ink-2);
+  animation: cp-in var(--dur-2) var(--ease-out);
+}
+.cp-feedback[hidden] { display: none; }
+.cp-feedback p { margin: 0 0 var(--sp-1); }
+.cp-feedback p:last-child { margin-bottom: 0; }
+.cp-feedback > p > b, .cp-why li > b { font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .08em; margin-right: var(--sp-1); color: var(--ink); }
+.cp-feedback.is-right .cp-feedback__lead { color: var(--good); }
+.cp-feedback.is-wrong .cp-feedback__lead { color: var(--bad); }
+.cp-retry {
+  margin-left: var(--sp-1); min-height: var(--tap); padding: 0 var(--sp-1);
+  background: none; border: 0; color: var(--accent); cursor: pointer;
+  font: 700 var(--fs-caption)/1 var(--font-mono); letter-spacing: .08em; text-decoration: underline; text-underline-offset: 3px;
+}
+.cp-why { margin-top: var(--sp-2); }
+.cp-why summary {
+  display: flex; align-items: center; min-height: var(--tap); cursor: pointer;
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink);
+}
+.cp-why summary { list-style: none; }
+.cp-why summary::-webkit-details-marker { display: none; }
+.cp-why summary::before { content: "▸"; margin-right: var(--sp-1); color: var(--ink); }
+.cp-why[open] > summary::before { content: "▾"; }
+.cp-why ul { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--sp-1); }
+.d-main .cp-why li { margin: 0; }
+/* think-then-reveal (k-09), as Ch 01 */
+.cp-reveal {
+  display: inline-flex; align-items: center; gap: var(--sp-1);
+  min-height: calc(var(--tap) + var(--sp-1)); padding: 0 var(--sp-3);
+  background: var(--surface); color: var(--ink);
+  border: var(--stroke) solid var(--ink); border-radius: var(--radius-1);
+  font: 700 var(--fs-caption)/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--dur-1) var(--ease-out), transform var(--dur-1) var(--ease-out), box-shadow var(--dur-1) var(--ease-out);
+}
+.cp-reveal:hover:not(:disabled) { background: var(--surface-2); transform: translate(-2px, -2px); box-shadow: 2px 2px 0 0 var(--ink); }
+.cp-reveal:disabled { cursor: default; color: var(--ink-3); border-color: var(--ink-4); }
+.cp-think { margin: 0 0 var(--sp-2) !important; font: italic var(--fs-small)/var(--lh-small) var(--font-serif); color: var(--ink-2); }
+.cp-answer { margin: var(--sp-1) 0; padding-left: var(--sp-3); }
+.d-main .cp-answer li { margin-bottom: var(--sp-half); }
+.cp-answer li > b:first-child { font: 700 15px/var(--lh-small) var(--font-mono); letter-spacing: 0; margin-right: 0; color: var(--ink); }
+.cp-feedback > .cp-more { margin: var(--sp-2) 0 0; }
+@keyframes cp-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .cp-feedback, .cs-step.is-unlocked > * { animation: none; }
+  .cp-option, .cp-reveal, .cs-step { transition: none; }
+}
+
+/* ======================================================================================================
+   New in Ch 05
+   ====================================================================================================== */
+
+/* ---------- prose additions ---------- */
+/* the questions a symptom raises: a short list of quoted questions (§03) */
+.cp-qs { margin: 0 0 var(--sp-3); padding-left: var(--sp-3); }
+.d-main .cp-qs li { margin-bottom: var(--sp-1); font-style: italic; }
+/* the line under a widget: what it shows and where it simplifies (page-owned, outside the mount) */
+.cp-wcap {
+  display: grid; grid-template-columns: auto 1fr; gap: var(--sp-2);
+  margin-top: calc(-1 * var(--sp-5)) !important; margin-bottom: var(--sp-6) !important;
+  font: 400 var(--fs-caption)/var(--lh-caption) var(--font-sans); color: var(--ink-2);
+}
+.cp-wcap .cp-label { color: var(--ink); }
+/* the three "things to notice" above W-02 */
+.cp-notice { margin: 0 0 var(--sp-3); padding: 0; list-style: none; display: grid; gap: var(--sp-1); }
+.d-main .cp-notice li {
+  margin: 0; padding-left: var(--sp-3); position: relative;
+  font: 400 var(--fs-body)/var(--lh-body) var(--font-serif);
+}
+.d-main .cp-notice li::before {
+  content: "→"; position: absolute; left: 0; top: 0;
+  font: 700 var(--fs-body)/var(--lh-body) var(--font-mono); color: var(--ink-3);
+}
+
+/* ---------- f-02: one node, two counts ----------
+   One node frame (the canvas's bar-and-body node) with two columns of equal height: MEMORY (13 GB) and
+   PROCESSOR (3.9 cores). Each segment's height is proportional to its amount (flex-grow = --u), so the
+   two columns use their own scales. Pods are Ch 04's Pod grammar (c1 chip in an ink ring); unreserved
+   room is Ch 03's dashed c6 region. Beside the node (below it under 600px): the new Pod, dashed (no node
+   yet), and its two verdicts, word + colour. */
+.tc { padding: var(--sp-3); }
+.tc__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); max-width: 760px; margin-inline: auto; }
+@media (min-width: 600px) { .tc__grid { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: center; } }
+.tc__node { min-width: 0; background: var(--surface); border: var(--stroke) solid var(--ink); border-radius: var(--radius-1); }
+.cp-fig .tc__bar {
+  margin: 0; padding: var(--sp-half) var(--sp-1); border-bottom: var(--stroke) solid var(--ink);
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink);
+}
+.tc__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); padding: var(--sp-1); }
+.tc__col { min-width: 0; display: grid; gap: var(--sp-half); }
+.cp-fig .tc__head { margin: 0; font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.tc__body { display: flex; flex-direction: column; gap: 2px; height: 208px; }
+.tc__seg { flex: var(--u) 1 0; min-height: 0; }
+.tc__pod {
+  display: flex; padding: 2px;
+  background: var(--surface); border: var(--stroke) solid var(--ink); border-radius: var(--radius-1);
+}
+.tc__chip {
+  flex: 1; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 0 var(--sp-1);
+  padding: 1px var(--sp-half); overflow: hidden;
+  background: var(--c1-soft); border: var(--stroke) solid var(--c1); border-radius: 1px;
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); color: var(--ink);
+}
+.tc__chip span { font-weight: 400; color: var(--ink-2); }
+.tc__free {
+  display: grid; place-items: center; text-align: center;
+  border: var(--stroke) dashed var(--c6); border-radius: var(--radius-1);
+  font: 400 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3);
+}
+.tc__new { min-width: 0; display: grid; gap: var(--sp-1); justify-items: start; }
+.tc__newpod {
+  display: flex; width: 132px; height: 34px; padding: 2px;
+  border: var(--stroke) dashed var(--ink); border-radius: var(--radius-1);
+}
+.tc__newpod .tc__chip { background: transparent; border-style: dashed; }
+.cp-fig .tc__newlabel { margin: 0; font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+.tc__verdicts { display: grid; gap: var(--sp-half); margin: 0; width: 100%; }
+.cp-fig .tc__verdict {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 var(--sp-1); margin: 0;
+  padding: var(--sp-half) 0; border-top: var(--stroke) solid var(--line);
+  font: 400 var(--fs-caption)/var(--lh-caption) var(--font-sans); color: var(--ink);
+}
+.cp-fig .tc__result { margin: 0; padding-top: var(--sp-half); border-top: var(--stroke) solid var(--ink); width: 100%; }
+@media (max-width: 599px) { .tc { padding: var(--sp-2) var(--sp-1); } .tc__body { height: 192px; } }
+
+/* ---------- f-03: node pools ----------
+   Ch 03's cluster frame (3px ink) around pool frames (thin ink-3 outline, mono header). A pool not yet
+   rented is dashed c6. Node outlines carry no Pods: the figure is about machine types. */
+.np { padding: var(--sp-3); }
+.np__cluster { background: var(--surface); border: 3px solid var(--ink); border-radius: var(--radius-1); }
+.cp-fig .np__clusterbar { margin: 0; padding: var(--sp-half) var(--sp-1); border-bottom: var(--stroke) solid var(--ink); font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+.np__pools { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-2); padding: var(--sp-2); }
+@media (min-width: 600px) { .np__pools { grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 3fr); align-items: stretch; } }
+.np__pool { min-width: 0; display: grid; grid-template-rows: auto 1fr auto; border: var(--stroke) solid var(--ink-3); border-radius: var(--radius-1); }
+.np__pool--later { border-style: dashed; border-color: var(--c6); }
+.cp-fig .np__head {
+  margin: 0; padding: var(--sp-half) var(--sp-1); border-bottom: var(--stroke) solid var(--ink-3);
+  font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink);
+}
+.np__pool--later .np__head { border-bottom-style: dashed; border-bottom-color: var(--c6); color: var(--ink-2); }
+.np__nodes { display: flex; flex-wrap: wrap; gap: var(--sp-1); align-items: flex-end; padding: var(--sp-2) var(--sp-1); }
+.np__node { display: grid; grid-template-rows: auto 1fr; width: 48px; height: 64px; background: var(--surface); border: var(--stroke) solid var(--ink); border-radius: var(--radius-1); }
+.np__node--small { width: 40px; height: 48px; }
+.np__node--big { width: 96px; height: 96px; border-style: dashed; border-color: var(--c6); background: none; }
+.np__nodebar { padding: 1px 0; border-bottom: var(--stroke) solid var(--ink); text-align: center; font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); color: var(--ink); }
+.np__node--small .np__nodebar { min-height: 10px; }
+.np__node--later { border-style: dashed; border-color: var(--c6); background: none; }
+.np__node--later .np__nodebar { border-bottom-style: dashed; border-bottom-color: var(--c6); }
+.np__node--big .np__nodebar { border-bottom-style: dashed; border-bottom-color: var(--c6); color: var(--ink-3); }
+.cp-fig .np__say { margin: 0; padding: 0 var(--sp-1) var(--sp-1); font: italic 400 var(--fs-caption)/var(--lh-caption) var(--font-sans); color: var(--ink-2); }
+.np__say code { font: 700 0.95em var(--font-mono); background: none; padding: 0; }
+@media (max-width: 599px) { .np { padding: var(--sp-2) var(--sp-1); } .np__pools { padding: var(--sp-1); } }
+
+/* ---------- f-05 and f-07: charts ----------
+   Drawn by assets/page.js into an <svg> at the plate's measured width (so text stays 13px), redrawn on
+   resize. Reserved = dashed c4, cap = solid ink, used = c1, kills = ✕ in bad with a word; the band above
+   the reservation is hatched warn. Under 600px f-05 moves its line labels above the plot (.ch-key). */
+.ch { padding: var(--sp-3); }
+.ch__svg { display: block; width: 100%; overflow: visible; }
+.ch__svg text { font: 400 var(--fs-caption) var(--font-sans); fill: var(--ink-2); }
+.ch__svg .t-mono { font: 700 var(--fs-caption) var(--font-mono); letter-spacing: .06em; }
+.ch__svg .t-tick { font: 400 var(--fs-caption) var(--font-mono); fill: var(--ink-3); }
+.ch__svg .t-ink { fill: var(--ink); }
+.ch__svg .t-c1 { fill: var(--c1); }
+.ch__svg .t-c4 { fill: var(--ink); }
+.ch__svg .t-bad { fill: var(--bad); }
+.ch__svg .t-halo { paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.ch__svg .l-axis { stroke: var(--ink-3); stroke-width: 1; fill: none; }
+.ch__svg .l-used { stroke: var(--c1); stroke-width: 2.5; fill: none; stroke-linejoin: round; stroke-linecap: round; }
+.ch__svg .l-req { stroke: var(--c4); stroke-width: 2; stroke-dasharray: 6 4; fill: none; }
+.ch__svg .l-cap { stroke: var(--ink); stroke-width: 2; fill: none; }
+.ch__svg .l-tick { stroke: var(--ink-3); stroke-width: 1; }
+.ch__svg .l-lead { stroke: var(--ink-3); stroke-width: 1; }
+.ch__svg .m-kill { stroke: var(--bad); stroke-width: 2.5; stroke-linecap: round; }
+.ch__svg .a-band { fill: url(#ch-hatch); }
+.ch__svg .p-hatch { stroke: var(--warn); stroke-width: 1; opacity: .55; }
+.ch__svg .a-traffic { fill: var(--c6-soft); stroke: var(--c6); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.ch-key { display: none; margin: 0 0 var(--sp-2); padding: 0; list-style: none; }
+.d-main .ch-key li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: var(--sp-1); align-items: center; margin: 0 0 var(--sp-half); font: 400 var(--fs-caption)/var(--lh-caption) var(--font-sans); color: var(--ink-2); }
+.ch-key b { font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+.ch-key .k { display: block; height: 0; border-top: 2.5px solid var(--c1); }
+.ch-key .k--req { border-top: 2px dashed var(--c4); }
+.ch-key .k--cap { border-top: 2px solid var(--ink); }
+.ch-key .k--band { height: 12px; border: 0; background: repeating-linear-gradient(135deg, var(--warn) 0 1px, transparent 1px 5px); opacity: .7; }
+.ch-key .k--kill { border: 0; height: auto; font: 700 15px/1 var(--font-mono); color: var(--bad); text-align: center; }
+.ch[data-narrow] .ch-key { display: block; }
+@media (max-width: 599px) { .ch { padding: var(--sp-2) var(--sp-1); } }
+
+/* f-07 sits inside k-09's reveal: two small charts, same axes, side by side from 560px (stacked, leak
+   first, below). */
+.cp-fig.lg { margin: var(--sp-3) 0 var(--sp-2); }
+.lg .ch { padding: 0; }
+.lg__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); }
+@container (min-width: 560px) { .lg__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); } }
+.lg__plate { container-type: inline-size; padding: var(--sp-2); }
+@media (max-width: 599px) { .lg__plate { padding: var(--sp-1); } }
+.cp-fig .lg__head { margin: 0 0 var(--sp-half); font: 700 var(--fs-caption)/var(--lh-caption) var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+.lg__chart { min-width: 0; }
+
+/* ---------- f-06: the NEW IN CH 5 tag ---------- */
+.lens__new {
+  display: inline-block; margin: 0 0 var(--sp-half); padding: 0 var(--sp-half);
+  border: var(--stroke) solid var(--accent); border-radius: var(--radius-1);
+  font: 700 11px/16px var(--font-mono); font-style: normal; letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
+  white-space: nowrap;
+}
+.lens td .lens__new { display: table; }
+.lens tbody th .lens__new { display: block; width: max-content; margin-top: var(--sp-half); }
+@media (max-width: 599px) {
+  .lens td .lens__new { display: inline-block; margin: 0 var(--sp-1) 0 0; vertical-align: 1px; }
+}
+
+/* ---------- §04 W-02 frame: w-sizing-sandbox ----------
+   The page owns the mount and its load-time height (plan w-sizing-sandbox size:); the widget owns
+   everything inside. Desktop reserves the tallest state (CURRICULUM §8 step 6); phones reserve only a
+   load-time minimum. The widget's index.css may adjust these to its measured heights. */
+.ss { margin-top: var(--sp-5); margin-bottom: var(--sp-8); min-height: 560px; }
+@media (min-width: 600px) and (max-width: 899px) { .ss { min-height: 620px; } }
+@media (min-width: 900px) { .ss { min-height: 560px; } }

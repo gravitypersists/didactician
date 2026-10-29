@@ -1,0 +1,111 @@
+{
+  "pointers": [
+    {
+      "id": "p1",
+      "where": "s-04",
+      "quote": "Set each request to what that service used at the rush. How many nodes does Fennel need now, and what sets that number?",
+      "start": "unspecified",
+      "steps": [ { "set_to_use": "all" } ],
+      "expect": [
+        { "at": 1, "observable": "nodes_for_pods", "op": "decreases", "relative_to": 0, "implied": true }
+      ]
+    },
+    {
+      "id": "p2",
+      "where": "s-04",
+      "quote": "Switch off the spare node. What does insurance cost?",
+      "start": "unspecified",
+      "steps": [ { "spare": false } ],
+      "expect": [
+        { "at": 1, "observable": "nodes_total", "op": "decreases", "relative_to": 0, "implied": true },
+        { "at": 1, "observable": "nodes_for_pods", "op": "unchanged", "relative_to": 0, "implied": true }
+      ]
+    },
+    {
+      "id": "p3",
+      "where": "s-04",
+      "quote": "Push <code>orders</code> past 13 GB.",
+      "start": "unspecified",
+      "steps": [ { "set": { "orders": 13.5 } } ],
+      "expect": [
+        { "at": 1, "observable": "services_never_placeable", "op": "includes", "value": "orders", "implied": true }
+      ]
+    },
+    {
+      "id": "p4",
+      "where": "s-06",
+      "quote": "a Pod larger than every node will never be placed, and W-02 shows it when you push orders past 13 GB",
+      "start": "unspecified",
+      "steps": [ { "set": { "orders": 13.5 } } ],
+      "expect": [
+        { "at": 1, "observable": "services_never_placeable", "op": "includes", "value": "orders" }
+      ]
+    },
+    {
+      "id": "p5",
+      "where": "s-05",
+      "quote": "the spare-node switch in W-02 shows what it costs",
+      "start": "unspecified",
+      "steps": [ { "spare": false } ],
+      "expect": [
+        { "at": 1, "observable": "nodes_total", "op": "decreases", "relative_to": 0, "implied": true }
+      ]
+    },
+    {
+      "id": "p6",
+      "where": "k-09",
+      "quote": "Raising the request does: each copy reserves more room, and on nodes that are already full, that can mean another node on the bill (try orders at 8 and then 12 GB in W-02).",
+      "start": "unspecified",
+      "steps": [ { "set": { "orders": 8 } }, { "set": { "orders": 12 } } ],
+      "expect": [
+        { "at": 2, "observable": "nodes_for_pods", "op": "increases", "relative_to": 1, "implied": true }
+      ]
+    },
+    {
+      "id": "p7",
+      "where": "k-04",
+      "quote": "The scheduler counts the doubled request in full, so each payments Pod takes twice the room, and on a full cluster that’s another node, or a Pod that waits. W-02, below, shows how far it goes.",
+      "start": "default",
+      "steps": [ { "scale": { "factor": 2, "services": ["payments"] } } ],
+      "expect": [
+        { "at": 1, "observable": "nodes_for_pods", "op": "increases", "relative_to": 0, "implied": true }
+      ]
+    },
+    {
+      "id": "p8",
+      "where": "k-08",
+      "quote": "Halved requests fit onto fewer nodes, but at the rush several services would use more than they reserved. … (W-02’s warnings show which services.)",
+      "start": "default",
+      "steps": [ { "scale": { "factor": 0.5, "services": "all" } } ],
+      "expect": [
+        { "at": 1, "observable": "nodes_for_pods", "op": "decreases", "relative_to": 0, "implied": true },
+        { "at": 1, "observable": "services_over", "op": "count_gte", "value": 2 }
+      ]
+    }
+  ],
+  "manipulations": [
+    { "where": "s-04", "quote": "Set each request to what that service used at the rush.", "service": null, "attribute": "memory_request" },
+    { "where": "s-04", "quote": "Switch off the spare node.", "service": null, "attribute": "spare_switch" },
+    { "where": "s-04", "quote": "Push <code>orders</code> past 13 GB.", "service": "orders", "attribute": "memory_request" },
+    { "where": "s-04", "quote": "W-02, Ari’s sizing sheet: change three services’ memory requests", "service": null, "attribute": "memory_request" },
+    { "where": "s-04", "quote": "and the spare-node switch, and see how many nodes Fennel must rent", "service": null, "attribute": "spare_switch" },
+    { "where": "s-05", "quote": "the spare-node switch in W-02 shows what it costs", "service": null, "attribute": "spare_switch" },
+    { "where": "s-06", "quote": "W-02 shows it when you push orders past 13 GB", "service": "orders", "attribute": "memory_request" },
+    { "where": "k-09", "quote": "try orders at 8 and then 12 GB in W-02", "service": "orders", "attribute": "memory_request" },
+    { "where": "k-04", "quote": "the payments team doubles its memory request … W-02, below, shows how far it goes.", "service": "payments", "attribute": "memory_request" },
+    { "where": "k-08", "quote": "halving every service’s memory request … (W-02’s warnings show which services.)", "service": null, "attribute": "memory_request" }
+  ],
+  "named_elements": [
+    { "where": "s-04", "quote": "W-02 is Ari’s sizing sheet.", "name": "Ari's sizing sheet" },
+    { "where": "s-04", "quote": "Each Pod’s outline is what it reserves", "name": "Pod outline (reserved)" },
+    { "where": "s-04", "quote": "the solid fill inside it is what it used at last Friday’s rush", "name": "solid fill (used at the rush)" },
+    { "where": "s-04", "quote": "plus one spare node", "name": "spare node" },
+    { "where": "s-04", "quote": "and see how many nodes Fennel must rent", "name": "node count" },
+    { "where": "s-04", "quote": "W-02’s idle bar splits the room Fennel rents but doesn’t use into two kinds", "name": "idle bar" },
+    { "where": "s-04", "quote": "The first is room that no Pod has reserved", "name": "idle bar segment: not reserved" },
+    { "where": "s-04", "quote": "The second is room that Pods have reserved and don’t use", "name": "idle bar segment: reserved, not used" },
+    { "where": "s-05", "quote": "the spare-node switch in W-02", "name": "spare-node switch" },
+    { "where": "k-08", "quote": "W-02’s warnings show which services", "name": "warnings" }
+  ],
+  "notes": "1) HTML comments (the W-02 mount contract, with expected values such as 5 nodes by default, 0.5 GB steps, 'Reset to Fennel's requests', orders >= 13.5 GB) are not reader-visible text and were not encoded. 2) 'Push orders past 13 GB' gives no exact value; 13.5 was used as the smallest plausible value past 13. 3) start states: the three 'things to notice' (s-04) don't say whether they're sequential or from the opening state, so start is 'unspecified'; likewise s-05, s-06 and k-09 don't say. k-04 and k-08 describe changes from Fennel's current requests, so 'default'. 4) 'all' is ambiguous in p1 ('each request') and p8 ('every service'): the caption says payments' and notifications' memory requests 'stay as the teams set them' and the aria-label says only 'three services' can be changed, so 'all' may mean every service (not reachable in W-02) or only the three adjustable ones (unnamed in the text; presumably storefront, orders, dispatch). 5) Conflict: k-04 feedback says W-02 'shows how far' doubling payments' memory request goes, but the caption says payments' memory request can't be changed in W-02. 6) p1's question 'what sets that number?' asks for set_by but the text gives no value; s-04's closing ('Requests closer to what each service uses at its busiest would let Fennel rent fewer nodes, but not as few as possible') is the basis for the implied decrease. 7) p2/p5: 'What does insurance cost?' and s-05's 'A spare node’s worth of room' imply exactly one node fewer; the vocabulary can only say 'decreases'. 8) Default state: the lead says it 'opens on Fennel’s requests as the teams set them' and counts nodes 'plus one spare node', implying the spare switch is on by default; no node count for the default is stated in reader text (Morgan's five rented nodes are the real cluster, not W-02). 9) The idle bar's two kinds of idle room, and the caption's claims (packs tightly, so a real cluster needs at least this many; each change places every Pod afresh) describe W-02's method rather than an observable, so they aren't encoded as pointers. 10) Reset is never mentioned in reader-visible text."
+}

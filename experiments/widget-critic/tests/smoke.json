@@ -1,0 +1,9 @@
+{"pointers":[
+ {"id":"s1","where":"x","quote":"defaults","start":"default","steps":[],"expect":[{"observable":"nodes_for_pods","op":"eq","value":4},{"observable":"nodes_total","op":"eq","value":5}]},
+ {"id":"s2","where":"x","quote":"switch off","start":"default","steps":[{"spare":false}],"expect":[{"observable":"nodes_total","op":"eq","value":4}]},
+ {"id":"s3","where":"x","quote":"orders huge","start":"default","steps":[{"set":{"orders":13.5}}],"expect":[{"observable":"services_never_placeable","op":"includes","value":"orders"}]},
+ {"id":"s4","where":"x","quote":"deliberately false","start":"default","steps":[],"expect":[{"observable":"nodes_for_pods","op":"eq","value":9}]},
+ {"id":"s5","where":"x","quote":"non-control","start":"default","steps":[{"set":{"notifications":1}}],"expect":[]}
+],
+"manipulations":[{"where":"x","quote":"q","service":"notifications","attribute":"memory_request"},{"where":"x","quote":"q","service":null,"attribute":"spare_switch"}],
+"named_elements":[{"where":"x","quote":"q","name":"the warnings"},{"where":"x","quote":"q","name":"purple dial"}]}
