@@ -1,6 +1,6 @@
 # widget-critic: pilot of the conceptual-model critic
 
-This is a pilot of `../../WIDGET-BUILDER-HYPOTHESIS.md` (H1, narrowed to text ↔ widget fit) on one k8s-course widget. **Result: falsified.** See `results/SCORE.md`.
+This is a pilot of `../../WIDGET-BUILDER-HYPOTHESIS.md` (H1, narrowed to text ↔ widget fit) on one k8s-course widget. **Result: falsified.** The conclusion and recommendations are in `CONCLUSION.md`, and the scoring is in `results/SCORE.md`.
 
 - `PROTOCOL.md`: the pre-registered question, inputs, targets, conditions and thresholds.
 - `inputs/ch05-r0/site/`: the frozen build that the round-1 reviewers saw (k8s-course `5af333d`).
