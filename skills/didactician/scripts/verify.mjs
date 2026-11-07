@@ -10,6 +10,8 @@
 //
 // Writes run/gate/<page|widget-id>-round-N.json, screenshots in run/screenshots/<scope>-round-N/,
 // appends to run/log.md and state.json's gate_history (for round_gate's no-progress rule).
+// A page built from fragments (site/src/shell.html + s-NN.html) is assembled into index.html first
+// (lib/assemble.mjs); a broken source layout or a hand-edited index.html exits 2.
 // Exit 0 = all gated checks pass; 1 = at least one fails; 2 = usage/setup error.
 //
 // Checks (fail = gated):
@@ -28,12 +30,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { args, blocks, kv, loadPlaywright, logAppend, readIf, serve } from './lib/pw.mjs';
+import { assembleOrExit } from './lib/assemble.mjs';
 
 const A = args(process.argv.slice(2));
 if (!A.out) { console.error('usage: verify.mjs --out <out> [--widget <id>] [--widths 360,768,1280]'); process.exit(2); }
 const out = path.resolve(A.out);
 const site = path.join(out, 'site');
 const run = path.join(out, 'run');
+assembleOrExit(site); // a page built from site/src/ fragments is assembled first
 if (!fs.existsSync(path.join(site, 'index.html'))) { console.error(`no ${site}/index.html`); process.exit(2); }
 const widget = typeof A.widget === 'string' ? A.widget : null;
 const scopeKey = widget || 'page';
@@ -120,9 +124,11 @@ const absPatterns = {
   '.js': /(?:\bfrom\s*|\bimport\s*\(\s*|\bfetch\s*\(\s*)["'`]\/(?!\/)/g,
   '.mjs': /(?:\bfrom\s*|\bimport\s*\(\s*|\bfetch\s*\(\s*)["'`]\/(?!\/)/g,
 };
+const assembled = fs.existsSync(path.join(site, 'src', 'shell.html'));
 for (const file of walk(widget ? path.join(site, 'widgets', widget) : site)) {
   const re = absPatterns[path.extname(file)];
   if (!re) continue;
+  if (assembled && file === path.join(site, 'index.html')) continue; // reported at its source in src/
   const text = fs.readFileSync(file, 'utf8');
   for (const m of text.matchAll(re)) {
     const line = text.slice(0, m.index).split('\n').length;

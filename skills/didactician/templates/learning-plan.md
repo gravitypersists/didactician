@@ -12,6 +12,13 @@ toc: <yes | no> — <reason>
 tokens: <default kit tokens | user-provided: … | custom: …>
 mobile: <how the piece adapts; or "waived per decisions.md d-NN">
 
+## Conventions
+
+<!-- Rules that hold across segments: visual grammar (what each colour or shape means), terms and
+     how they're styled, disclosures, recurring characters or examples. Agents read the plan by
+     record (kb.py), and every record's reader gets ## Shape and ## Conventions; other free
+     sections are only listed. Write "none" if there are none. -->
+
 ## Objectives
 
 <!-- Copy the brief's objective IDs. Map each to its comprehension items, or say why it has none. -->

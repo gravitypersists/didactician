@@ -107,7 +107,7 @@ The multi-agent design has to beat this baseline on accuracy findings and reader
           ◆ HUMAN CHECKPOINT: approve │ revise(notes) │ rescope; asset decisions  (≤3 rounds)
                 ▼
           [3a BUILD · page-builder] pre-flight → shell + tokens + prose + simple figures
-                ▼   site/index.html, site/assets/, site/widgets/manifest.json
+                ▼   site/src/ (shell + s-NN fragments) → index.html, site/assets/, site/widgets/manifest.json
           [3b BUILD · widget-builder ×0–N, parallel] one per complex widget
                 ▼   site/widgets/<id>/
           gate: verify.mjs (Playwright invariant gate) ── fail ─► owning builder
@@ -229,7 +229,7 @@ Blockers use the §11 schema. **Fake compliance is the worst outcome.** Each pro
   - `references/{ux-ui,graphics,widgets,sourcing}.md` and `kit/`;
   - `brief.md`.
 - **Out:**
-  - `site/index.html` and `site/assets/*`;
+  - `site/src/shell.html` and one `site/src/s-NN.html` per segment, assembled into `site/index.html` by the scripts; `site/assets/*`;
   - `site/widgets/manifest.json`: for each widget, its mount point, size contract and declared CDN origins.
 - **Authority (intended):** writes to `site/` except `site/widgets/<id>/`.
 - **Pre-flight:** before building, check each segment's layout constraint against 360px and confirm that every asset the plan uses is cleared. Infeasibilities go back as one early blocker, not mid-build.
@@ -278,7 +278,8 @@ Blockers use the §11 schema. **Fake compliance is the worst outcome.** Each pro
 ```
 explainers/<slug>/
 ├── site/                     # deployable; nothing else is published
-│   ├── index.html
+│   ├── src/shell.html, src/s-NN.html, src/segments.json   # page source, one fragment per segment
+│   ├── index.html            # assembled from src/ (scripts/lib/assemble.mjs); never hand-edited
 │   ├── assets/ (tokens.css, kit helpers, images, vendored libs if not CDN)
 │   └── widgets/<id>/ + manifest.json
 └── run/                      # audit trail; never deployed
@@ -295,13 +296,15 @@ explainers/<slug>/
 ```
 
 - **Cost comes from transcripts, through one adapter:** Claude Code's `.jsonl` transcripts are an internal, undocumented format. `scripts/_transcripts.py` is the only code that reads them. It turns them into usage events in a format we own (`run/usage/`, versioned with `"v"`, counts and paths only, no message content), and fails loudly rather than reporting zeros when the format changes. `cost_report.py` and any later eval read `usage/` only. Copying usage into the run also keeps it after Claude Code deletes old transcripts.
+- **Agents read records, not files.** Every artifact the agents exchange is already a set of ID'd records (claims, segments, widgets, checks, acceptance criteria, decisions, findings) that cite each other by ID. They used to be handed out by file path, so a widget builder read a 120 KB plan and the facts file to use one widget's spec, and builders re-read files whole or guessed `sed -n` ranges. In the k8s-course runs, the plan and the page were each read about 2 MB over seven chapters. `scripts/kb.py` reads by ID: `get <ids> --closure` prints the records, what they mention, the acceptance criteria, decisions and open findings that mention them, page-wide criteria, and the plan's `## Shape` and `## Conventions`; the plan's other free sections are listed with line ranges, not dropped silently. The closure comes from the references, not from an excerpt someone chose, so a constraint is missed only when a reference is missing, and the fix is to add the reference. The files stay markdown and stay the source of truth: humans review them, the namespace check and `history/` work on them, and agents write them without an API. IDs don't move when a section does, so the plan can be reorganized without breaking a handoff.
+- **The page is built from fragments.** The page builder writes `site/src/shell.html` and one fragment per plan segment; `lib/assemble.mjs` inlines them into `index.html`, marking each with `<!-- begin s-NN -->` comments. The plan's IDs then name files in the output, so a fix to one segment reads and edits one small file instead of the whole page. `verify`, `probe` and `human_review` assemble before rendering, so nobody can forget to. The assembled file carries a hash, and a hand edit to it is refused rather than overwritten. For a piece embedded in a larger site (a course), the fragments and `segments.json` are what the host takes; `shell.html` is the standalone wrapper. A site with no `src/shell.html` is a single-file page, which everything still accepts.
 - **Namespace ownership:** each directory has exactly one writer (see the contracts). Reviewers never edit `site/`. User decisions live in `decisions.md`, so no agent-owned file is edited by anyone else.
 - **Handoffs are self-contained:** the orchestrator writes every subagent prompt to `handoffs/` _before_ spawning, using `templates/handoff.md`. The fields:
   - the root request verbatim;
   - brief path;
   - invariants verbatim;
   - **relevant user decisions** (checkpoint notes, asset approvals, waivers), quoted from `decisions.md`;
-  - inputs by path;
+  - inputs by record ID (loaded with `kb.py get --closure`) and by path;
   - output paths;
   - done predicate;
   - not-your-job list;

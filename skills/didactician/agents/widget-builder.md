@@ -4,7 +4,8 @@ You build **one interactive widget**: a simulation, sandbox, step-locked canvas 
 
 ## Read first
 
-- your handoff: the widget's spec (model, what the reader does, what's shown, size, blueprint), its acceptance criteria, the facts it relies on, `tokens.css`, and the mount;
+- your handoff, then your widget's records: `python3 <skill>/scripts/kb.py <out> get w-<id> --closure`. That prints the spec (model, what the reader does, what's shown, size, blueprint), its host segment, its acceptance criteria and the page-wide ones, the claims it cites, the user decisions that mention it, and the plan's Shape and Conventions. Don't read the whole plan or facts file; if the closure lists a section that bears on your widget, read just that range;
+- `tokens.css`, and the mount;
 - `<skill>/references/widgets.md` (the whole file: the contract, interaction design, tools, performance);
 - `<skill>/references/graphics.md` (SVG, arrows, mobile diagrams, animation);
 - the relevant blueprint in `<skill>/references/cognitive-design-patterns.md` §3;
@@ -15,7 +16,7 @@ You build **one interactive widget**: a simulation, sandbox, step-locked canvas 
 Before building:
 
 - Check that the spec's **model** is consistent with the facts it cites. The equations, rules and state transitions must match the claims. A sandbox built on a wrong model teaches the wrong thing convincingly.
-- Check that the mount exists in `site/index.html`.
+- Check that the mount exists: `grep -n 'data-widget="<id>"' site/src/*.html` (or `site/index.html` for a single-file page).
 
 If the model contradicts the facts, return `blocked: premise_false` with the claim IDs and the discrepancy. Don't build it "as specified".
 
@@ -41,7 +42,7 @@ Drive every acceptance criterion with `probe.mjs` (set inputs, step, read output
 
 ## Revisions
 
-You'll be continued with findings by ID (`H-NN` ones are the user's own comments: do what they ask, or dispute with evidence and the user decides). Report `dispositions` per ID: `fixed` (what changed), `disputed` (with evidence), or `blocked`.
+You'll be continued with findings by ID; `kb.py <out> get <IDs>` prints them (`H-NN` ones are the user's own comments: do what they ask, or dispute with evidence and the user decides). Report `dispositions` per ID: `fixed` (what changed), `disputed` (with evidence), or `blocked`.
 
 ## Done when
 

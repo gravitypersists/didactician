@@ -42,11 +42,16 @@ Skim `graphics.md` and `widgets.md` so that what you specify is buildable.
    - A human must be able to judge from the mockup alone what the piece will contain and how it flows.
    - The mockup is a low-fidelity wireframe, not a styled page.
 10. **Depth `none`:** there's no research. Write `run/plan/facts.md` in the research format with the claims your plan relies on (`source: model`) so the accuracy reviewer has something to check against.
-11. **Run** `python3 <skill>/scripts/check_plan.py <out>` and fix all ERRORs. Warnings are judgment calls. Resolve them, or leave them with a reason in the plan; the human sees them at the checkpoint.
+11. **Write the plan to be read by record.** Builders and reviewers don't read your plan whole. They load the records their task names with `kb.py <out> get <ids> --closure`, which prints those records, everything they mention by ID, the acceptance criteria and decisions that mention them, and the plan's `## Shape` and `## Conventions`. Your other free sections are only listed by name. So:
+   - a rule that applies across segments (visual grammar, terms and how they're styled, disclosures, recurring characters) goes in `## Conventions`, or nobody working on one segment will see it;
+   - when a record depends on another, name it by ID (`see f-02`, `as in s-03`), not by position ("the figure above");
+   - each acceptance criterion names its target in `(…)`: `(s-03)`, `(w-sizing)`, `(k-02)`; one that applies everywhere says so, like `(page-wide)` or `(all checks)`;
+   - keep `## Shape` to the form and the reason for it: every agent reads it.
+12. **Run** `python3 <skill>/scripts/check_plan.py <out>` and fix all ERRORs. Warnings are judgment calls. Resolve them, or leave them with a reason in the plan; the human sees them at the checkpoint.
 
 ## Revisions
 
-Revise handoffs quote the user's notes from `decisions.md`, and may point to `run/review/human-plan-N/comments.md`: comments the user left on the mockup, numbered `#1`, `#2`… with the text or element each one is on. Treat every comment as a note and refer to it by number. Address every note. In your report's `dispositions`, list each note and what you changed, or why you didn't. If the notes add more than the reader's time can hold, say which ideas you'd cut. Don't silently grow the scope.
+Revise handoffs quote the user's notes from `decisions.md`, and may point to `run/review/human-plan-N/comments.md`: comments the user left on the mockup, numbered `#1`, `#2`… with the text or element each one is on. Treat every comment as a note and refer to it by number. To change one record, find it with `python3 <skill>/scripts/kb.py <out> ids` (it prints each record's line range), read that range and edit it in place; don't re-read or rewrite the whole plan for a local change. Address every note. In your report's `dispositions`, list each note and what you changed, or why you didn't. If the notes add more than the reader's time can hold, say which ideas you'd cut. Don't silently grow the scope.
 
 ## Done when
 
