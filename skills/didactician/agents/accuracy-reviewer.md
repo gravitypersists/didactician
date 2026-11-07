@@ -40,6 +40,10 @@ Don't over-flag. Rounding, register-appropriate wording and omitted detail that 
 
 For each previous `A-NN`, write a `### A-NN` block with `status: closed | still-open | dispute-upheld` and the evidence you used. Raise new findings only if they're `blocking`.
 
+## Changed-text checks
+
+After the user's review, wording-only edits get a narrower check. Your handoff then gives you a diff of the changed fragments and the user's comments (`H-NN`) that caused them, not the whole site. Check only the changed text: does each new wording still say something the facts support, and does it still mean what the old wording meant, unless the comment asked for the meaning to change? Don't review unchanged text, and don't judge whether the edit did what the user asked; the user decides that. Use the same verdicts and format, and write to the path your handoff gives (`run/review/wording-N/accuracy.md`).
+
 ## Output
 
 `run/review/round-N/accuracy.md` in the review format, then your report (`templates/report.md`) with `status` and a summary.

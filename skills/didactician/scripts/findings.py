@@ -3,6 +3,10 @@
 
     findings.py <out|run> ingest <round>    assign IDs to `### new` findings, apply closure statuses,
                                             write run/review/round-<N>/findings.md
+    findings.py <out|run> ingest wording-<N>
+                                            the same for a changed-text check after wording-only human
+                                            edits (run/review/wording-<N>/); new findings below blocking
+                                            are late nits, as in a closure round
     findings.py <out|run> ingest-human <target-N> --decision d-NN
                                             turn a human review round (e.g. site-1) into H- findings
     findings.py <out|run> close <H-NN>… --decision d-NN
@@ -71,8 +75,10 @@ def user_decision(run: Path, did: str, applies_to: str | None = None) -> dict:
     return f
 
 
-def cmd_ingest(run: Path, rnd: int):
-    rdir = run / "review" / f"round-{rnd}"
+def cmd_ingest(run: Path, rnd: int | str):
+    """`rnd` is a review round number, or `wording-N` for a changed-text check after human review."""
+    rdir = run / "review" / (rnd if isinstance(rnd, str) else f"round-{rnd}")
+    late_round = isinstance(rnd, str) or rnd >= 2
     files = sorted(rdir.glob("*.md"))
     files = [f for f in files if f.name != "findings.md"]
     if not files:
@@ -89,7 +95,7 @@ def cmd_ingest(run: Path, rnd: int):
                 fid = f"{prefix}-{reg['next'][prefix]:02d}"
                 reg["next"][prefix] += 1
                 status = "open"
-                if rnd >= 2 and sev != "blocking":
+                if late_round and sev != "blocking":
                     sev, status = "nit", "late-nit"
                     late.append(fid)
                 reg["findings"][fid] = {**f, "severity": sev, "status": status, "round_opened": rnd,
@@ -109,13 +115,13 @@ def cmd_ingest(run: Path, rnd: int):
             touched.append(fid)
     write_atomic(run / "review" / "registry.json", json.dumps(reg, indent=2) + "\n")
 
-    lines = [f"# Findings: round {rnd}", "", f"_Ingested {now()} from {', '.join(f.name for f in files)}._", ""]
+    lines = [f"# Findings: {rnd if isinstance(rnd, str) else f'round {rnd}'}", "", f"_Ingested {now()} from {', '.join(f.name for f in files)}._", ""]
     lines += finding_lines(reg)
     write_atomic(rdir / "findings.md", "\n".join(lines))
     opened = {s: sum(1 for r in reg["findings"].values() if r["status"] == "open" and r["severity"] == s)
               for s in ("blocking", "should", "nit")}
     log_append(run, "orchestrator", "findings",
-               f"Round {rnd} ingested: {len(touched)} finding(s) touched; open: {opened['blocking']} blocking, "
+               f"{rnd if isinstance(rnd, str) else f'Round {rnd}'} ingested: {len(touched)} finding(s) touched; open: {opened['blocking']} blocking, "
                f"{opened['should']} should, {opened['nit']} nit" + (f"; late nits (not routed): {', '.join(late)}" if late else "") + ".",
                links=[str((rdir / 'findings.md').relative_to(run))])
     print(f"wrote {rdir / 'findings.md'}")
@@ -227,7 +233,13 @@ def main():
         sys.exit(2)
     _, run = resolve_run(sys.argv[1])
     if sys.argv[2] == "ingest":
-        cmd_ingest(run, int(sys.argv[3]))
+        arg = sys.argv[3]
+        if re.fullmatch(r"wording-\d+", arg):
+            cmd_ingest(run, arg)
+        elif arg.isdigit():
+            cmd_ingest(run, int(arg))
+        else:
+            die(f"ingest takes a round number or wording-N, not {arg!r}")
     elif sys.argv[2] == "ingest-human" and len(sys.argv) == 6 and sys.argv[4] == "--decision":
         cmd_ingest_human(run, sys.argv[3], sys.argv[5])
     elif sys.argv[2] == "close" and "--decision" in sys.argv:
