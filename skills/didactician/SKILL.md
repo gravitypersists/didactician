@@ -215,11 +215,18 @@ Reviewers judge the page against the brief; only the user can say whether it's w
 1. `round_gate.py <out> stage human-review`. Start a site review session (`--target site`, see "Human review sessions"). Tell the user what changed since the plan, and that the session can wait until they have time.
 2. **The speed bump.** When the session ends, give the comment count and a one-line gist of the themes, then AskUserQuestion: **finished with this review** / **keep reviewing** (reopen the same round) / **skip human review**. Record the answer verbatim with `applies_to: human-review site-N` and `decision: approved` only for "finished". Never infer it from the session having ended, and never ingest on a skip.
 3. **Ingest:** `python3 <skill>/scripts/findings.py <run> ingest-human site-N --decision d-NN` turns each open comment into an `H-NN` finding at `blocking`. It refuses without that decision.
-4. **Route** each `H-` finding to its owner, as with reviewer findings:
-   - wording, layout or a widget → the builder that owns it, with the IDs;
-   - anything that changes objectives, segments, the overall shape, or what a segment teaches → the designer (`--loop checkpoint`), quoting the comments. The user's comment is the decision; tell them it reopens the plan, then rebuild.
+4. **Sort** the `H-` findings into two groups before dispatching anything. Most human comments are about wording, and wording doesn't need the machinery a structural change does.
+   - **Wording-only:** the fix changes text inside an existing segment (prose, a caption, a label, check feedback) and leaves its layout, its widgets and what it teaches as they are.
+   - **Structural:** layout, a figure or a widget, or anything that changes objectives, segments, the overall shape, or what a segment teaches.
+   - A wording comment on a segment that a structural finding will rework goes with the structural group, since that text is about to be rewritten anyway. When you can't tell which group a comment belongs in, treat it as structural.
    - Comments that contradict each other, or are unclear → ask the user before dispatching.
-5. Re-run the gate. Show the user each `H-` disposition. Offer a new site round to look at the changes. **Only the user closes an `H-` finding:** record their answer, then `findings.py <run> close H-NN… --decision d-NN`. Then run the closure round.
+5. **Structural findings** keep the full route, as with reviewer findings:
+   - layout, a figure or a widget → the builder that owns it, with the IDs;
+   - objectives, segments, the overall shape, or what a segment teaches → the designer (`--loop checkpoint`), quoting the comments. The user's comment is the decision; tell them it reopens the plan, then rebuild.
+6. **Wording-only findings** go to one **fresh** `page-builder` acting as an editor: `--loop gate:page --writes site/src --label wording`. Its handoff holds only the `H-` IDs (`kb.py <out> get <H- IDs>` prints each comment with the text it points at), the fragments in `site/src/` that text lives in, and `facts.md`. Leave out the plan, the reviews and earlier reports: it's rewording sentences, not rebuilding the page. Tell it that a comment needing more than a text change comes back `blocked` with the reason; route that one as structural.
+
+   Re-run the gate, then dispatch a **fresh** `accuracy-reviewer` for a changed-text check: `--loop review:wording --writes run/review/wording-N`. Give it the brief, `facts.md`, the `H-` findings and the diff of the changed fragments (`diff -ru <out>/run/review/human-site-N/build/src <out>/site/src`). The risk with a rewording is that it changes the meaning, and this check looks only for that. Ingest it with `findings.py <run> ingest wording-N`; as in a closure round, only `blocking` findings are routed, and they go back to the same editor. This is not a closure round and doesn't add one; the pedagogy/UX reviewer isn't involved.
+7. Re-run the gate. Show the user each `H-` disposition. Offer a new site round to look at the changes. **Only the user closes an `H-` finding:** record their answer, then `findings.py <run> close H-NN… --decision d-NN`. Then run the closure round for the round 1 findings. Its reviewers check changed text only where structural `H-` fixes changed it; text the wording check already covered isn't reviewed again.
 
 ## Stage 5: Deliver
 

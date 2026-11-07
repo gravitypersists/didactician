@@ -121,6 +121,31 @@ python3 "$SKILL/scripts/findings.py" "$R" close H-01 H-02 --decision d-09 > /dev
 python3 "$SKILL/scripts/findings.py" "$R" close H-01 H-02 --decision d-02 > /dev/null; expect_exit "close on the user's word" 0 $?
 python3 "$SKILL/scripts/findings.py" "$R" status > /dev/null; expect_exit "nothing blocking after close" 0 $?
 
+echo "findings.py (changed-text check after wording edits)"
+W="$R/run/review/wording-1"; mkdir -p "$W"
+cat > "$W/accuracy.md" <<'EOF'
+### new
+severity: blocking
+criterion: accuracy
+location: s-01
+verdict: contradicted
+evidence: the reworded sentence now says the opposite of c-03
+expected_fix: restore the original meaning
+
+### new
+severity: should
+criterion: accuracy
+location: s-01
+verdict: unsupported
+evidence: x
+expected_fix: y
+EOF
+python3 "$SKILL/scripts/findings.py" "$R" ingest wording-1 > "$TMP/w.txt" 2>&1; expect_exit "wording check ingests" 0 $?
+expect_grep "wording findings.md written" "wording-1/findings.md" "$TMP/w.txt"
+python3 "$SKILL/scripts/findings.py" "$R" status > /dev/null; expect_exit "a blocking wording finding blocks" 1 $?
+expect_grep "below-blocking wording findings are late nits" "late nits (not routed)" "$R/run/log.md"
+python3 "$SKILL/scripts/findings.py" "$R" ingest wording-x > /dev/null 2>&1; expect_exit "bad ingest target refused" 1 $?
+
 echo "cost_report.py"
 C="$TMP/run3"
 python3 "$SKILL/scripts/init_run.py" "$C" --slug c --depth light --minutes 5 > /dev/null
