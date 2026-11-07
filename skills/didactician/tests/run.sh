@@ -102,6 +102,12 @@ for n in 1 2; do
   python3 "$SKILL/scripts/round_gate.py" "$C" receive $n > "$TMP/c$n.txt" 2>&1
 done
 expect_grep "receive refreshes the cost report" "cost so far:" "$TMP/c2.txt"
+expect_grep "builder report without a map warns" "has no \`map:\` section" "$TMP/c2.txt"
+python3 "$SKILL/scripts/round_gate.py" "$C" dispatch --role page-builder --loop gate:page --writes site --label r3 > /dev/null
+echo p > "$C/run/handoffs/03-page-builder.prompt.md"
+printf 'status: done\nmap:\n- site/index.html — the page\n' > "$C/run/handoffs/03-page-builder.report.md"
+python3 "$SKILL/scripts/round_gate.py" "$C" receive 3 > "$TMP/c3.txt" 2>&1; expect_exit "receive with a map" 0 $?
+grep -q "no \`map:\`" "$TMP/c3.txt" && bad "map present but still warned" || ok "no warning when the map is there"
 for f in 01-page-builder 02-page-builder orchestrator; do
   [ -s "$C/run/usage/$f.jsonl" ] && ok "usage/$f.jsonl written" || bad "usage/$f.jsonl missing"
 done

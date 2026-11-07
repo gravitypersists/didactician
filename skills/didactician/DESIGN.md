@@ -312,7 +312,7 @@ explainers/<slug>/
   - A human can follow any change from log line to diff without forensics.
 - **Log format:** one entry per event (stage start/end, spawn, report, gate result, user decision). Each entry has a timestamp, the actor, a one-line summary, links, and decisions with their reasons. `scripts/log.py` appends entries so the format stays consistent.
 - **Resume:** `state.json` records the current stage. Rerunning the skill on an existing run directory resumes from the last completed stage.
-  - Within a session, revisions continue the same builder.
+  - Every builder revision round is a fresh agent, briefed with the previous report's `map`, the latest gate output and the findings with the files they touch. Continuing a builder made every fix turn re-read 200–400k of build history, and the pause for the gate or review usually expired its cache, so the first fix turn wrote it all again.
   - In a new session that's impossible, so the builder is respawned with its prior report, the findings, and the current artifacts. The log notes that it is a respawn.
 
 ## Research depth and convergence (the divergence problem)
@@ -554,7 +554,7 @@ Reviewed by a fresh agent on 2026-10-19. Its findings are incorporated above.
 | FM-1.3 step repetition | round_gate counters; stable finding IDs; no-progress rules |
 | FM-1.4 loss of history | everything on disk; `state.json` resume; handoffs and reports paired (round_gate checks) |
 | FM-1.5 unaware of stop | done predicates per agent; per-loop and run-level caps in `round_gate.py` |
-| FM-2.1 conversation reset | continue builders within a session; respawn with prior report + findings across sessions |
+| FM-2.1 conversation reset | builders are reset on purpose each round; the previous report's `map` (files, landmarks, `keep:` decisions) plus findings and quoted decisions carry what matters |
 | FM-2.2 no clarification | intake asks for what can't be inferred; pre-flights; blocker path with threshold |
 | FM-2.3 task derailment | root request verbatim in every handoff; objectives visible at checkpoint; content-beyond-plan finding |
 | FM-2.4 info withholding | handoff template carries invariants verbatim, user decisions, and the not-your-job list |

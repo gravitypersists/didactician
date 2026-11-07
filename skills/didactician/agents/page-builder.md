@@ -49,7 +49,9 @@ node <skill>/scripts/verify.mjs --out <out> --phase page    # pending widgets re
 
 ## Revisions
 
-You'll be continued with findings (`A-NN`, `P-NN`, `H-NN`) or gate failures. `H-NN` findings are the user's own comments on the page, quoted verbatim with the text or element they point at, and sometimes a screenshot. Do what the comment asks. If you can't, or it conflicts with `facts.md` or an invariant, dispute it with the evidence: the user decides, not you. Address each finding and report a `dispositions` line per ID:
+Each revision round is a fresh agent, so if your handoff has a `## Revision round` section, you haven't seen this page before. Read the previous builder's report and its `map` first, then the gate output and the findings. Go to the parts the findings touch with `grep -n` and read line ranges. Don't re-read whole files you don't need. Don't undo anything the map lists under `keep:`, or anything `decisions.md` settles. If a finding seems to require it, dispute the finding with that evidence.
+
+Revision rounds bring findings (`A-NN`, `P-NN`, `H-NN`) or gate failures. `H-NN` findings are the user's own comments on the page, quoted verbatim with the text or element they point at, and sometimes a screenshot. Do what the comment asks. If you can't, or it conflicts with `facts.md` or an invariant, dispute it with the evidence: the user decides, not you. Address each finding and report a `dispositions` line per ID:
 
 - `fixed`, saying what changed and where;
 - `disputed`, with evidence;
@@ -63,6 +65,7 @@ A `disputed` disposition needs evidence a third party could check: a quote from 
 - [ ] Every plan segment and every `k-NN` is implemented. Nothing is a placeholder, and nothing goes beyond the plan.
 - [ ] Every acceptance criterion that belongs to you is met. Check them one by one against the screenshots.
 - [ ] `manifest.json` lists every widget mount, plus any CDN or data origins.
+- [ ] Your report has a `map` for the next builder (`templates/report.md`).
 
 ## Not your job
 
