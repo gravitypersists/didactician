@@ -36,7 +36,8 @@ Preferences, in rank order: **accuracy > instructional effectiveness > UX clarit
 <out>/                        default ./explainers/<slug>/
 ├── site/                     deployable output; relative URLs only
 └── run/                      audit trail; never deployed
-    ├── brief.md  decisions.md  log.md  state.json  escalation.md
+    ├── brief.md  decisions.md  log.md  state.json  escalation.md  cost.md  cost.json
+    ├── usage/NN-<role>.jsonl   (token usage per dispatch, copied out of Claude Code's transcripts)
     ├── research/  plan/  review/round-N/  review/human-<plan|site>-N/  gate/  screenshots/
     ├── handoffs/NN-<role>.prompt.md   handoffs/NN-<role>.report.md
     └── history/NN-<role>/   (automatic snapshot before each dispatch)
@@ -46,7 +47,7 @@ Namespaces (who may write):
 
 | Role | Writes |
 |---|---|
-| orchestrator (you) | `run/brief.md`, `run/decisions.md`, `run/handoffs/`, `run/escalation.md`. `log.md`, `state.json`, `gate/`, `history/` and `review/human-*/` go only through scripts |
+| orchestrator (you) | `run/brief.md`, `run/decisions.md`, `run/handoffs/`, `run/escalation.md`. `log.md`, `state.json`, `cost.*`, `usage/`, `gate/`, `history/` and `review/human-*/` go only through scripts |
 | researcher | `run/research/` |
 | instructional-designer | `run/plan/` |
 | page-builder | `site/` except `site/widgets/<id>/` |
@@ -87,6 +88,8 @@ Every spawn **and every continuation message** to an existing agent goes through
    ```
 
    It checks that the report exists, parses its status, and runs the namespace check: writes outside the allowed namespaces fail. On a namespace failure, inspect the diff it prints. Restore from `run/history/NN-<role>/` if the write was harmful, then log it.
+
+   It also refreshes the run's cost report (`run/cost.md`) and prints its headline. If that fails it prints a warning and logs it. That is never a reason to stop: carry on with the run and mention it at delivery.
 6. **Log** happens automatically in steps 2 and 5. Use `python3 <skill>/scripts/log.py <run> --actor orchestrator --event <event> --summary "…" [--link <path>]…` for anything else worth a human's attention: user decisions, routing choices, blocker dispositions.
 
 Parallel dispatch (several widget builders, deep research) is fine. Dispatch them all, then receive each one. The namespace check accounts for overlapping dispatches.
@@ -226,7 +229,8 @@ Give the user:
 - deduplicated concerns;
 - open `nit`s;
 - any post-approval changes;
-- the path to `run/log.md`.
+- the path to `run/log.md`;
+- what the run cost: run `python3 <skill>/scripts/cost_report.py <run>`, give the user the line it prints and the path to `run/cost.md`.
 
 Deploy **only** if the original request included deployment instructions. Even then, confirm the exact target with the user first, because deployment is the one irreversible step. Log the final event.
 
@@ -271,5 +275,5 @@ Then ask with AskUserQuestion. If the user extends a cap, run `round_gate.py <ru
   - `learning-science-patterns.md` and `cognitive-design-patterns.md` (instructional design);
   - `ux-ui.md`, `graphics.md`, `widgets.md`, `sourcing.md`.
 - `kit/`: optional runtime helpers that builders copy into `site/assets/`: `tokens.css`, `components.css`, `toc.js`, `arrow.js`, `replay.js`, `carousel.js`, `widget.js`.
-- `scripts/`: `preflight.sh`, `init_run.py`, `round_gate.py`, `log.py`, `check_research.py`, `check_plan.py`, `findings.py`, `verify.mjs`, `probe.mjs`, `human_review.mjs`.
+- `scripts/`: `preflight.sh`, `init_run.py`, `round_gate.py`, `log.py`, `cost_report.py`, `check_research.py`, `check_plan.py`, `findings.py`, `verify.mjs`, `probe.mjs`, `human_review.mjs`.
 - `vendor/annotate/`: the annotation layer `human_review.mjs` injects into the review browser. It is never copied into `site/`. `tests/run.sh` self-tests the gate and scripts.

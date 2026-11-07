@@ -1,0 +1,1281 @@
+{
+  "v": 1,
+  "generated": "2026-11-07T09:47:17-05:00",
+  "slug": "didactician",
+  "stage": "build",
+  "weights": {
+    "input": 1,
+    "cache_write_5m": 1.25,
+    "cache_write_1h": 2,
+    "cache_read": 0.1,
+    "output": 5
+  },
+  "total_ieq": 13559548,
+  "by_stage": {
+    "Research": 705505,
+    "Plan": 780487,
+    "Build": 3362432,
+    "Review": 953396,
+    "Fixes (gate)": 3235157,
+    "Replan": 634125,
+    "Orchestrator": 3888447
+  },
+  "causes": [
+    {
+      "key": "carried_history",
+      "ieq": 1402089,
+      "continuations": 4,
+      "cold": 4,
+      "median_ctx": 198249.5,
+      "agents": [
+        "04 page-builder",
+        "05 widget-builder w-pipeline",
+        "11 page-builder",
+        "02 instructional-designer"
+      ]
+    },
+    {
+      "key": "whole_reads",
+      "ieq": 444279,
+      "count": 9,
+      "files": [
+        {
+          "path": "(a large tool output Claude Code saved to a file)",
+          "count": 5,
+          "bytes": 47178,
+          "agents": 4
+        },
+        {
+          "path": "run/plan/learning-plan.md",
+          "count": 2,
+          "bytes": 38906,
+          "agents": 2
+        },
+        {
+          "path": "site/index.html",
+          "count": 1,
+          "bytes": 34522,
+          "agents": 1
+        }
+      ]
+    },
+    {
+      "key": "images",
+      "ieq": 339227,
+      "count": 109,
+      "top": [
+        [
+          "07 pedagogy-ux-reviewer",
+          31
+        ],
+        [
+          "orchestrator (main session)",
+          20
+        ]
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "dispatch": null,
+      "role": "orchestrator",
+      "agent": "5908e626-5bd7-4713-aaad-2a92bfd5bee0",
+      "kind": "orchestrator",
+      "seq": 0,
+      "label": "orchestrator (main session)",
+      "stage": "Orchestrator",
+      "turns": 51,
+      "ts": "2026-10-25T13:29:18.501Z",
+      "ctx": {
+        "first": 63726,
+        "peak": 152506,
+        "last": 152506
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 126,
+        "cache_write_5m": 0,
+        "cache_write_1h": 90417,
+        "cache_read": 5290153,
+        "output": 42552
+      },
+      "ieq": 922735,
+      "images": 5,
+      "whole_reads": [
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/final/1-hero-1280x800.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/final/5-plate3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/final/6-why-dark.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/mockup-00.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/top-light.png",
+          "count": 1,
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "dispatch": 1,
+      "role": "researcher",
+      "agent": "ab39f1a2d00f1dedb",
+      "kind": "spawn",
+      "seq": 0,
+      "label": "01 researcher",
+      "stage": "Research",
+      "turns": 40,
+      "ts": "2026-10-25T13:29:34.046Z",
+      "ctx": {
+        "first": 33201,
+        "peak": 136538,
+        "last": 136538
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 82,
+        "cache_write_5m": 136536,
+        "cache_write_1h": 0,
+        "cache_read": 3898232,
+        "output": 28986
+      },
+      "ieq": 705505,
+      "images": 0,
+      "whole_reads": [
+        {
+          "path": "run/handoffs/01-researcher.prompt.md",
+          "count": 1,
+          "bytes": 4393
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/agents/researcher.md",
+          "count": 1,
+          "bytes": 4629
+        }
+      ]
+    },
+    {
+      "dispatch": 2,
+      "role": "instructional-designer",
+      "agent": "a48f9e5b11f1a315b",
+      "kind": "spawn",
+      "seq": 0,
+      "label": "02 instructional-designer",
+      "stage": "Plan",
+      "turns": 15,
+      "ts": "2026-10-25T13:35:37.571Z",
+      "ctx": {
+        "first": 33207,
+        "peak": 126873,
+        "last": 126873
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 32,
+        "cache_write_5m": 108407,
+        "cache_write_1h": 0,
+        "cache_read": 1223188,
+        "output": 41509
+      },
+      "ieq": 465405,
+      "images": 0,
+      "whole_reads": [
+        {
+          "path": "run/handoffs/02-instructional-designer.prompt.md",
+          "count": 1,
+          "bytes": 5238
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/agents/instructional-designer.md",
+          "count": 1,
+          "bytes": 7003
+        }
+      ]
+    },
+    {
+      "dispatch": 3,
+      "role": "instructional-designer",
+      "agent": "a48f9e5b11f1a315b",
+      "kind": "continue",
+      "seq": 1,
+      "label": "03 instructional-designer",
+      "stage": "Plan",
+      "turns": 8,
+      "ts": "2026-10-25T14:30:54.977Z",
+      "ctx": {
+        "first": 128073,
+        "peak": 145302,
+        "last": 145302
+      },
+      "cold_start": true,
+      "tokens": {
+        "input": 18,
+        "cache_write_5m": 145300,
+        "cache_write_1h": 0,
+        "cache_read": 960944,
+        "output": 7469
+      },
+      "ieq": 315082,
+      "images": 0,
+      "whole_reads": []
+    },
+    {
+      "dispatch": 4,
+      "role": "page-builder",
+      "agent": "ad050c9fcc5b21ed2",
+      "kind": "spawn",
+      "seq": 0,
+      "label": "04 page-builder",
+      "stage": "Build",
+      "turns": 49,
+      "ts": "2026-10-25T14:32:45.299Z",
+      "ctx": {
+        "first": 33210,
+        "peak": 232863,
+        "last": 232863
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 98,
+        "cache_write_5m": 214397,
+        "cache_write_1h": 0,
+        "cache_read": 7981298,
+        "output": 95042
+      },
+      "ieq": 1541434,
+      "images": 12,
+      "whole_reads": [
+        {
+          "path": "(a large tool output Claude Code saved to a file)",
+          "count": 2,
+          "bytes": 38051
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/crops/d2.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/crops/d_top.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/crops/dark.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/crops/m1.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/crops/m2.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/crops/mobland.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/crops/p1280.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/crops/p360.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/handoffs/04-page-builder.prompt.md",
+          "count": 1,
+          "bytes": 5113
+        },
+        {
+          "path": "run/screenshots/probe/d-k02.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d-plate3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d-plate4.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d-top.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/agents/page-builder.md",
+          "count": 1,
+          "bytes": 6236
+        }
+      ]
+    },
+    {
+      "dispatch": 5,
+      "role": "widget-builder",
+      "agent": "a00f9eb0947fb05e7",
+      "kind": "spawn",
+      "seq": 0,
+      "label": "05 widget-builder w-pipeline",
+      "stage": "Build",
+      "turns": 45,
+      "ts": "2026-10-25T14:49:51.509Z",
+      "ctx": {
+        "first": 33211,
+        "peak": 197291,
+        "last": 197291
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 98,
+        "cache_write_5m": 178825,
+        "cache_write_1h": 0,
+        "cache_read": 5997515,
+        "output": 78041
+      },
+      "ieq": 1213586,
+      "images": 12,
+      "whole_reads": [
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/wp/m360-sheet.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/wp/s1.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/wp/s2.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/wp/s3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/wp/s4.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/wp/s5.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/handoffs/05-widget-builder.prompt.md",
+          "count": 1,
+          "bytes": 4906
+        },
+        {
+          "path": "run/plan/learning-plan.md",
+          "count": 1,
+          "bytes": 31247
+        },
+        {
+          "path": "run/screenshots/probe/d1280-what0.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-what3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-why1.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-why2.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-why3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-why4.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/agents/widget-builder.md",
+          "count": 1,
+          "bytes": 4364
+        }
+      ]
+    },
+    {
+      "dispatch": 6,
+      "role": "accuracy-reviewer",
+      "agent": "ac6b5362e18ec732b",
+      "kind": "spawn",
+      "seq": 0,
+      "label": "06 accuracy-reviewer",
+      "stage": "Review",
+      "turns": 25,
+      "ts": "2026-10-25T15:05:26.494Z",
+      "ctx": {
+        "first": 33234,
+        "peak": 115111,
+        "last": 115111
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 52,
+        "cache_write_5m": 96645,
+        "cache_write_1h": 0,
+        "cache_read": 1952472,
+        "output": 14750
+      },
+      "ieq": 389855,
+      "images": 3,
+      "whole_reads": [
+        {
+          "path": "(a large tool output Claude Code saved to a file)",
+          "count": 1,
+          "bytes": 39161
+        },
+        {
+          "path": "run/handoffs/06-accuracy-reviewer.prompt.md",
+          "count": 1,
+          "bytes": 4109
+        },
+        {
+          "path": "run/screenshots/probe/acc-what7.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-why1.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-why3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/agents/accuracy-reviewer.md",
+          "count": 1,
+          "bytes": 3893
+        }
+      ]
+    },
+    {
+      "dispatch": 7,
+      "role": "pedagogy-ux-reviewer",
+      "agent": "a900bb2d77f806ab0",
+      "kind": "spawn",
+      "seq": 0,
+      "label": "07 pedagogy-ux-reviewer",
+      "stage": "Review",
+      "turns": 34,
+      "ts": "2026-10-25T15:05:26.510Z",
+      "ctx": {
+        "first": 33242,
+        "peak": 132803,
+        "last": 132803
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 68,
+        "cache_write_5m": 114337,
+        "cache_write_1h": 0,
+        "cache_read": 3069758,
+        "output": 22715
+      },
+      "ieq": 563540,
+      "images": 31,
+      "whole_reads": [
+        {
+          "path": "(a large tool output Claude Code saved to a file)",
+          "count": 1,
+          "bytes": 47178
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/tiles/w1280-00.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/tiles/w1280-01.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/tiles/w360-13.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/tiles/w360-14.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/handoffs/07-pedagogy-ux-reviewer.prompt.md",
+          "count": 1,
+          "bytes": 4421
+        },
+        {
+          "path": "run/screenshots/probe/d1280-hero.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-what3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-what4.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-what6.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-what7.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-why1.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-why2.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-why3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/d1280-why4.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m390-fig1.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m390-hero.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m390-k01a.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m390-k01pre.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m390-k02a.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m390-k04c.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m390-p2p1.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m390-p2p3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m390-plate3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m390-what3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m390-what7.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/x-1280-p2p3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/x-1280-plate3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/x-1280x800-hero.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/x-740x360-what5.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/x-dark-1280-why3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/x-dark-390-p2p.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/x-dark-390-plate3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/agents/pedagogy-ux-reviewer.md",
+          "count": 1,
+          "bytes": 5571
+        }
+      ]
+    },
+    {
+      "dispatch": 8,
+      "role": "page-builder",
+      "agent": "ad050c9fcc5b21ed2",
+      "kind": "continue",
+      "seq": 1,
+      "label": "08 page-builder",
+      "stage": "Fixes (gate)",
+      "turns": 16,
+      "ts": "2026-10-25T15:11:55.347Z",
+      "ctx": {
+        "first": 235321,
+        "peak": 262693,
+        "last": 262693
+      },
+      "cold_start": true,
+      "tokens": {
+        "input": 32,
+        "cache_write_5m": 244227,
+        "cache_write_1h": 0,
+        "cache_read": 3787816,
+        "output": 15331
+      },
+      "ieq": 760752,
+      "images": 3,
+      "whole_reads": [
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/crops/r-top.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/crops/r1280b.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/crops/r390.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/handoffs/08-page-builder.prompt.md",
+          "count": 1,
+          "bytes": 4873
+        }
+      ]
+    },
+    {
+      "dispatch": 9,
+      "role": "widget-builder",
+      "agent": "a00f9eb0947fb05e7",
+      "kind": "continue",
+      "seq": 1,
+      "label": "09 widget-builder w-pipeline",
+      "stage": "Fixes (gate)",
+      "turns": 14,
+      "ts": "2026-10-25T15:11:55.387Z",
+      "ctx": {
+        "first": 199238,
+        "peak": 222694,
+        "last": 222694
+      },
+      "cold_start": true,
+      "tokens": {
+        "input": 30,
+        "cache_write_5m": 204226,
+        "cache_write_1h": 0,
+        "cache_read": 2764675,
+        "output": 12418
+      },
+      "ieq": 593870,
+      "images": 1,
+      "whole_reads": [
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/5908e626-5bd7-4713-aaad-2a92bfd5bee0/scratchpad/wp/s6.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/handoffs/09-widget-builder.prompt.md",
+          "count": 1,
+          "bytes": 3349
+        }
+      ]
+    },
+    {
+      "dispatch": null,
+      "role": "orchestrator",
+      "agent": "3094f3b6-927e-4fab-8ce3-a65bd12a9cbf",
+      "kind": "orchestrator",
+      "seq": 0,
+      "label": "orchestrator (main session)",
+      "stage": "Orchestrator",
+      "turns": 139,
+      "ts": "2026-10-25T17:20:35.911Z",
+      "ctx": {
+        "first": 47877,
+        "peak": 239519,
+        "last": 239519
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 320,
+        "cache_write_5m": 0,
+        "cache_write_1h": 286414,
+        "cache_read": 17907885,
+        "output": 120355
+      },
+      "ieq": 2965712,
+      "images": 15,
+      "whole_reads": [
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/ex/run/review/human-plan-1/shots/H-01.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/ex/run/review/human-plan-1/shots/H-02.png",
+          "count": 2,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/ex/run/review/human-site-1/shots/H-01.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t2/ex/run/review/human-site-1/shots/cshape1.png",
+          "count": 2,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/tasks/bbytbp0s3.output",
+          "count": 1,
+          "bytes": 250
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/tasks/btascm9ji.output",
+          "count": 1,
+          "bytes": 312
+        },
+        {
+          "path": "run/review/human-site-1/shots/H-01.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/review/human-site-1/shots/H-02.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/review/human-site-1/shots/H-03.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/review/human-site-1/shots/H-15.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/review/human-site-1/shots/H-25.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/review/human-site-1/shots/H-27.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/review/human-site-1/shots/H-28.png",
+          "count": 2,
+          "bytes": 0
+        },
+        {
+          "path": "run/review/human-site-1/shots/c1ji7wbi1sfpkmx1ktx7jv.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/SKILL.md",
+          "count": 1,
+          "bytes": 19041
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/scripts/_common.py",
+          "count": 1,
+          "bytes": 7512
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/scripts/findings.py",
+          "count": 1,
+          "bytes": 6305
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/scripts/init_run.py",
+          "count": 1,
+          "bytes": 4107
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/scripts/round_gate.py",
+          "count": 1,
+          "bytes": 16361
+        }
+      ]
+    },
+    {
+      "dispatch": 10,
+      "role": "instructional-designer",
+      "agent": "a3cd3849180849759",
+      "kind": "spawn",
+      "seq": 0,
+      "label": "10 instructional-designer",
+      "stage": "Replan",
+      "turns": 8,
+      "ts": "2026-10-25T19:31:02.757Z",
+      "ctx": {
+        "first": 33166,
+        "peak": 88185,
+        "last": 88185
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 16,
+        "cache_write_5m": 88183,
+        "cache_write_1h": 0,
+        "cache_read": 402113,
+        "output": 1249
+      },
+      "ieq": 156701,
+      "images": 0,
+      "whole_reads": [
+        {
+          "path": "(a large tool output Claude Code saved to a file)",
+          "count": 1,
+          "bytes": 45477
+        },
+        {
+          "path": "run/handoffs/10-instructional-designer.prompt.md",
+          "count": 1,
+          "bytes": 9336
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/agents/instructional-designer.md",
+          "count": 1,
+          "bytes": 7218
+        }
+      ]
+    },
+    {
+      "dispatch": 10,
+      "role": "instructional-designer",
+      "agent": "aa0aa07b59ff79a95",
+      "kind": "spawn",
+      "seq": 0,
+      "label": "10 instructional-designer",
+      "stage": "Replan",
+      "turns": 20,
+      "ts": "2026-10-25T19:34:00.740Z",
+      "ctx": {
+        "first": 33172,
+        "peak": 129304,
+        "last": 129304
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 40,
+        "cache_write_5m": 110838,
+        "cache_write_1h": 0,
+        "cache_read": 1519866,
+        "output": 37370
+      },
+      "ieq": 477424,
+      "images": 0,
+      "whole_reads": []
+    },
+    {
+      "dispatch": 11,
+      "role": "page-builder",
+      "agent": "ae119bf17588395f1",
+      "kind": "spawn",
+      "seq": 0,
+      "label": "11 page-builder",
+      "stage": "Fixes (gate)",
+      "turns": 40,
+      "ts": "2026-10-25T19:42:03.579Z",
+      "ctx": {
+        "first": 33174,
+        "peak": 193713,
+        "last": 193713
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 84,
+        "cache_write_5m": 193711,
+        "cache_write_1h": 0,
+        "cache_read": 5390599,
+        "output": 49374
+      },
+      "ieq": 1028153,
+      "images": 9,
+      "whole_reads": [
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/hero-1280x800.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/hero-360x740.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/handoffs/11-page-builder.prompt.md",
+          "count": 1,
+          "bytes": 5524
+        },
+        {
+          "path": "run/plan/learning-plan.md",
+          "count": 1,
+          "bytes": 38906
+        },
+        {
+          "path": "run/screenshots/page-round-7/w1280.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/h1280-d3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/h1280-fig1.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/h1280-hero.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m360-d3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/m360-fig1.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/x-1280-plate3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "site/index.html",
+          "count": 1,
+          "bytes": 34522
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/agents/page-builder.md",
+          "count": 1,
+          "bytes": 6535
+        }
+      ]
+    },
+    {
+      "dispatch": 12,
+      "role": "widget-builder",
+      "agent": "a86d694caf25cccd5",
+      "kind": "spawn",
+      "seq": 0,
+      "label": "12 widget-builder w-pipeline",
+      "stage": "Fixes (gate)",
+      "turns": 27,
+      "ts": "2026-10-25T19:42:03.597Z",
+      "ctx": {
+        "first": 33176,
+        "peak": 132850,
+        "last": 132850
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 54,
+        "cache_write_5m": 132848,
+        "cache_write_1h": 0,
+        "cache_read": 2745128,
+        "output": 27088
+      },
+      "ieq": 576067,
+      "images": 14,
+      "whole_reads": [
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/run/screenshots/probe/x1280-what0.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/run/screenshots/probe/x1280-what2.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/run/screenshots/probe/x1280-what7.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/run/screenshots/probe/x1280-why1.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/run/screenshots/probe/x1280-why2.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/run/screenshots/probe/x1280-why3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/run/screenshots/probe/x360-what0.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/run/screenshots/probe/x360-what7.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/run/screenshots/probe/x360-why1.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/run/screenshots/probe/x360-why2.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "/private/tmp/claude-501/-Users-m-workspace-didactician/3094f3b6-927e-4fab-8ce3-a65bd12a9cbf/scratchpad/t/run/screenshots/probe/x360-why3.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/handoffs/12-widget-builder.prompt.md",
+          "count": 1,
+          "bytes": 3923
+        },
+        {
+          "path": "run/screenshots/probe/wp1280-why2.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/wp360-what0.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/wp740-what0.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "site/widgets/w-pipeline/index.css",
+          "count": 1,
+          "bytes": 9008
+        },
+        {
+          "path": "site/widgets/w-pipeline/index.js",
+          "count": 1,
+          "bytes": 32860
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/agents/widget-builder.md",
+          "count": 1,
+          "bytes": 4471
+        }
+      ]
+    },
+    {
+      "dispatch": 13,
+      "role": "widget-builder",
+      "agent": "a345fd153c3ee95f9",
+      "kind": "spawn",
+      "seq": 0,
+      "label": "13 widget-builder w-blocks",
+      "stage": "Build",
+      "turns": 22,
+      "ts": "2026-10-25T19:50:07.950Z",
+      "ctx": {
+        "first": 33176,
+        "peak": 146236,
+        "last": 146236
+      },
+      "cold_start": false,
+      "tokens": {
+        "input": 46,
+        "cache_write_5m": 127770,
+        "cache_write_1h": 0,
+        "cache_read": 2122989,
+        "output": 47071
+      },
+      "ieq": 607412,
+      "images": 4,
+      "whole_reads": [
+        {
+          "path": "run/handoffs/13-widget-builder.prompt.md",
+          "count": 1,
+          "bytes": 4202
+        },
+        {
+          "path": "run/screenshots/probe/b1280-all.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/b360-all.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/t1280-s7.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "run/screenshots/probe/t360-s6.png",
+          "count": 1,
+          "bytes": 0
+        },
+        {
+          "path": "~/workspace/didactician/skills/didactician/agents/widget-builder.md",
+          "count": 1,
+          "bytes": 4471
+        }
+      ]
+    },
+    {
+      "dispatch": 14,
+      "role": "page-builder",
+      "agent": "ae119bf17588395f1",
+      "kind": "continue",
+      "seq": 1,
+      "label": "14 page-builder",
+      "stage": "Fixes (gate)",
+      "turns": 3,
+      "ts": "2026-10-25T19:57:37.798Z",
+      "ctx": {
+        "first": 197261,
+        "peak": 199513,
+        "last": 199513
+      },
+      "cold_start": true,
+      "tokens": {
+        "input": 8,
+        "cache_write_5m": 181047,
+        "cache_write_1h": 0,
+        "cache_read": 413580,
+        "output": 1728
+      },
+      "ieq": 276315,
+      "images": 0,
+      "whole_reads": [
+        {
+          "path": "run/handoffs/14-page-builder.prompt.md",
+          "count": 1,
+          "bytes": 1233
+        }
+      ]
+    }
+  ],
+  "missing_dispatches": [],
+  "notes": []
+}

@@ -140,12 +140,14 @@ explainers/<slug>/
 ├── site/                         ← deploy this folder
 └── run/
     ├── log.md                    ← start here: timeline with links
+    ├── cost.md                   ← what the run cost, and where it went
     ├── brief.md                  ← the root spec every agent points to
     ├── decisions.md              ← every answer you gave, verbatim
     ├── research/  plan/          ← the agents' work products
     ├── handoffs/NN-role.prompt.md / .report.md   ← exactly what each agent was told and said
     ├── history/NN-role/          ← snapshot before each agent touched anything
     ├── gate/  screenshots/       ← gate results and renders at each width
+    ├── usage/  cost.json         ← per-turn token usage behind cost.md
     └── review/round-N/findings.md
 ```
 
@@ -165,6 +167,8 @@ Round 2 ingested: 3 finding(s) touched; open: 0 blocking, 1 should, 1 nit.
 
 - [review/round-2/findings.md](review/round-2/findings.md)
 ```
+
+`cost.md` is regenerated each time an agent's work is received. It opens with what the run cost and the biggest single fact about it, then shows where the cost went by stage and by agent, the likeliest causes (agents carrying earlier rounds, screenshots, big files read whole), and a folded table of every dispatch. Costs are in input-equivalent tokens: every kind of token is weighted by its price relative to normal input, so runs stay comparable across models and prices. The numbers come from Claude Code's transcripts, which are copied into `usage/` as they're read, so a run keeps its numbers after Claude Code deletes old transcripts (30 days by default).
 
 To see how an artifact changed, diff the snapshot against the current file. For example, `diff -r run/history/05-page-builder/site site` shows what dispatch 05's revision did.
 

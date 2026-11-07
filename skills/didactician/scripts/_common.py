@@ -26,6 +26,9 @@ ORCHESTRATOR_NS = [
     "run/review/registry.json",
     "run/review/round-*/findings.md",
     "run/review/human-*",  # written by human_review.mjs and findings.py, which the orchestrator runs
+    "run/usage",  # cost_report.py, run by round_gate.py on every receive
+    "run/cost.md",
+    "run/cost.json",
 ]
 
 

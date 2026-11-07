@@ -170,6 +170,16 @@ def cmd_dispatch(a, out: Path, run: Path):
     print(f"report:  {run / prompt.replace('.prompt.md', '.report.md')}")
 
 
+def refresh_cost(out: Path, run: Path):
+    """Regenerate run/cost.md. A warning, never a failure: cost reporting must not block a run."""
+    try:
+        from cost_report import run_report
+        print(f"cost so far: {run_report(out, run)}")
+    except Exception as e:  # noqa: BLE001 (any failure here is reported, not raised)
+        print(f"WARNING: cost report not updated: {e}", file=sys.stderr)
+        log_append(run, "cost_report", "warning", f"Cost report not updated: {e}")
+
+
 def cmd_receive(a, out: Path, run: Path):
     state = load_state(run)
     nn = int(a.nn)
@@ -233,6 +243,7 @@ def cmd_receive(a, out: Path, run: Path):
     log_append(run, "orchestrator", "receive", msg, links=[str(report.relative_to(run))])
     print(f"status: {status}" + (f" ({d['reason']})" if d.get("reason") else ""))
     print(f"changed files: {len(changed)}")
+    refresh_cost(out, run)
     if violations:
         print("NAMESPACE VIOLATION (writes outside allowed namespaces):", file=sys.stderr)
         for v in violations:
