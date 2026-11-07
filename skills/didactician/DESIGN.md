@@ -285,6 +285,8 @@ explainers/<slug>/
     ├── log.md                # human-readable timeline (orchestrator only)
     ├── decisions.md          # every user decision (orchestrator only)
     ├── state.json            # stage, counters, spawn count, timestamps (scripts only)
+    ├── cost.md  cost.json    # what the run cost and where (cost_report.py only)
+    ├── usage/NN-<agent>.jsonl  # token usage per dispatch, our format (cost_report.py only)
     ├── brief.md
     ├── research/ plan/ review/round-N/ screenshots/round-N/
     ├── handoffs/NN-<agent>.prompt.md   # exact prompt sent
@@ -292,6 +294,7 @@ explainers/<slug>/
     └── history/NNN-<label>/            # snapshot before any spawn that may mutate
 ```
 
+- **Cost comes from transcripts, through one adapter:** Claude Code's `.jsonl` transcripts are an internal, undocumented format. `scripts/_transcripts.py` is the only code that reads them. It turns them into usage events in a format we own (`run/usage/`, versioned with `"v"`, counts and paths only, no message content), and fails loudly rather than reporting zeros when the format changes. `cost_report.py` and any later eval read `usage/` only. Copying usage into the run also keeps it after Claude Code deletes old transcripts.
 - **Namespace ownership:** each directory has exactly one writer (see the contracts). Reviewers never edit `site/`. User decisions live in `decisions.md`, so no agent-owned file is edited by anyone else.
 - **Handoffs are self-contained:** the orchestrator writes every subagent prompt to `handoffs/` _before_ spawning, using `templates/handoff.md`. The fields:
   - the root request verbatim;

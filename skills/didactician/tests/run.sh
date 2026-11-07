@@ -16,6 +16,8 @@ expect_grep() { # name pattern file
   if grep -q -- "$2" "$3"; then ok "$1"; else bad "$1 (no '$2' in output)"; fi
 }
 
+# Keep the scripts away from the real ~/.claude transcripts.
+export CLAUDE_CONFIG_DIR="$TMP/claude"
 cp -R "$SKILL/tests/fixtures" "$TMP/fx"
 rm -rf "$TMP"/fx/*/run/gate "$TMP"/fx/*/run/screenshots
 
@@ -89,6 +91,37 @@ python3 "$SKILL/scripts/findings.py" "$R" status > /dev/null; expect_exit "open 
 python3 "$SKILL/scripts/findings.py" "$R" close H-01 H-02 --decision d-09 > /dev/null 2>&1; expect_exit "close needs a recorded decision" 1 $?
 python3 "$SKILL/scripts/findings.py" "$R" close H-01 H-02 --decision d-02 > /dev/null; expect_exit "close on the user's word" 0 $?
 python3 "$SKILL/scripts/findings.py" "$R" status > /dev/null; expect_exit "nothing blocking after close" 0 $?
+
+echo "cost_report.py"
+C="$TMP/run3"
+python3 "$SKILL/scripts/init_run.py" "$C" --slug c --depth light --minutes 5 > /dev/null
+for n in 1 2; do
+  python3 "$SKILL/scripts/round_gate.py" "$C" dispatch --role page-builder --loop gate:page --writes site --label r$n > /dev/null
+  echo p > "$C/run/handoffs/0$n-page-builder.prompt.md"; printf 'status: done\n' > "$C/run/handoffs/0$n-page-builder.report.md"
+  [ $n = 1 ] && python3 "$SKILL/tests/make_transcripts.py" "$C" "$CLAUDE_CONFIG_DIR" > /dev/null
+  python3 "$SKILL/scripts/round_gate.py" "$C" receive $n > "$TMP/c$n.txt" 2>&1
+done
+expect_grep "receive refreshes the cost report" "cost so far:" "$TMP/c2.txt"
+for f in 01-page-builder 02-page-builder orchestrator; do
+  [ -s "$C/run/usage/$f.jsonl" ] && ok "usage/$f.jsonl written" || bad "usage/$f.jsonl missing"
+done
+expect_grep "reminder doesn't split a round" '"turns": 4' "$C/run/cost.json"
+expect_grep "continuation counted" "+ 1 continuation" "$C/run/cost.md"
+expect_grep "cold restart found" "started after the cache had expired" "$C/run/cost.md"
+expect_grep "fix round staged as a gate fix" "Fixes (gate)" "$C/run/cost.md"
+expect_grep "screenshot measured" '"w":1280,"h":900' "$C/run/usage/01-page-builder.jsonl"
+expect_grep "whole read of a big file" "run/plan/learning-plan.md (58 KB)" "$C/run/cost.md"
+# transcripts cleaned up: usage stays and the report still builds
+cp "$C/run/usage/01-page-builder.jsonl" "$TMP/u1.jsonl"; rm -rf "$CLAUDE_CONFIG_DIR/projects"
+python3 "$SKILL/scripts/cost_report.py" "$C" > /dev/null 2>&1; expect_exit "report without transcripts" 0 $?
+cmp -s "$TMP/u1.jsonl" "$C/run/usage/01-page-builder.jsonl" && ok "usage kept after cleanup" || bad "usage lost after cleanup"
+expect_grep "report still has the numbers" "+ 1 continuation" "$C/run/cost.md"
+# transcript format change: fail loudly, write nothing
+python3 "$SKILL/tests/make_transcripts.py" "$C" "$CLAUDE_CONFIG_DIR" --break > /dev/null
+cp "$C/run/cost.md" "$TMP/cost-before.md"
+python3 "$SKILL/scripts/cost_report.py" "$C" > /dev/null 2> "$TMP/cbreak.txt"; expect_exit "format change exits 3" 3 $?
+expect_grep "format change named" "unrecognized transcript format" "$TMP/cbreak.txt"
+cmp -s "$TMP/cost-before.md" "$C/run/cost.md" && ok "report untouched on format change" || bad "report overwritten on format change"
 
 echo
 echo "passed $PASS, failed $FAILN"
