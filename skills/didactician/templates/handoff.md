@@ -23,7 +23,8 @@ Read and follow `<skill>/agents/<role>.md`. This file is your task.
 
 ## Inputs (read these; don't expect them pasted)
 
-- `<abs path>`: <what it is>
+- Records: `python3 <skill>/scripts/kb.py <out> get <ids> --closure` with <ids> = <the segments, widgets, checks, claims or findings this task is about, e.g. `s-03 w-sizing P-04`>. It prints them with what they depend on; read a whole plan or research file only if your task is the whole file.
+- `<abs path>`: <what it is; for site files, the fragments in `site/src/` the task touches>
 - …
 
 ## Outputs (write only these)

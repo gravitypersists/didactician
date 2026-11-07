@@ -22,6 +22,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { args, loadPlaywright, logAppend, nowIso, serve } from './lib/pw.mjs';
+import { assembleOrExit } from './lib/assemble.mjs';
 
 const A = args(process.argv.slice(2));
 if (!A.out || !['plan', 'site'].includes(A.target)) {
@@ -34,6 +35,7 @@ const run = path.join(out, 'run');
 const target = A.target;
 const live = target === 'plan' ? path.join(run, 'plan') : path.join(out, 'site');
 const entry = target === 'plan' ? 'mockup.html' : 'index.html';
+if (target === 'site' && !rewrite) assembleOrExit(live); // so a new round freezes the current fragments
 const width = +(A.width || 1280);
 const height = +(A.height || 900);
 const maxMs = +(A['max-minutes'] || 180) * 60000;

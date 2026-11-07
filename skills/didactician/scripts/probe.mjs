@@ -23,6 +23,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { args, loadPlaywright, serve } from './lib/pw.mjs';
+import { assembleOrExit } from './lib/assemble.mjs';
 
 const A = args(process.argv.slice(2));
 if (!A.out || !A.do) {
@@ -31,6 +32,7 @@ if (!A.out || !A.do) {
 }
 const out = path.resolve(A.out);
 const site = path.join(out, 'site');
+assembleOrExit(site);
 const width = +(A.width || 390);
 const label = String(A.name || `w${width}`).replace(/[^a-z0-9_-]+/gi, '-');
 const dir = path.join(out, 'run', 'screenshots', 'probe');

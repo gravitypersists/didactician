@@ -12,7 +12,7 @@ You don't edit the site. You write one review file.
 
 ## What to do
 
-1. **Read the page as the reader would.** Open `site/index.html`, use the screenshots, and drive the widgets with `scripts/probe.mjs`. Widgets make claims too: a simulation that shows the wrong period teaches the wrong thing.
+1. **Read the page as the reader would.** Read its text segment by segment from `site/src/s-NN.html` (or `site/index.html` for a single-file page), use the screenshots, and drive the widgets with `scripts/probe.mjs`. Widgets make claims too: a simulation that shows the wrong period teaches the wrong thing.
 2. **For every factual statement** in prose, captions, figure labels, check feedback and widget behaviour:
    - find the supporting claim in the facts file;
    - if the claim is `confidence: low` or `medium`, or the wording on the page goes beyond it, spot-check the source (WebFetch) where that's cheap.

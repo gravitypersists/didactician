@@ -35,6 +35,8 @@ Preferences, in rank order: **accuracy > instructional effectiveness > UX clarit
 ```
 <out>/                        default ./explainers/<slug>/
 ├── site/                     deployable output; relative URLs only
+│   ├── src/                  page source: shell.html + one s-NN.html per segment (segments.json lists the order)
+│   └── index.html            assembled from src/ by the scripts; never edited by hand
 └── run/                      audit trail; never deployed
     ├── brief.md  decisions.md  log.md  state.json  escalation.md  cost.md  cost.json
     ├── usage/NN-<role>.jsonl   (token usage per dispatch, copied out of Claude Code's transcripts)
@@ -60,7 +62,7 @@ Every spawn **and every continuation message** to an existing agent goes through
 
 1. **Write the handoff** with `<skill>/templates/handoff.md` as the skeleton. Fill in every field. The receiving agent has none of your context, so the handoff must stand alone:
    - the original request verbatim;
-   - paths, not pasted content;
+   - record IDs and paths, not pasted content. Plan and research content is named by ID (`s-03`, `w-sizing`, `c-07`, `H-02`), and the agent loads it with `python3 <skill>/scripts/kb.py <out> get <ids> --closure`, which prints those records plus what they depend on. Point at a whole file only when the task is the whole file: the designer revising the plan, a reviewer judging the whole page;
    - the invariants that apply, verbatim;
    - quoted user decisions from `decisions.md`;
    - the done predicate;
@@ -180,7 +182,7 @@ node <skill>/scripts/human_review.mjs --out <out> --target plan|site [--round N]
 
 ## Stage 3: Build
 
-1. Dispatch `page-builder`: `--loop gate:page --writes site --exclude 'site/widgets/*/*'`. It runs its own pre-flight first, so expect early blockers rather than late ones. It produces the shell, tokens, prose, simple figures, widget mounts and `site/widgets/manifest.json`, and verifies with `verify.mjs --phase page`, where widgets not built yet are reported as pending. In the handoff, point to the mockup as approved content and flow. Don't tell the builder to match its prose: the mockup's wording is a draft, and only its check prompts, options and answers are final.
+1. Dispatch `page-builder`: `--loop gate:page --writes site --exclude 'site/widgets/*/*'`. It runs its own pre-flight first, so expect early blockers rather than late ones. It writes the page as `site/src/shell.html` plus one fragment per plan segment (`site/src/s-NN.html`), which the scripts assemble into `site/index.html`. It produces the shell, tokens, prose, simple figures, widget mounts and `site/widgets/manifest.json`, and verifies with `verify.mjs --phase page`, where widgets not built yet are reported as pending. In the handoff, point to the mockup as approved content and flow. Don't tell the builder to match its prose: the mockup's wording is a draft, and only its check prompts, options and answers are final.
 2. Once the page builder reports `done`, dispatch one `widget-builder` per `complexity: high` widget, in parallel: `--loop gate:<widget-id> --writes site/widgets/<widget-id>`.
 3. **The gate:**
 
@@ -200,7 +202,7 @@ node <skill>/scripts/human_review.mjs --out <out> --target plan|site [--round N]
 - Dispatch the reviewers **fresh**, in parallel, after the gate passes: `--loop review:accuracy` / `--loop review:pedagogy-ux`, each `--writes run/review/round-N`. Give them the brief, the plan (for the pedagogy-ux reviewer), the facts (for the accuracy reviewer), the site, and the gate's screenshots. **Never** give them builder reports or your own commentary.
 - **Ingest:** `python3 <skill>/scripts/findings.py <run> ingest <round>` assigns stable IDs (`A-NN` accuracy, `P-NN` pedagogy/UX) and writes `run/review/round-N/findings.md`.
 - **Done** when no `blocking` findings are open (`python3 <skill>/scripts/findings.py <run> status` exits 0). `should` findings are fixed where cheap. `nit`s are listed in the final report.
-- **Revise:** route each blocking or `should` finding to its owning builder (continue it) with the IDs. The builder answers each one with a disposition: `fixed`, `disputed` (with evidence), or `blocked`. Re-run the gate.
+- **Revise:** route each blocking or `should` finding to its owning builder (continue it) with the IDs and the segment or widget each one is on (`location:`; `kb.py <out> get <finding IDs>` shows them without reading every review). The builder answers each one with a disposition: `fixed`, `disputed` (with evidence), or `blocked`. Re-run the gate.
 - After the round 1 fixes pass the gate, go to **Human review** (below) before the closure round.
 - **Closure round (round 2):** dispatch fresh reviewers with the previous `findings.md` and the dispositions. They also check any text that changed for `H-` findings, against the facts and the plan, but they don't close `H-` findings. They mark each finding `closed`, `still-open` or `dispute-upheld`, and may raise **new** findings only at `blocking` severity. The cap is 2 review rounds. Anything still open after that goes to the user with options.
 - **Disputes:** if the closure reviewer and the builder still disagree, the user decides.
@@ -223,7 +225,7 @@ Reviewers judge the page against the brief; only the user can say whether it's w
 
 Give the user:
 
-- the path to `site/` and how to preview it (`npx serve <out>/site`, or any static server);
+- the path to `site/` and how to preview it (`npx serve <out>/site`, or any static server). If the piece goes into an existing site, the fragments in `site/src/` and their order in `site/src/segments.json` are what the host embeds; `shell.html` is only the standalone wrapper;
 - built reading time against the brief's time, and page weight. If it runs long, show the plan's cut order (`## If it runs long` in `cut-list.md`) and let the user pick cuts. Never trim prose to fit;
 - what was traded off (`relaxed` entries);
 - deduplicated concerns;
@@ -275,5 +277,5 @@ Then ask with AskUserQuestion. If the user extends a cap, run `round_gate.py <ru
   - `learning-science-patterns.md` and `cognitive-design-patterns.md` (instructional design);
   - `ux-ui.md`, `graphics.md`, `widgets.md`, `sourcing.md`.
 - `kit/`: optional runtime helpers that builders copy into `site/assets/`: `tokens.css`, `components.css`, `toc.js`, `arrow.js`, `replay.js`, `carousel.js`, `widget.js`.
-- `scripts/`: `preflight.sh`, `init_run.py`, `round_gate.py`, `log.py`, `cost_report.py`, `check_research.py`, `check_plan.py`, `findings.py`, `verify.mjs`, `probe.mjs`, `human_review.mjs`.
+- `scripts/`: `preflight.sh`, `init_run.py`, `round_gate.py`, `log.py`, `cost_report.py`, `check_research.py`, `check_plan.py`, `findings.py`, `kb.py` (read records by ID), `assemble.mjs` (fragments → `index.html`; `verify`, `probe` and `human_review` run it themselves), `verify.mjs`, `probe.mjs`, `human_review.mjs`.
 - `vendor/annotate/`: the annotation layer `human_review.mjs` injects into the review browser. It is never copied into `site/`. `tests/run.sh` self-tests the gate and scripts.

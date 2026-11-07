@@ -37,6 +37,35 @@ sed -i.bak 's/decision: approved/decision: rejected/' "$TMP/fx/good/run/decision
 node "$SKILL/scripts/verify.mjs" --out "$TMP/fx/good" > "$TMP/good2.txt" 2>&1; expect_exit "rejected asset fails" 1 $?
 expect_grep "rejected asset reported" "which the user rejected" "$TMP/good2.txt"
 
+echo "assemble (fragments)"
+F="$TMP/fx/frag"
+node "$SKILL/scripts/verify.mjs" --out "$F" > "$TMP/frag.txt" 2>&1; expect_exit "fragment page assembles and passes" 0 $?
+expect_grep "banner on line 2" "assembled by didactician assemble.mjs" "$F/site/index.html"
+expect_grep "segment boundaries marked" "<!-- begin s-02 · src/s-02.html -->" "$F/site/index.html"
+expect_grep "order written for hosts" '"id": "s-02"' "$F/site/src/segments.json"
+sed -i.bak 's|A longer pendulum|A much longer pendulum|' "$F/site/index.html"
+node "$SKILL/scripts/verify.mjs" --out "$F" > "$TMP/frag2.txt" 2>&1; expect_exit "hand-edited index.html refused" 2 $?
+expect_grep "hand edit named" "edited by hand" "$TMP/frag2.txt"
+node "$SKILL/scripts/assemble.mjs" --out "$F" --force > /dev/null; expect_exit "--force reassembles" 0 $?
+echo '<section id="s-09"></section>' > "$F/site/src/s-09.html"
+node "$SKILL/scripts/assemble.mjs" --out "$F" > "$TMP/frag3.txt" 2>&1; expect_exit "unplaced fragment refused" 2 $?
+expect_grep "unplaced fragment named" "src/s-09.html is not placed" "$TMP/frag3.txt"
+rm "$F/site/src/s-09.html"
+node "$SKILL/scripts/assemble.mjs" --out "$TMP/fx/good" > "$TMP/single.txt" 2>&1; expect_exit "single-file page left alone" 0 $?
+
+echo "kb.py"
+python3 "$SKILL/scripts/kb.py" "$F" get w-swing --closure > "$TMP/kb.txt" 2>&1; expect_exit "closure" 0 $?
+for id in "## Shape" "## Conventions" "### s-01" "### c-01" "ac-02 (w-swing)" "ac-04 (all checks)" "### d-01" "## Diagnosis · plan/learning-plan.md"; do
+  expect_grep "closure has $id" "$id" "$TMP/kb.txt"
+done
+grep -q "### c-02\|ac-03\|### s-02" "$TMP/kb.txt" && bad "closure leaks another segment's records" || ok "closure stays in scope"
+python3 "$SKILL/scripts/kb.py" "$F" get s-02 --closure > "$TMP/kb2.txt"
+expect_grep "requested segment brings its claims" "### c-02" "$TMP/kb2.txt"
+python3 "$SKILL/scripts/kb.py" "$F" get c-01 > "$TMP/kb3.txt"; expect_grep "record with its location" "c-01 · research/facts.md:8-12" "$TMP/kb3.txt"
+python3 "$SKILL/scripts/kb.py" "$F" get s-77 > /dev/null 2>&1; expect_exit "unknown id fails" 1 $?
+python3 "$SKILL/scripts/kb.py" "$F" refs c-01 > "$TMP/kb4.txt"; expect_grep "refs finds the citing segment" "^s-01 " "$TMP/kb4.txt"
+python3 "$SKILL/scripts/kb.py" "$F" ids --kind s,w > "$TMP/kb5.txt"; expect_grep "ids lists widgets" "^w-swing " "$TMP/kb5.txt"
+
 echo "round_gate.py"
 R="$TMP/run1"
 python3 "$SKILL/scripts/init_run.py" "$R" --slug t --depth light --minutes 5 > /dev/null; expect_exit "init" 0 $?

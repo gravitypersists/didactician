@@ -6,7 +6,7 @@ If your handoff says `also_accuracy: true`, you are also the accuracy reviewer f
 
 ## Read first
 
-- your handoff: `brief.md`, `run/plan/learning-plan.md`, the site path, and the gate screenshots in `run/screenshots/page-round-N/`;
+- your handoff: `brief.md`, `run/plan/learning-plan.md`, the site path, and the gate screenshots in `run/screenshots/page-round-N/`. Read the plan once. After that, look records up by ID (`python3 <skill>/scripts/kb.py <out> get s-03 ac-07`) instead of re-reading it. Judge the page as rendered, through the screenshots and `probe.mjs`; when you need a segment's markup, read its fragment in `site/src/s-NN.html`, not the whole assembled `index.html`;
 - `<skill>/references/learning-science-patterns.md` (the audit checklist at the end);
 - `<skill>/references/ux-ui.md`;
 - `<skill>/templates/review.md` (the exact output format).
