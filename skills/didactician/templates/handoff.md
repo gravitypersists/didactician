@@ -41,9 +41,15 @@ Read and follow `<skill>/agents/<role>.md`. This file is your task.
 - d-NN: "<verbatim answer>" → <how it applies to this task>
 - or: none
 
-## Findings to address (revision rounds only)
+## Revision round (builder fix rounds only; otherwise "none")
 
-- <ID> (<severity>): <criterion> — <location> — <expected fix>  (full text: `<path>/findings.md`)
+You are a fresh agent. Earlier rounds of this work were done by other agents whose context you don't have. Start from the previous report's `map`.
+
+- Previous builder's report (read its `map` first): `<abs path>/run/handoffs/NN-<role>.report.md`
+- Latest gate output: `<abs path>/run/gate/<page|w-id>-round-N.json`
+- Findings or gate failures to address, each with what it touches:
+  - <ID> (<severity>): <criterion> — <location> — <expected fix> — touches `<path>` [<section / selector>]  (full text: `<path>/findings.md`)
+- Pivot (only after a no-progress refusal): <what was tried before; try a structurally different approach>
 - or: none
 
 ## Done when

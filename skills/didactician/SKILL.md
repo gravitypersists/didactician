@@ -79,7 +79,7 @@ Every spawn **and every continuation message** to an existing agent goes through
    - no progress is being made.
 
    **Never dispatch around a refusal.** Follow the message, which will say either "escalate to the user" or "pivot".
-3. **Spawn or continue** the agent. The prompt is: "Read and follow `<skill>/agents/<role>.md`. Your task handoff is `<abs path to NN-<role>.prompt.md>`." Use a fresh general-purpose agent. **Never use a fork**, because a fork inherits your context and destroys independence. For revision rounds within the same session, continue the same builder agent with a message pointing to the new handoff file.
+3. **Spawn or continue** the agent. The prompt is: "Read and follow `<skill>/agents/<role>.md`. Your task handoff is `<abs path to NN-<role>.prompt.md>`." Use a fresh general-purpose agent. **Never use a fork**, because a fork inherits your context and destroys independence. **Builders get a fresh agent for every round, revisions included** (see "Builder revision rounds" below). Other roles may be continued within a session with a message pointing to the new handoff file.
 4. **Save the report verbatim** as `run/handoffs/NN-<role>.report.md`.
 5. **Receive:**
 
@@ -188,19 +188,33 @@ node <skill>/scripts/human_review.mjs --out <out> --target plan|site [--round N]
    node <skill>/scripts/verify.mjs --out <out>
    ```
 
-   This is the full gate, so never use `--phase page` here. It writes `run/gate/page-round-N.json` and screenshots, and records failures for `round_gate`'s no-progress rule. `legibility` and carousel-pager items are warnings for the reviewers, not failures. Route each failing check to the builder that owns the element (continue that agent, same loop). Repeated identical failures trip the no-progress rule in `round_gate`: first a pivot instruction (tell the builder to try a structurally different approach), then a block, which goes to you to escalate.
+   This is the full gate, so never use `--phase page` here. It writes `run/gate/page-round-N.json` and screenshots, and records failures for `round_gate`'s no-progress rule. `legibility` and carousel-pager items are warnings for the reviewers, not failures. Route each failing check to the builder that owns the element: a fresh builder in the same loop, briefed as in "Builder revision rounds". Repeated identical failures trip the no-progress rule in `round_gate`: first a pivot instruction (tell the builder to try a structurally different approach), then a block, which goes to you to escalate.
 4. **Blockers during build:**
    - Layout infeasible on mobile → designer, for an alternative.
    - Asset missing or uncleared → designer, to substitute a drawn figure.
    - Any change to objectives, segments, the overall shape, or the assets used → send the user a **short delta** and record their answer.
    - Changes that leave all of those the same → log them and list them in the final report.
 
+## Builder revision rounds
+
+Every fix round, whether for gate failures, reviewer findings or the user's comments, goes to a **fresh** builder, never a continued one. By its fix round a builder holds 200–400k tokens of build history, and it re-reads all of it on every turn. The gate or review in between usually outlasts its prompt cache, so the first fix turn writes all of it again. A fresh agent with a good handoff starts at a fraction of that. `run/cost.md` shows what continuing cost in a run.
+
+What a fresh builder can't see is why earlier rounds did what they did, so the handoff carries it. Fill the handoff's `## Revision round` section with:
+
+- **the finding IDs or gate failures**, each with the files (and, where you know it, the section or selector) it touches;
+- **the latest gate output:** `run/gate/page-round-N.json`, or the widget's latest round;
+- **the previous builder's report** for this loop, `run/handoffs/NN-<role>.report.md`, whose `map` says which file holds what and which decisions not to undo;
+- **the user decisions and invariants** that bear on these findings, quoted as always;
+- on a pivot, the instruction to try a structurally different approach, and what was tried before.
+
+If a finding doesn't name a file, point at the builder's namespace and say so. Don't paste file contents; the builder reads what it needs.
+
 ## Stage 4: Review
 
 - Dispatch the reviewers **fresh**, in parallel, after the gate passes: `--loop review:accuracy` / `--loop review:pedagogy-ux`, each `--writes run/review/round-N`. Give them the brief, the plan (for the pedagogy-ux reviewer), the facts (for the accuracy reviewer), the site, and the gate's screenshots. **Never** give them builder reports or your own commentary.
 - **Ingest:** `python3 <skill>/scripts/findings.py <run> ingest <round>` assigns stable IDs (`A-NN` accuracy, `P-NN` pedagogy/UX) and writes `run/review/round-N/findings.md`.
 - **Done** when no `blocking` findings are open (`python3 <skill>/scripts/findings.py <run> status` exits 0). `should` findings are fixed where cheap. `nit`s are listed in the final report.
-- **Revise:** route each blocking or `should` finding to its owning builder (continue it) with the IDs. The builder answers each one with a disposition: `fixed`, `disputed` (with evidence), or `blocked`. Re-run the gate.
+- **Revise:** route each blocking or `should` finding to its owning builder (a fresh one, briefed as in "Builder revision rounds") with the IDs. The builder answers each one with a disposition: `fixed`, `disputed` (with evidence), or `blocked`. Re-run the gate.
 - After the round 1 fixes pass the gate, go to **Human review** (below) before the closure round.
 - **Closure round (round 2):** dispatch fresh reviewers with the previous `findings.md` and the dispositions. They also check any text that changed for `H-` findings, against the facts and the plan, but they don't close `H-` findings. They mark each finding `closed`, `still-open` or `dispute-upheld`, and may raise **new** findings only at `blocking` severity. The cap is 2 review rounds. Anything still open after that goes to the user with options.
 - **Disputes:** if the closure reviewer and the builder still disagree, the user decides.

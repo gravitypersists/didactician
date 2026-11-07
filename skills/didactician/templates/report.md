@@ -21,7 +21,15 @@ dispositions:            # revision rounds only: one line per finding ID you wer
 - <ID>: fixed — <what changed, where>
 - <ID>: disputed — <evidence it is not a problem / the fix would break X>
 - <ID>: blocked — <why>
+
+map:                     # builders only: for the fresh agent that does the next round of this work
+- <abs path> — <what it holds; where the parts that matter start (heading, selector, function)>
+- keep: <a non-obvious choice the next builder must not undo> — <why: decision d-NN, finding ID, or what broke>
 ```
+
+## The map (builders)
+
+The next round of your work goes to a fresh agent that has none of your context, only this report. Write the `map` for that agent. Name the files you wrote and what each holds, with enough of a landmark that it can go straight to the right part with `grep -n`. Under `keep:`, list the choices that look odd or arbitrary but aren't, with the reason: a user decision, a finding you fixed, a layout that broke when done the obvious way. Leave out anything the plan or the code already makes plain. In a revision round, carry forward the earlier map, updated: it is the only memory the work has.
 
 ## When blocked
 

@@ -210,6 +210,7 @@ def cmd_receive(a, out: Path, run: Path):
             f"agent to restate its report in the templates/report.md format.", 1)
     status = m.group(1)
     reason = re.search(r"^\s*reason:\s*(\S+)", rep, flags=re.M)
+    no_map = d["role"].endswith("builder") and status != "blocked" and not re.search(r"^\s*map:", rep, flags=re.M)
 
     # namespace check: compare against this dispatch's pre-manifest; allow writes from every dispatch
     # whose interval overlapped this one (parallel batches), plus the orchestrator's namespaces.
@@ -240,7 +241,13 @@ def cmd_receive(a, out: Path, run: Path):
           f". {len(changed)} file(s) changed."
     if violations:
         msg += f" **Namespace violation** ({len(violations)}): " + ", ".join(f"`{v}`" for v in violations[:10])
+    if no_map:
+        msg += " Report has **no `map`**: the next round's fresh builder starts without one."
     log_append(run, "orchestrator", "receive", msg, links=[str(report.relative_to(run))])
+    if no_map:
+        print(f"WARNING: {report.name} has no `map:` section. The next round of this work goes to a fresh "
+              f"builder, which will have only this report to go on. Ask this builder for its map "
+              f"(templates/report.md) before moving on if you can.", file=sys.stderr)
     print(f"status: {status}" + (f" ({d['reason']})" if d.get("reason") else ""))
     print(f"changed files: {len(changed)}")
     refresh_cost(out, run)

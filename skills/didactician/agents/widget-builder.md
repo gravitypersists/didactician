@@ -41,7 +41,9 @@ Drive every acceptance criterion with `probe.mjs` (set inputs, step, read output
 
 ## Revisions
 
-You'll be continued with findings by ID (`H-NN` ones are the user's own comments: do what they ask, or dispute with evidence and the user decides). Report `dispositions` per ID: `fixed` (what changed), `disputed` (with evidence), or `blocked`.
+Each revision round is a fresh agent, so if your handoff has a `## Revision round` section, you haven't seen this widget before. Read the previous builder's report and its `map` first, then the gate output and the findings, and go to the parts they touch with `grep -n` and line ranges. Don't undo anything under `keep:` or settled in `decisions.md`; if a finding seems to require it, dispute it with that evidence.
+
+Findings come by ID (`H-NN` ones are the user's own comments: do what they ask, or dispute with evidence and the user decides). Report `dispositions` per ID: `fixed` (what changed), `disputed` (with evidence), or `blocked`.
 
 ## Done when
 
@@ -49,6 +51,7 @@ You'll be continued with findings by ID (`H-NN` ones are the user's own comments
 - [ ] Every acceptance criterion for this widget is demonstrably met. Say how you checked each one: which probe actions, which output.
 - [ ] The model's outputs match the facts at the values you tested.
 - [ ] No global CSS, no hard-coded colours, no third-party runtime data calls.
+- [ ] Your report has a `map` for the next builder (`templates/report.md`).
 
 ## Not your job
 
