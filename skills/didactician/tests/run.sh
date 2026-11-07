@@ -93,6 +93,27 @@ import json, sys
 p = sys.argv[1] + "/run/state.json"; s = json.load(open(p)); s["caps"]["spawns"] = len(s["dispatches"]); json.dump(s, open(p, "w"))
 EOF
 python3 "$SKILL/scripts/round_gate.py" "$R" dispatch --role researcher --loop research --writes run/research --label z > /dev/null 2>&1; expect_exit "spawn cap enforced" 2 $?
+# agent time: a 3-hour dispatch with a 2.5-hour pause between turns counts active time only
+A="$TMP/run-time"
+python3 "$SKILL/scripts/init_run.py" "$A" --slug a --depth light --minutes 5 > /dev/null
+python3 - "$A" <<'EOF'
+import json, sys
+run = sys.argv[1] + "/run"; p = run + "/state.json"; s = json.load(open(p))
+s["dispatches"] = [
+  {"nn": 1, "role": "page-builder", "loop": "gate:page", "label": "x", "writes": ["site"], "exclude": [],
+   "opened": "2026-01-01T10:00:00+00:00", "closed": "2026-01-01T13:00:00+00:00", "status": "done", "ns_ok": True},
+  {"nn": 2, "role": "researcher", "loop": "research", "label": "y", "writes": ["run/research"], "exclude": [],
+   "opened": "2026-01-01T14:00:00+00:00", "closed": "2026-01-01T14:10:00+00:00", "status": "done", "ns_ok": True}]
+s["seq"] = 2; json.dump(s, open(p, "w"))
+seg = {"v": 1, "t": "segment", "dispatch": 1, "role": "page-builder"}
+ts = ["10:01", "10:05", "10:10", "10:15", "10:20", "12:50", "12:55"]  # 20 min of work, a 2.5 h pause, 5 min more
+lines = [seg] + [{"v": 1, "t": "turn", "ts": f"2026-01-01T{t}:00Z"} for t in ts]
+import os; os.makedirs(run + "/usage", exist_ok=True)
+open(run + "/usage/01-page-builder.jsonl", "w").write("".join(json.dumps(l) + "\n" for l in lines))
+EOF
+python3 "$SKILL/scripts/round_gate.py" "$A" status > "$TMP/at.txt"
+# dispatch 1: 10:00→10:20 (20) + 5 capped + 12:50→12:55 (5) + 5 capped to close = 35; dispatch 2 has no turns: 10
+expect_grep "pauses between turns don't count as agent time" "agent-min: 45/" "$TMP/at.txt"
 
 echo "findings.py (human review)"
 H="$R/run/review/human-site-1"; mkdir -p "$H"

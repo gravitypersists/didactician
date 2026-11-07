@@ -21,6 +21,7 @@ re-run with --pivot) · 4 no progress after a pivot (escalate) · 5 bookkeeping 
 from __future__ import annotations
 
 import argparse
+import datetime as _dt
 import fnmatch
 import json
 import re
@@ -37,14 +38,52 @@ from _common import (  # noqa: E402
 STAGES = ["intake", "research", "plan", "checkpoint", "build", "review", "human-review", "deliver", "done"]
 
 
-def agent_minutes(state: dict) -> float:
-    """Wall-clock minutes during which at least one agent was running (union of intervals)."""
+IDLE_GAP = 5 * 60  # seconds; a longer gap between an agent's turns counts as this much, no more
+
+
+def _ts(s: str):
+    return parse_time(s.replace("Z", "+00:00"))
+
+
+def turn_times(run: Path) -> dict[int, list]:
+    """Each dispatch's model-turn timestamps, from run/usage/ (written by cost_report.py on receive)."""
+    times: dict[int, list] = {}
+    for p in sorted((run / "usage").glob("*.jsonl")):
+        nn = None
+        for line in p.read_text().splitlines():
+            try:
+                e = json.loads(line)
+            except ValueError:
+                continue
+            if e.get("t") == "segment":
+                nn = e.get("dispatch")
+            elif e.get("t") == "turn" and nn is not None and e.get("ts"):
+                times.setdefault(nn, []).append(_ts(e["ts"]))
+    return times
+
+
+def agent_minutes(state: dict, run: Path) -> float:
+    """Active minutes during which at least one agent was working (union across parallel dispatches).
+
+    A dispatch's time runs from its opening through each of its turns to its close, but any gap
+    longer than IDLE_GAP counts as IDLE_GAP: rate-limit and usage-limit pauses, and a cache-cold
+    continuation waiting on the orchestrator, aren't agent work. A dispatch with no recorded turns
+    yet (still open, or transcripts unavailable) counts its whole wall-clock interval.
+    """
     spans = []
     t_now = parse_time(now())
+    turns = turn_times(run)
+    cap = _dt.timedelta(seconds=IDLE_GAP)
     for d in state["dispatches"]:
         a = parse_time(d["opened"])
         b = parse_time(d["closed"]) if d.get("closed") else t_now
-        spans.append((a, b))
+        ts = sorted(t for t in turns.get(d["nn"], []) if a <= t <= b)
+        if not ts:
+            spans.append((a, b))
+            continue
+        points = [a, *ts, b]
+        for x, y in zip(points, points[1:]):
+            spans.append((x, min(y, x + cap)))
     spans.sort()
     total, cur_a, cur_b = 0.0, None, None
     for a, b in spans:
@@ -95,7 +134,7 @@ def cmd_dispatch(a, out: Path, run: Path):
     if len(state["dispatches"]) >= caps["spawns"]:
         refuse(2, f"dispatch cap reached ({caps['spawns']}). Escalate to the user with options; "
                   f"extend only on their decision.", run, label)
-    used = agent_minutes(state)
+    used = agent_minutes(state, run)
     if used >= caps["agent_minutes"]:
         refuse(2, f"agent-time cap reached ({used:.0f}/{caps['agent_minutes']} min). Escalate.", run, label)
 
@@ -162,7 +201,7 @@ def cmd_dispatch(a, out: Path, run: Path):
         f"Dispatch {nn:02d} → **{a.role}** ({a.label}){loop_info}{' — PIVOT' if a.pivot else ''}. "
         f"May write: {', '.join(f'`{w}`' for w in a.writes)}"
         + (f" except {', '.join(f'`{e}`' for e in a.exclude)}" if a.exclude else "") + ". "
-        f"Usage: {len(state['dispatches'])}/{caps['spawns']} dispatches, {agent_minutes(state):.0f}/{caps['agent_minutes']} agent-min.",
+        f"Usage: {len(state['dispatches'])}/{caps['spawns']} dispatches, {agent_minutes(state, run):.0f}/{caps['agent_minutes']} agent-min.",
         links=[prompt] + ([f"history/{nn:02d}-{role_tag}"] if snapped else []),
     )
     print(f"NN={nn:02d}")
@@ -300,7 +339,7 @@ def cmd_status(a, out: Path, run: Path):
     state = load_state(run)
     c = state["caps"]
     print(f"stage: {state['stage']}")
-    print(f"dispatches: {len(state['dispatches'])}/{c['spawns']}  agent-min: {agent_minutes(state):.0f}/{c['agent_minutes']}")
+    print(f"dispatches: {len(state['dispatches'])}/{c['spawns']}  agent-min: {agent_minutes(state, run):.0f}/{c['agent_minutes']}")
     print("loops: " + ", ".join(f"{k}={v}" for k, v in state["loops"].items()))
     open_d = [d for d in state["dispatches"] if not d.get("closed")]
     for d in state["dispatches"]:
