@@ -351,7 +351,7 @@ Convergence is enforced at five points:
 
 - **Run-level caps** (in `round_gate.py`, checked before *every* spawn):
   - total spawn count, scaled by depth and size (e.g. light/≤10 min: 8; deep/long: 20);
-  - wall-clock since run start, from `state.json` timestamps (default 90 minutes of agent time, excluding time spent waiting on the user).
+  - active agent time: the union of dispatch intervals, with any gap over 5 minutes between an agent's turns (from `run/usage/` turn timestamps) counted as 5 minutes, so rate-limit and usage-limit pauses and time spent waiting on the user don't count. Defaults scale with depth (`init_run.py`).
 
   Either cap tripping escalates to the user with the option to extend.
 - **`round_gate.py` refuses** to authorise the next spawn while any of these is outstanding:
